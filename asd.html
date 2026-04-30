@@ -1,686 +1,460 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FlashStudy — Sınav Hazırlık</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0d0d0f;
-    --surface: #161618;
-    --surface2: #1e1e21;
-    --border: #2a2a2e;
-    --accent: #c8f04a;
-    --accent2: #4af0c8;
-    --text: #e8e8ec;
-    --muted: #666672;
-    --danger: #f04a6a;
-    --success: #4af0a0;
-    --warning: #f0c84a;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:'Instrument Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
-  body::before {
-    content:''; position:fixed; inset:0;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events:none; z-index:0; opacity:0.5;
-  }
-  .app { position:relative; z-index:1; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sınav Flashcard Sistemi</title>
+    <style>
+        /* Genel Ayarlar ve Renkler (Göz yormayan kırık beyaz/krem tonları) */
+        :root {
+            --bg-color: #F7F5F0; 
+            --card-bg: #FFFFFF;
+            --text-main: #2D3436;
+            --text-muted: #636E72;
+            --accent: #D4C5B9; /* Bohem / Soft krem vurgu */
+            --btn-easy: #55EFC4;
+            --btn-normal: #74B9FF;
+            --btn-hard: #FF7675;
+        }
 
-  /* HEADER */
-  header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 32px; border-bottom:1px solid var(--border);
-    position:sticky; top:0; z-index:100;
-    background:rgba(13,13,15,0.92); backdrop-filter:blur(12px); gap:12px;
-  }
-  .logo { font-family:'Fraunces',serif; font-size:20px; font-weight:900; color:var(--accent); letter-spacing:-0.5px; white-space:nowrap; }
-  .logo span { color:var(--text); }
-  .header-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  /* BUTTONS */
-  .btn {
-    display:inline-flex; align-items:center; gap:6px;
-    padding:7px 16px; border-radius:6px;
-    font-family:'DM Mono',monospace; font-size:11px; font-weight:500;
-    cursor:pointer; border:1px solid var(--border);
-    background:var(--surface); color:var(--text);
-    transition:all 0.15s; text-transform:uppercase; letter-spacing:0.5px; white-space:nowrap;
-  }
-  .btn:hover { border-color:var(--accent); color:var(--accent); }
-  .btn-accent { background:var(--accent); color:#0d0d0f; border-color:var(--accent); }
-  .btn-accent:hover { background:#d4f55c; border-color:#d4f55c; color:#0d0d0f; }
-  .btn-danger { background:rgba(240,74,106,0.1); color:var(--danger); border-color:rgba(240,74,106,0.4); }
-  .btn-danger:hover { background:rgba(240,74,106,0.2); color:var(--danger); border-color:var(--danger); }
-  .btn-sm { padding:5px 11px; font-size:10px; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden; /* Taşmaları engellemek için */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-  /* UPLOAD */
-  #upload-screen {
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    min-height:calc(100vh - 57px); padding:40px; text-align:center;
-  }
-  .upload-hero { font-family:'Fraunces',serif; font-size:clamp(36px,6vw,78px); font-weight:900; line-height:0.95; margin-bottom:16px; letter-spacing:-2px; }
-  .upload-hero em { font-style:italic; font-weight:300; color:var(--accent); }
-  .upload-sub { color:var(--muted); font-size:15px; margin-bottom:44px; max-width:400px; line-height:1.6; }
-  .drop-zone {
-    width:100%; max-width:500px; border:1.5px dashed var(--border); border-radius:16px;
-    padding:52px 40px; background:var(--surface); cursor:pointer; transition:all 0.2s; position:relative; overflow:hidden;
-  }
-  .drop-zone::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center,rgba(200,240,74,0.04) 0%,transparent 70%); }
-  .drop-zone:hover,.drop-zone.drag-over { border-color:var(--accent); background:rgba(200,240,74,0.04); }
-  .drop-zone input { display:none; }
-  .drop-icon { font-size:34px; margin-bottom:12px; display:block; }
-  .drop-zone h3 { font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin-bottom:6px; }
-  .drop-zone p { color:var(--muted); font-size:13px; font-family:'DM Mono',monospace; }
-  .or-divider { display:flex; align-items:center; gap:16px; width:100%; max-width:500px; margin:22px 0; color:var(--muted); font-size:12px; font-family:'DM Mono',monospace; }
-  .or-divider::before,.or-divider::after { content:''; flex:1; height:1px; background:var(--border); }
-  .paste-area { width:100%; max-width:500px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; resize:vertical; min-height:110px; outline:none; transition:border-color 0.15s; }
-  .paste-area:focus { border-color:var(--accent); }
-  .load-btn-wrap { margin-top:14px; }
+        /* Üst Menü & Sayaç (Sağa dayalı) */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-  /* STUDY */
-  #study-screen { display:none; }
-  .study-layout { display:grid; grid-template-columns:270px 1fr; min-height:calc(100vh - 57px); }
+        .logo { font-size: 1.2rem; font-weight: bold; }
+        .timer-container { text-align: right; font-weight: bold; color: var(--text-muted); }
 
-  /* SIDEBAR */
-  .sidebar { border-right:1px solid var(--border); padding:20px 0; overflow-y:auto; position:sticky; top:57px; height:calc(100vh - 57px); background:var(--surface); }
-  .sidebar-section-title { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:0 18px 14px; }
-  .sidebar-divider { height:1px; background:var(--border); margin:10px 0; }
-  .karma-item { padding:11px 18px; cursor:pointer; border-left:3px solid transparent; transition:all 0.15s; display:flex; align-items:center; gap:10px; }
-  .karma-item:hover { background:var(--surface2); }
-  .karma-item.active { border-left-color:var(--accent2); background:rgba(74,240,200,0.06); }
-  .karma-item-name { font-size:13px; font-weight:600; color:var(--accent2); }
-  .deck-item { padding:11px 18px; cursor:pointer; border-left:3px solid transparent; transition:all 0.15s; }
-  .deck-item:hover { background:var(--surface2); }
-  .deck-item.active { border-left-color:var(--accent); background:rgba(200,240,74,0.06); }
-  .deck-item-name { font-size:13px; font-weight:500; margin-bottom:5px; line-height:1.3; }
-  .deck-item-count { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
-  .deck-progress-bar-bg { height:3px; background:var(--border); border-radius:2px; overflow:hidden; margin-top:6px; }
-  .deck-progress-bar-fill { height:100%; border-radius:2px; background:var(--accent); transition:width 0.4s ease; }
-  .deck-progress-pct { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:3px; }
-  .sidebar-footer { padding:14px 18px 0; border-top:1px solid var(--border); margin-top:12px; }
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-  /* MAIN */
-  .main-content { padding:36px 40px; max-width:920px; }
-  .deck-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:28px; gap:16px; flex-wrap:wrap; }
-  .deck-title { font-family:'Fraunces',serif; font-size:30px; font-weight:900; letter-spacing:-1px; line-height:1.1; }
-  .deck-subtitle { color:var(--muted); font-size:13px; font-family:'DM Mono',monospace; margin-top:5px; }
-  .deck-header-right { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
-  .mode-tabs { display:flex; gap:3px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:3px; }
-  .mode-tab { padding:6px 14px; border-radius:5px; font-family:'DM Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; cursor:pointer; border:none; background:none; color:var(--muted); transition:all 0.15s; }
-  .mode-tab.active { background:var(--accent); color:#0d0d0f; font-weight:500; }
+        /* Netflix Tarzı Bölüm Kartları (Yan yana dizili) */
+        #deck-selection {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .deck-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            scroll-snap-type: x mandatory;
+        }
 
-  /* TOGGLE */
-  .toggle-wrap { display:flex; align-items:center; gap:7px; cursor:pointer; }
-  .toggle { width:34px; height:19px; border-radius:10px; background:var(--border); position:relative; transition:background 0.2s; flex-shrink:0; }
-  .toggle.on { background:var(--accent); }
-  .toggle::after { content:''; position:absolute; top:3px; left:3px; width:13px; height:13px; border-radius:50%; background:#fff; transition:transform 0.2s; }
-  .toggle.on::after { transform:translateX(15px); }
-  .toggle-label { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+        .deck-scroll::-webkit-scrollbar { height: 8px; }
+        .deck-scroll::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
 
-  /* PROGRESS */
-  .progress-wrap { margin-bottom:28px; }
-  .progress-info { display:flex; justify-content:space-between; font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:8px; }
-  .progress-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
-  .progress-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s ease; }
+        .deck-card {
+            min-width: 140px;
+            height: 140px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            cursor: pointer;
+            scroll-snap-align: start;
+            transition: transform 0.2s;
+            border: 1px solid transparent;
+        }
 
-  /* STATS BAR */
-  .stats-bar { display:flex; gap:20px; flex-wrap:wrap; padding:12px 18px; background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:22px; }
-  .stat-item { display:flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:11px; }
-  .stat-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-  .stat-dot.green { background:var(--success); }
-  .stat-dot.red { background:var(--danger); }
-  .stat-dot.yellow { background:var(--warning); }
-  .stat-val { font-weight:500; color:var(--text); }
-  .stat-lbl { color:var(--muted); }
+        .deck-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
 
-  /* FLASHCARD */
-  .card-stage { perspective:1200px; margin-bottom:24px; }
-  .card { width:100%; min-height:270px; position:relative; transform-style:preserve-3d; transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); cursor:pointer; }
-  .card.flipped { transform:rotateY(180deg); }
-  .card-face { position:absolute; inset:0; border-radius:16px; padding:36px 44px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; min-height:270px; }
-  .card-front { background:var(--surface); border:1px solid var(--border); }
-  .card-back { background:linear-gradient(135deg,rgba(200,240,74,0.08) 0%,rgba(74,240,200,0.06) 100%); border:1px solid rgba(200,240,74,0.2); transform:rotateY(180deg); }
-  .card-label { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:18px; align-self:flex-start; }
-  .card-back .card-label { color:var(--accent); }
-  .card-content { font-size:20px; font-weight:500; line-height:1.5; }
-  .card-back .card-content { font-size:17px; line-height:1.65; color:#e0e0e8; }
-  .card-hint { margin-top:22px; font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
+        /* Flashcard Tasarımı ve 3D Dönüş Efekti */
+        #study-area {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
 
-  /* CARD NAV */
-  .card-nav { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:20px; }
-  .nav-btn { width:42px; height:42px; border-radius:50%; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:17px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
-  .nav-btn:hover { border-color:var(--accent); color:var(--accent); }
-  .nav-btn:disabled { opacity:0.25; cursor:not-allowed; }
-  .card-counter { font-family:'Fraunces',serif; font-size:26px; font-weight:600; min-width:70px; text-align:center; letter-spacing:-1px; }
-  .card-counter span { color:var(--muted); font-size:15px; font-weight:300; }
+        .flashcard-container {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
 
-  /* REACTION */
-  .reaction-row { display:flex; gap:10px; justify-content:center; }
-  .reaction-btn { flex:1; max-width:160px; padding:11px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:6px; }
-  .reaction-btn.wrong:hover { background:rgba(240,74,106,0.1); border-color:var(--danger); color:var(--danger); }
-  .reaction-btn.hard:hover { background:rgba(240,200,74,0.1); border-color:var(--warning); color:var(--warning); }
-  .reaction-btn.correct:hover { background:rgba(74,240,160,0.1); border-color:var(--success); color:var(--success); }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
 
-  /* RETRY BANNER */
-  .retry-banner { margin-top:20px; padding:14px 18px; background:rgba(240,74,106,0.08); border:1px solid rgba(240,74,106,0.25); border-radius:10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-  .retry-banner p { font-size:13px; color:var(--danger); flex:1; }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
 
-  /* DECK COMPLETE */
-  .deck-complete { text-align:center; padding:48px 0; animation:slideIn 0.4s ease; }
-  .deck-complete .big-num { font-family:'Fraunces',serif; font-size:72px; font-weight:900; color:var(--accent); letter-spacing:-3px; line-height:1; }
-  .deck-complete h3 { font-family:'Fraunces',serif; font-size:22px; font-weight:600; margin:12px 0 6px; }
-  .deck-complete p { color:var(--muted); font-size:13px; font-family:'DM Mono',monospace; margin-bottom:24px; }
-  .deck-complete-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
 
-  /* TEST */
-  .question-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:28px 32px; margin-bottom:16px; animation:slideIn 0.3s ease; }
-  .question-num { font-family:'DM Mono',monospace; font-size:10px; color:var(--accent); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; }
-  .question-text { font-size:16px; font-weight:500; line-height:1.55; margin-bottom:20px; }
-  .options-list { display:flex; flex-direction:column; gap:9px; }
-  .option-item { padding:12px 16px; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-size:14px; transition:all 0.15s; display:flex; align-items:center; gap:12px; background:var(--surface2); }
-  .option-item:hover { border-color:var(--accent); }
-  .option-item.selected { border-color:var(--accent); background:rgba(200,240,74,0.07); }
-  .option-item.correct { border-color:var(--success); background:rgba(74,240,160,0.08); color:var(--success); }
-  .option-item.wrong { border-color:var(--danger); background:rgba(240,74,106,0.08); color:var(--danger); }
-  .option-letter { font-family:'DM Mono',monospace; font-size:11px; font-weight:500; width:22px; height:22px; border-radius:4px; background:var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--muted); }
-  .option-item.correct .option-letter { background:var(--success); color:#000; }
-  .option-item.wrong .option-letter { background:var(--danger); color:#fff; }
-  .option-item.selected .option-letter { background:var(--accent); color:#000; }
-  .explanation { margin-top:12px; padding:13px 16px; border-radius:8px; background:rgba(200,240,74,0.05); border:1px solid rgba(200,240,74,0.15); font-size:13px; line-height:1.6; color:#b0b0bc; display:none; }
-  .test-controls { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: #FAFAFA;
+        }
 
-  /* RESULTS PANEL */
-  .results-summary { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:28px; }
-  .result-stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px; text-align:center; }
-  .result-stat-n { font-family:'Fraunces',serif; font-size:32px; font-weight:600; margin-bottom:4px; }
-  .result-stat-n.green { color:var(--success); }
-  .result-stat-n.red { color:var(--danger); }
-  .result-stat-n.accent { color:var(--accent); }
-  .result-stat-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
-  .results-section-title { font-family:'Fraunces',serif; font-size:20px; font-weight:700; margin-bottom:16px; letter-spacing:-0.5px; }
-  .result-item { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:12px; animation:slideIn 0.3s ease; }
-  .result-item.wrong-result { border-color:rgba(240,74,106,0.3); }
-  .result-item-header { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
-  .result-badge { font-family:'DM Mono',monospace; font-size:10px; padding:3px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.5px; flex-shrink:0; }
-  .result-badge.fail { background:rgba(240,74,106,0.15); color:var(--danger); }
-  .result-item-q { font-size:14px; font-weight:500; line-height:1.4; }
-  .result-answer-row { display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; }
-  .answer-tag { padding:4px 10px; border-radius:4px; font-size:12px; font-family:'DM Mono',monospace; }
-  .answer-tag.correct { background:rgba(74,240,160,0.12); color:var(--success); }
-  .answer-tag.wrong { background:rgba(240,74,106,0.12); color:var(--danger); }
-  .result-exp { margin-top:10px; font-size:12px; color:var(--muted); line-height:1.6; padding-top:10px; border-top:1px solid var(--border); }
-  .deck-tag { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
+        /* Butonlar */
+        .controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
 
-  /* EMPTY */
-  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:380px; color:var(--muted); text-align:center; gap:12px; }
-  .empty-state .icon { font-size:38px; }
-  .empty-state p { font-size:14px; line-height:1.6; max-width:260px; }
+        .controls.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-  /* KBD HINT */
-  .kbd-hint { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
-  .kbd { display:inline-flex; align-items:center; gap:4px; }
-  .kbd kbd { background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:2px 7px; font-family:inherit; font-size:11px; }
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
 
-  @keyframes slideIn { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+        button:hover { opacity: 0.8; }
+        .btn-easy { background-color: var(--btn-easy); }
+        .btn-normal { background-color: var(--btn-normal); }
+        .btn-hard { background-color: var(--btn-hard); }
 
-  @media (max-width:720px) {
-    .study-layout { grid-template-columns:1fr; }
-    .sidebar { display:none; }
-    .main-content { padding:20px; }
-    header { padding:14px 18px; }
-    .upload-hero { font-size:34px; }
-    .results-summary { grid-template-columns:1fr 1fr; }
-  }
-</style>
+        /* İlerleme Çubuğu ve Üst Bilgi */
+        .study-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 15px;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            text-decoration: underline;
+            padding: 0;
+            text-align: left;
+            flex: initial;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 8px;
+            background-color: #E0E0E0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+    </style>
 </head>
 <body>
-<div class="app">
 
-<header>
-  <div class="logo">Flash<span>Study</span></div>
-  <div class="header-actions" id="header-actions"></div>
-</header>
-
-<!-- UPLOAD -->
-<div id="upload-screen">
-  <div class="upload-hero">Sınava<br><em>hazır</em> mısın?</div>
-  <p class="upload-sub">PDF'inden oluşturulan flashcard JSON dosyasını yükle, hemen çalışmaya başla.</p>
-  <label class="drop-zone" id="drop-zone">
-    <input type="file" accept=".json" onchange="loadFromFile(event)">
-    <span class="drop-icon">📂</span>
-    <h3>JSON Dosyasını Bırak</h3>
-    <p>ya da tıkla ve seç</p>
-  </label>
-  <div class="or-divider">ya da</div>
-  <textarea class="paste-area" id="paste-area" placeholder='JSON içeriğini buraya yapıştır...'></textarea>
-  <div class="load-btn-wrap">
-    <button class="btn btn-accent" onclick="loadFromPaste()">Yükle →</button>
-  </div>
-</div>
-
-<!-- STUDY -->
-<div id="study-screen">
-  <div class="study-layout">
-    <aside class="sidebar">
-      <div id="sidebar-content"></div>
-      <div class="sidebar-footer">
-        <label class="btn" style="width:100%;justify-content:center;cursor:pointer;">
-          ↑ JSON Yükle <input type="file" accept=".json" onchange="loadFromFile(event)" style="display:none">
-        </label>
-      </div>
-    </aside>
-    <main class="main-content" id="main-content">
-      <div class="empty-state"><span class="icon">👈</span><p>Sol menüden bir bölüm seç</p></div>
-    </main>
-  </div>
-</div>
-
-<script>
-// ═══════════ STATE ═══════════
-let allDecks = [];
-let currentDeckIndex = null; // null=none, -1=karma, 0..n=deck
-let currentDeck = null;
-let currentMode = 'flashcard';
-// flashcard
-let shuffleOn = false;
-let cardOrder = [];
-let cardPos = 0;
-let cardFlipped = false;
-let wrongQueue = [];
-let retryMode = false;
-// per-deck stats
-let deckStats = {};
-// test
-let testQuestions = [];
-let testAnswers = [];
-let testSubmitted = false;
-
-// ═══════════ LOAD ═══════════
-function loadFromFile(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => parseAndLoad(ev.target.result);
-  r.readAsText(f);
-}
-function loadFromPaste() {
-  const t = document.getElementById('paste-area').value.trim();
-  if (!t) return alert('Lütfen JSON yapıştır.');
-  parseAndLoad(t);
-}
-function parseAndLoad(text) {
-  try {
-    const data = JSON.parse(text);
-    if (!data.decks || !Array.isArray(data.decks)) throw new Error('decks dizisi bulunamadı');
-    allDecks = data.decks;
-    allDecks.forEach(d => {
-      if (!deckStats[d.title]) deckStats[d.title] = { correct:0, wrong:0, hard:0, seen:new Set() };
-    });
-    document.getElementById('upload-screen').style.display = 'none';
-    document.getElementById('study-screen').style.display = 'block';
-    document.getElementById('header-actions').innerHTML = `<button class="btn" onclick="showUpload()">↑ Yeni Yükle</button>`;
-    renderSidebar();
-    if (allDecks.length > 0) selectDeck(0);
-  } catch(e) { alert('JSON ayrıştırılamadı: ' + e.message); }
-}
-function showUpload() {
-  document.getElementById('upload-screen').style.display = 'flex';
-  document.getElementById('study-screen').style.display = 'none';
-}
-
-// ═══════════ SIDEBAR ═══════════
-function renderSidebar() {
-  let html = `<div class="sidebar-section-title">Bölümler</div>`;
-  // Karma
-  html += `
-    <div class="karma-item ${currentDeckIndex===-1?'active':''}" onclick="selectKarmaTest()">
-      <span style="font-size:15px">⚡</span>
-      <div class="karma-item-name">Karma Test</div>
-    </div>
-    <div class="sidebar-divider"></div>
-  `;
-  allDecks.forEach((deck, i) => {
-    const st = deckStats[deck.title] || {correct:0,wrong:0,hard:0,seen:new Set()};
-    const total = (deck.cards||[]).length;
-    const pct = total > 0 ? Math.round((st.seen.size / total) * 100) : 0;
-    html += `
-      <div class="deck-item ${currentDeckIndex===i?'active':''}" onclick="selectDeck(${i})">
-        <div class="deck-item-name">${deck.title}</div>
-        <div class="deck-item-count">${total} kart · ${(deck.questions||[]).length} soru</div>
-        <div class="deck-progress-bar-bg"><div class="deck-progress-bar-fill" style="width:${pct}%"></div></div>
-        <div class="deck-progress-pct">${pct}% tamamlandı</div>
-      </div>
-    `;
-  });
-  document.getElementById('sidebar-content').innerHTML = html;
-}
-
-// ═══════════ SELECT ═══════════
-function selectDeck(i) {
-  currentDeckIndex = i;
-  currentDeck = allDecks[i];
-  currentMode = 'flashcard';
-  resetCardState();
-  renderSidebar();
-  renderDeck();
-}
-function selectKarmaTest() {
-  currentDeckIndex = -1;
-  currentDeck = null;
-  currentMode = 'test';
-  renderSidebar();
-  renderKarma();
-}
-function resetCardState() {
-  const cards = currentDeck ? (currentDeck.cards||[]) : [];
-  cardOrder = cards.map((_,i)=>i);
-  if (shuffleOn) shuffle(cardOrder);
-  cardPos = 0; cardFlipped = false; wrongQueue = []; retryMode = false;
-}
-function shuffle(a) { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} }
-
-// ═══════════ KARMA TEST ═══════════
-function renderKarma() {
-  const allQs = [];
-  allDecks.forEach(d => (d.questions||[]).forEach(q => allQs.push({...q, _deck:d.title})));
-  const main = document.getElementById('main-content');
-  if (!allQs.length) {
-    main.innerHTML = `<div class="deck-header"><div><div class="deck-title">⚡ Karma Test</div><div class="deck-subtitle">Tüm bölümlerden karışık</div></div></div><div class="empty-state"><span class="icon">📝</span><p>Hiçbir bölümde test sorusu bulunamadı.</p></div>`;
-    return;
-  }
-  shuffle(allQs);
-  testQuestions = allQs; testAnswers = new Array(allQs.length).fill(null); testSubmitted = false;
-  main.innerHTML = `
-    <div class="deck-header">
-      <div><div class="deck-title">⚡ Karma Test</div><div class="deck-subtitle">${allQs.length} soru · tüm bölümlerden</div></div>
-    </div>
-    <div>${buildTestHTML(allQs)}</div>
-  `;
-}
-
-// ═══════════ RENDER DECK ═══════════
-function renderDeck() {
-  const main = document.getElementById('main-content');
-  const cards = currentDeck.cards||[];
-  const questions = currentDeck.questions||[];
-  const st = deckStats[currentDeck.title];
-  const seenCount = st.correct + st.wrong + st.hard;
-
-  main.innerHTML = `
-    <div class="deck-header">
-      <div>
-        <div class="deck-title">${currentDeck.title}</div>
-        <div class="deck-subtitle">${cards.length} flashcard · ${questions.length} test sorusu</div>
-      </div>
-      <div class="deck-header-right">
-        <div class="mode-tabs">
-          <button class="mode-tab ${currentMode==='flashcard'?'active':''}" onclick="switchMode('flashcard')">🃏 Kartlar</button>
-          <button class="mode-tab ${currentMode==='test'?'active':''}" onclick="switchMode('test')">📝 Test</button>
+    <header>
+        <div class="logo">📚 Flashcard App</div>
+        <div class="timer-container">
+            <div>Odak Süresi</div>
+            <div id="timer">00:00</div>
         </div>
-        ${currentMode==='flashcard'?`
-        <div class="toggle-wrap" onclick="toggleShuffle()">
-          <div class="toggle ${shuffleOn?'on':''}" ></div>
-          <div class="toggle-label">🔀 Karıştır</div>
-        </div>`:''}
-      </div>
-    </div>
+    </header>
 
-    ${seenCount > 0 ? `
-    <div class="stats-bar">
-      <div class="stat-item"><div class="stat-dot green"></div><span class="stat-val">${st.correct}</span><span class="stat-lbl">&nbsp;Biliyor</span></div>
-      <div class="stat-item"><div class="stat-dot yellow"></div><span class="stat-val">${st.hard}</span><span class="stat-lbl">&nbsp;Zor</span></div>
-      <div class="stat-item"><div class="stat-dot red"></div><span class="stat-val">${st.wrong}</span><span class="stat-lbl">&nbsp;Bilmiyor</span></div>
-      <div class="stat-item" style="margin-left:auto"><span class="stat-lbl">Görülen:&nbsp;</span><span class="stat-val">${seenCount}/${cards.length}</span></div>
-    </div>` : ''}
-
-    <div id="flashcard-mode" style="display:${currentMode==='flashcard'?'block':'none'}">
-      ${!cards.length ? '<div class="empty-state"><span class="icon">🃏</span><p>Bu bölümde flashcard yok</p></div>' : buildFlashcardHTML(cards)}
-    </div>
-    <div id="test-mode" style="display:${currentMode==='test'?'block':'none'}">
-      ${!questions.length ? '<div class="empty-state"><span class="icon">📝</span><p>Bu bölümde test sorusu yok</p></div>' : buildTestSection(questions)}
-    </div>
-  `;
-}
-
-// ═══════════ FLASHCARD HTML ═══════════
-function buildFlashcardHTML(cards) {
-  const queue = retryMode ? wrongQueue : cardOrder;
-  if (!queue.length) return buildCompleteHTML();
-  const ci = queue[cardPos];
-  const card = cards[ci];
-  const pct = Math.round(((cardPos+1)/queue.length)*100);
-  return `
-    <div class="progress-wrap">
-      <div class="progress-info">
-        <span>${retryMode?'🔁 Yanlışlar Tekrarı':'İlerleme'}</span>
-        <span>${cardPos+1} / ${queue.length}</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    </div>
-    <div class="card-stage">
-      <div class="card" id="fc" onclick="flipCard()">
-        <div class="card-face card-front">
-          <div class="card-label">Soru</div>
-          <div class="card-content">${card.front}</div>
-          <div class="card-hint">Tıkla veya Boşluk ile çevir</div>
-        </div>
-        <div class="card-face card-back">
-          <div class="card-label">Cevap</div>
-          <div class="card-content">${card.back}</div>
-        </div>
-      </div>
-    </div>
-    <div class="card-nav">
-      <button class="nav-btn" onclick="goPrev()" ${cardPos===0?'disabled':''}>←</button>
-      <div class="card-counter">${cardPos+1}<span> / ${queue.length}</span></div>
-      <button class="nav-btn" onclick="goNext()" ${cardPos===queue.length-1?'disabled':''}>→</button>
-    </div>
-    <div class="reaction-row">
-      <button class="reaction-btn wrong" onclick="markCard('wrong')">✗ Bilmedim</button>
-      <button class="reaction-btn hard" onclick="markCard('hard')">~ Zordu</button>
-      <button class="reaction-btn correct" onclick="markCard('correct')">✓ Bildim</button>
-    </div>
-    <div class="kbd-hint">
-      <span class="kbd"><kbd>←</kbd><kbd>→</kbd> gezin</span>
-      <span class="kbd"><kbd>Boşluk</kbd> çevir</span>
-      <span class="kbd"><kbd>1</kbd> bilmedim · <kbd>2</kbd> zordu · <kbd>3</kbd> bildim</span>
-    </div>
-    ${wrongQueue.length > 0 && !retryMode ? `
-    <div class="retry-banner">
-      <p><strong>${wrongQueue.length}</strong> kart yanlış işaretlendi.</p>
-      <button class="btn btn-danger btn-sm" onclick="startRetry()">🔁 Yanlışları Tekrar Et</button>
-    </div>` : ''}
-  `;
-}
-
-function buildCompleteHTML() {
-  const st = deckStats[currentDeck.title];
-  const total = st.correct + st.wrong + st.hard;
-  const pct = total > 0 ? Math.round((st.correct/total)*100) : 0;
-  return `
-    <div class="deck-complete">
-      <div class="big-num">${pct}%</div>
-      <h3>${pct>=80?'Harika iş! 🎉':pct>=50?'Fena değil! 👍':'Biraz daha çalış 💪'}</h3>
-      <p>${st.correct} doğru · ${st.wrong} yanlış · ${st.hard} zor</p>
-      <div class="deck-complete-btns">
-        <button class="btn btn-accent" onclick="restartDeck()">↺ Baştan Başla</button>
-        ${st.wrong>0?`<button class="btn btn-danger" onclick="startRetry()">🔁 Yanlışları Tekrar Et</button>`:''}
-      </div>
-    </div>
-  `;
-}
-
-// ─── CARD ACTIONS ───
-function flipCard() {
-  const el = document.getElementById('fc'); if(!el) return;
-  cardFlipped = !cardFlipped; el.classList.toggle('flipped', cardFlipped);
-}
-function markCard(type) {
-  if (!currentDeck) return;
-  const queue = retryMode ? wrongQueue : cardOrder;
-  const ci = queue[cardPos];
-  const st = deckStats[currentDeck.title];
-  st[type]++; st.seen.add(ci);
-  if (type==='wrong' && !retryMode && !wrongQueue.includes(ci)) wrongQueue.push(ci);
-  renderSidebar();
-  advanceCard();
-}
-function advanceCard() {
-  const queue = retryMode ? wrongQueue : cardOrder;
-  cardFlipped = false;
-  if (cardPos < queue.length-1) { cardPos++; renderDeck(); }
-  else renderDeck(); // triggers complete screen
-}
-function goNext() { const q=retryMode?wrongQueue:cardOrder; if(cardPos<q.length-1){cardPos++;cardFlipped=false;renderDeck();} }
-function goPrev() { if(cardPos>0){cardPos--;cardFlipped=false;renderDeck();} }
-function toggleShuffle() { shuffleOn=!shuffleOn; resetCardState(); renderDeck(); }
-function startRetry() { retryMode=true; cardPos=0; cardFlipped=false; renderDeck(); }
-function restartDeck() {
-  deckStats[currentDeck.title]={correct:0,wrong:0,hard:0,seen:new Set()};
-  resetCardState(); renderSidebar(); renderDeck();
-}
-
-// ═══════════ TEST ═══════════
-function buildTestSection(questions) {
-  testQuestions = questions; testAnswers = new Array(questions.length).fill(null); testSubmitted = false;
-  return buildTestHTML(questions);
-}
-function buildTestHTML(questions) {
-  let html = '';
-  questions.forEach((q, qi) => {
-    const deckTag = q._deck ? `<span class="deck-tag"> · ${q._deck}</span>` : '';
-    html += `
-      <div class="question-card">
-        <div class="question-num">Soru ${qi+1}${deckTag}</div>
-        <div class="question-text">${q.question}</div>
-        <div class="options-list">
-          ${q.options.map((opt,oi)=>`
-            <div class="option-item" id="opt-${qi}-${oi}" onclick="selectOpt(${qi},${oi})">
-              <div class="option-letter">${String.fromCharCode(65+oi)}</div>
-              <span>${opt}</span>
+    <main>
+        <!-- BÖLÜM SEÇİM EKRANI -->
+        <div id="deck-selection">
+            <h2 style="margin-bottom: 15px;">Çalışma Bölümleri</h2>
+            <div class="deck-scroll" id="deck-list">
+                <!-- Bölümler buraya JS ile yüklenecek -->
             </div>
-          `).join('')}
+            
+            <div id="resume-container" style="display: none; margin-top: 30px; text-align: center;">
+                <p style="color: var(--text-muted); margin-bottom: 10px;">Yarım kalan bir çalışman var!</p>
+                <button onclick="resumeStudy()" style="background-color: var(--accent); padding: 12px 24px;">Kaldığın Yerden Devam Et</button>
+            </div>
         </div>
-        <div class="explanation" id="exp-${qi}">${q.explanation||''}</div>
-      </div>
-    `;
-  });
-  html += `
-    <div class="test-controls" id="test-ctrl">
-      <button class="btn" onclick="resetTest()">↺ Sıfırla</button>
-      <button class="btn btn-accent" onclick="submitTest()">Testi Bitir →</button>
-    </div>
-    <div id="results-panel"></div>
-  `;
-  return html;
-}
-function selectOpt(qi, oi) {
-  if (testSubmitted) return;
-  testAnswers[qi] = oi;
-  document.querySelectorAll(`[id^="opt-${qi}-"]`).forEach(el => el.classList.remove('selected'));
-  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
-}
-function submitTest() {
-  if (testSubmitted) return;
-  const blank = testAnswers.filter(a=>a===null).length;
-  if (blank > 0 && !confirm(`${blank} soru boş. Yine de bitir?`)) return;
-  testSubmitted = true;
-  let correct = 0;
-  testQuestions.forEach((q, qi) => {
-    const sel = testAnswers[qi], ans = q.answer;
-    for (let oi=0; oi<q.options.length; oi++) {
-      const el = document.getElementById(`opt-${qi}-${oi}`); if(!el) continue;
-      el.onclick = null;
-      if (oi===ans) el.classList.add('correct');
-      else if (oi===sel && sel!==ans) el.classList.add('wrong');
-    }
-    const exp = document.getElementById(`exp-${qi}`);
-    if (exp && q.explanation) exp.style.display = 'block';
-    if (sel === ans) correct++;
-  });
-  const ctrl = document.getElementById('test-ctrl');
-  if (ctrl) ctrl.style.display = 'none';
-  showResultsPanel(correct);
-}
-function showResultsPanel(correct) {
-  const total = testQuestions.length, wrong = total-correct;
-  const pct = Math.round((correct/total)*100);
-  const panel = document.getElementById('results-panel'); if(!panel) return;
 
-  let wrongItems = '';
-  testQuestions.forEach((q, qi) => {
-    if (testAnswers[qi] === q.answer) return;
-    const selText = testAnswers[qi]!==null ? q.options[testAnswers[qi]] : '(Boş bırakıldı)';
-    wrongItems += `
-      <div class="result-item wrong-result">
-        <div class="result-item-header">
-          <span class="result-badge fail">✗ Yanlış</span>
-          <div class="result-item-q">S${qi+1}: ${q.question}</div>
+        <!-- KART ÇALIŞMA EKRANI -->
+        <div id="study-area">
+            <div class="study-header">
+                <button class="back-btn" onclick="goHome()">← Bölümlere Dön</button>
+                <span id="card-counter" style="color: var(--text-muted); font-size: 0.9rem;">0 / 0</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <div class="flashcard-container" onclick="flipCard()">
+                <div class="flashcard" id="flashcard">
+                    <div class="card-face card-front" id="card-front">Soru Yükleniyor...</div>
+                    <div class="card-face card-back" id="card-back">Cevap Yükleniyor...</div>
+                </div>
+            </div>
+
+            <div class="controls" id="controls">
+                <button class="btn-easy" onclick="answer('kolay')">Kolay</button>
+                <button class="btn-normal" onclick="answer('normal')">Normal</button>
+                <button class="btn-hard" onclick="answer('zor')">Zor</button>
+            </div>
         </div>
-        <div class="result-answer-row">
-          <span class="answer-tag wrong">Senin: ${selText}</span>
-          <span class="answer-tag correct">Doğru: ${q.options[q.answer]}</span>
-        </div>
-        ${q.explanation?`<div class="result-exp">${q.explanation}</div>`:''}
-      </div>
-    `;
-  });
+    </main>
 
-  panel.innerHTML = `
-    <div style="border-top:1px solid var(--border);margin:28px 0 24px"></div>
-    <div class="results-section-title">📊 Sonuç Raporu</div>
-    <div class="results-summary">
-      <div class="result-stat"><div class="result-stat-n accent">${pct}%</div><div class="result-stat-label">Başarı</div></div>
-      <div class="result-stat"><div class="result-stat-n green">${correct}</div><div class="result-stat-label">Doğru</div></div>
-      <div class="result-stat"><div class="result-stat-n red">${wrong}</div><div class="result-stat-label">Yanlış</div></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
-      <button class="btn btn-accent" onclick="resetTest()">↺ Tekrar Çöz</button>
-      <span style="font-size:13px;color:${pct>=70?'var(--success)':'var(--danger)'}">
-        ${pct>=70?'✓ Harika! Bölümü geçtin.':'✗ Biraz daha çalışman gerekiyor.'}
-      </span>
-    </div>
-    ${wrong>0?`<div class="results-section-title" style="font-size:17px;">Yanlış Yapılan Sorular (${wrong})</div>${wrongItems}`
-    :'<p style="color:var(--success);font-size:14px">🎉 Tüm soruları doğru yaptın!</p>'}
-  `;
-  panel.scrollIntoView({behavior:'smooth',block:'start'});
-}
-function resetTest() {
-  if (currentDeckIndex === -1) renderKarma();
-  else { switchMode('test'); }
-}
+    <script>
+        // İleride senin vereceğin kaynaklarla burayı dolduracağız. Şimdilik örnek veriler:
+        const rawData = {
+            "Tarih - Ünite 1": [
+                { q: "Fransız İhtilali kaç yılında gerçekleşmiştir?", a: "1789" },
+                { q: "Osmanlı'nın ilk anayasası nedir?", a: "Kanuni Esasi" },
+                { q: "Kavimler Göçü hangi yıl başlamıştır?", a: "375" }
+            ],
+            "Coğrafya - Haritalar": [
+                { q: "Dünyanın en derin çukuru nerededir?", a: "Mariana Çukuru" },
+                { q: "Türkiye hangi kıtalarda toprağa sahiptir?", a: "Asya ve Avrupa" }
+            ],
+            "Edebiyat - Dönemler": [
+                { q: "İlk yerli romanımız hangisidir?", a: "Taaşşuk-ı Talat ve Fitnat" },
+                { q: "Makber şiiri kime aittir?", a: "Abdülhak Hamit Tarhan" },
+                { q: "Mai ve Siyah romanının yazarı kimdir?", a: "Halit Ziya Uşaklıgil" },
+                { q: "İlk psikolojik roman denememiz?", a: "Zehra (Nabizade Nazım)" }
+            ]
+        };
 
-// ═══════════ SWITCH MODE ═══════════
-function switchMode(mode) {
-  currentMode = mode;
-  if (mode==='flashcard') resetCardState();
-  renderDeck();
-}
+        let currentDeckName = "";
+        let learningQueue = [];
+        let completedCount = 0;
+        let totalCards = 0;
+        
+        // Kronometre Değişkenleri
+        let timerInterval;
+        let seconds = 0;
 
-// ═══════════ KEYBOARD ═══════════
-document.addEventListener('keydown', e => {
-  if (currentMode!=='flashcard' || !currentDeck) return;
-  if (e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT') return;
-  if (e.key==='ArrowRight') goNext();
-  else if (e.key==='ArrowLeft') goPrev();
-  else if (e.key===' ') { e.preventDefault(); flipCard(); }
-  else if (e.key==='1') markCard('wrong');
-  else if (e.key==='2') markCard('hard');
-  else if (e.key==='3') markCard('correct');
-});
+        // Dizi karıştırma algoritması (Karmaşık gelmesi için)
+        function shuffleArray(array) {
+            let shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
 
-// ═══════════ DRAG & DROP ═══════════
-const dz = document.getElementById('drop-zone');
-if (dz) {
-  dz.addEventListener('dragover', e=>{e.preventDefault();dz.classList.add('drag-over');});
-  dz.addEventListener('dragleave', ()=>dz.classList.remove('drag-over'));
-  dz.addEventListener('drop', e=>{
-    e.preventDefault(); dz.classList.remove('drag-over');
-    const f=e.dataTransfer.files[0];
-    if(f){const r=new FileReader();r.onload=ev=>parseAndLoad(ev.target.result);r.readAsText(f);}
-  });
-}
-</script>
+        // Sayfa yüklendiğinde çalışacaklar
+        window.onload = () => {
+            renderDecks();
+            checkSavedProgress();
+            startTimer();
+        };
+
+        // Sayaç Başlatıcı
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                let s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        // Bölümleri Ekrana Çizme
+        function renderDecks() {
+            const deckList = document.getElementById('deck-list');
+            deckList.innerHTML = '';
+            for (let deck in rawData) {
+                const cardCount = rawData[deck].length;
+                deckList.innerHTML += `
+                    <div class="deck-card" onclick="startNewStudy('${deck}')">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 5px;">${deck}</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">${cardCount} Kart</span>
+                    </div>
+                `;
+            }
+        }
+
+        function startNewStudy(deckName) {
+            currentDeckName = deckName;
+            learningQueue = shuffleArray(rawData[deckName]);
+            completedCount = 0;
+            totalCards = learningQueue.length;
+            
+            document.getElementById('deck-selection').style.display = 'none';
+            document.getElementById('study-area').style.display = 'flex';
+            
+            showNextCard();
+        }
+
+        function checkSavedProgress() {
+            const saved = localStorage.getItem('flashcard_save');
+            if (saved) {
+                document.getElementById('resume-container').style.display = 'block';
+            }
+        }
+
+        function resumeStudy() {
+            const saved = JSON.parse(localStorage.getItem('flashcard_save'));
+            if (saved) {
+                currentDeckName = saved.deckName;
+                learningQueue = saved.queue;
+                completedCount = saved.completedCount;
+                totalCards = saved.totalCards;
+
+                document.getElementById('deck-selection').style.display = 'none';
+                document.getElementById('study-area').style.display = 'flex';
+                showNextCard();
+            }
+        }
+
+        function saveProgress() {
+            if (learningQueue.length > 0) {
+                const state = { deckName: currentDeckName, queue: learningQueue, completedCount, totalCards };
+                localStorage.setItem('flashcard_save', JSON.stringify(state));
+            } else {
+                localStorage.removeItem('flashcard_save');
+            }
+            checkSavedProgress();
+        }
+
+        function goHome() {
+            saveProgress();
+            document.getElementById('study-area').style.display = 'none';
+            document.getElementById('deck-selection').style.display = 'block';
+            
+            // Kart ön yüzde kalsın diye sıfırlama
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('is-flipped');
+            document.getElementById('controls').classList.remove('visible');
+        }
+
+        function showNextCard() {
+            if (learningQueue.length === 0) {
+                alert("Tebrikler! Bu bölümdeki tüm kartları başarıyla tamamladın.");
+                localStorage.removeItem('flashcard_save');
+                goHome();
+                return;
+            }
+
+            const currentCard = learningQueue[0];
+            document.getElementById('card-front').innerText = currentCard.q;
+            document.getElementById('card-back').innerText = currentCard.a;
+            
+            // UI Güncellemeleri
+            document.getElementById('card-counter').innerText = `${completedCount} / ${totalCards}`;
+            const progressPercent = (completedCount / totalCards) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+            // Kartı Ön Yüze Çevir ve Butonları Gizle
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('is-flipped');
+            document.getElementById('controls').classList.remove('visible');
+            
+            saveProgress();
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            if (!flashcard.classList.contains('is-flipped')) {
+                flashcard.classList.add('is-flipped');
+                document.getElementById('controls').classList.add('visible');
+            }
+        }
+
+        function answer(difficulty) {
+            const currentCard = learningQueue.shift(); // İlk kartı sıradan çıkar
+
+            if (difficulty === 'zor') {
+                // Zor dendiyse, kartı dizinin biraz ilerisine (2-4 adım sonrasına) tekrar ekle
+                const insertIndex = Math.min(Math.floor(Math.random() * 3) + 2, learningQueue.length);
+                learningQueue.splice(insertIndex, 0, currentCard);
+                // Zor denilen kart tam öğrenilmediği için totalCards havuzunu genişletiyoruz ki bar mantığı bozulmasın
+                totalCards++; 
+            } else if (difficulty === 'normal') {
+                // Normal dendiyse dizinin en sonuna at (bölüm bitmeden bir kez daha göster)
+                learningQueue.push(currentCard);
+                totalCards++;
+            } else {
+                // Kolay dendiyse tamamen diziden çıkar ve tamamlananları artır
+                completedCount++;
+            }
+
+            // Kartın çevrilme animasyonunun bitmesini beklemeden arka planda veriyi değiştirirsek çirkin görünür. 
+            // Bu yüzden kartı düzeltip 300ms sonra yeni soruyu yüklüyoruz.
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('is-flipped');
+            document.getElementById('controls').classList.remove('visible');
+            
+            setTimeout(() => {
+                showNextCard();
+            }, 300);
+        }
+    </script>
 </body>
 </html>
