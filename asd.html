@@ -3,458 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sınav Flashcard Sistemi</title>
+    <title>Modern Flashcard App</title>
     <style>
-        /* Genel Ayarlar ve Renkler (Göz yormayan kırık beyaz/krem tonları) */
+        /* Fütüristik & Bohem Temel Renkler (Karanlık Mod Varsayılan) */
         :root {
-            --bg-color: #F7F5F0; 
-            --card-bg: #FFFFFF;
-            --text-main: #2D3436;
-            --text-muted: #636E72;
-            --accent: #D4C5B9; /* Bohem / Soft krem vurgu */
-            --btn-easy: #55EFC4;
-            --btn-normal: #74B9FF;
-            --btn-hard: #FF7675;
+            --bg: #0A0A0F;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --accent: #E2B378; /* Bohem Kum/Altın */
+            --accent-glow: rgba(226, 179, 120, 0.2);
+            --text: #F0F0F2;
+            --text-muted: #8A8A93;
+            --danger: #FF5E5E;
+            --success: #32E0C4;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* Aydınlık Mod Seçeneği */
+        [data-theme="light"] {
+            --bg: #F4F3F0;
+            --surface: #FFFFFF;
+            --surface-border: #E0DFDB;
+            --accent: #C28E46;
+            --accent-glow: rgba(194, 142, 70, 0.2);
+            --text: #2C2C30;
+            --text-muted: #73737A;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-main);
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden; /* Taşmaları engellemek için */
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Üst Menü & Sayaç (Sağa dayalı) */
+        /* Üst Menü */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px 5%;
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface-border);
         }
 
-        .logo { font-size: 1.2rem; font-weight: bold; }
-        .timer-container { text-align: right; font-weight: bold; color: var(--text-muted); }
+        .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+
+        .timer { font-family: monospace; font-size: 1.2rem; color: var(--accent); }
+        
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--surface-border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .theme-toggle:hover { border-color: var(--accent); }
 
         main {
             flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 800px;
+            padding: 30px 5%;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
         }
 
-        /* Netflix Tarzı Bölüm Kartları (Yan yana dizili) */
-        #deck-selection {
-            width: 100%;
-            margin-top: 20px;
-        }
+        /* Netflix Tarzı Klasör Kartları */
+        .section-title { margin-bottom: 15px; font-size: 1.2rem; font-weight: 600; }
         
-        .deck-scroll {
+        .deck-slider {
             display: flex;
             gap: 15px;
             overflow-x: auto;
             padding-bottom: 15px;
             scroll-snap-type: x mandatory;
         }
-
-        .deck-scroll::-webkit-scrollbar { height: 8px; }
-        .deck-scroll::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+        
+        .deck-slider::-webkit-scrollbar { height: 6px; }
+        .deck-slider::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 10px; }
 
         .deck-card {
-            min-width: 140px;
-            height: 140px;
-            background-color: var(--card-bg);
-            border-radius: 12px;
+            flex: 0 0 auto;
+            width: 160px;
+            height: 160px;
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            justify-content: space-between;
             cursor: pointer;
             scroll-snap-align: start;
-            transition: transform 0.2s;
-            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .deck-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent);
+            box-shadow: 0 10px 20px var(--accent-glow);
         }
 
-        /* Flashcard Tasarımı ve 3D Dönüş Efekti */
-        #study-area {
-            display: none;
-            width: 100%;
-            flex-direction: column;
+        .deck-card h3 { font-size: 1.1rem; word-wrap: break-word; }
+        .deck-card .count { font-size: 0.85rem; color: var(--text-muted); }
+
+        .add-deck-card {
+            border: 1px dashed var(--text-muted);
             align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        /* Panel Geçişleri */
+        .panel { display: none; animation: fadeIn 0.4s ease; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Soru Ekleme Ekranı (İçeri Taşma Korumalı) */
+        .editor-container {
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            padding: 20px;
             margin-top: 20px;
         }
 
-        .flashcard-container {
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        input, textarea {
             width: 100%;
-            max-width: 400px;
-            height: 250px;
-            perspective: 1000px;
-            margin-bottom: 30px;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            color: var(--text);
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus, textarea:focus { border-color: var(--accent); }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover { opacity: 0.8; }
+        .btn-outline { background: transparent; border: 1px solid var(--surface-border); color: var(--text); }
+
+        .question-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .q-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            word-break: break-word; /* Metin taşmalarını engeller */
+        }
+        
+        .q-text { flex: 1; padding-right: 10px; }
+        .q-item button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            flex-shrink: 0; /* Butonun ezilip taşmasını engeller */
+        }
+
+        /* Fütüristik Çalışma Ekranı */
+        .study-area { max-width: 600px; margin: 0 auto; text-align: center; }
+        
+        .progress-container {
+            width: 100%; height: 6px; background: var(--surface-border);
+            border-radius: 3px; margin: 20px 0; overflow: hidden;
+        }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: 0.3s; }
+
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 100%;
+            height: 350px;
+            margin-bottom: 30px;
         }
 
         .flashcard {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             position: relative;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
             transform-style: preserve-3d;
+            cursor: pointer;
         }
 
-        .flashcard.is-flipped {
-            transform: rotateY(180deg);
-        }
+        .flashcard.flipped { transform: rotateY(180deg); }
 
         .card-face {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             backface-visibility: hidden;
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
-            text-align: center;
-            font-size: 1.2rem;
+            justify-content: center;
+            padding: 30px;
+            font-size: 1.4rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
-        .card-back {
-            transform: rotateY(180deg);
-            background-color: #FAFAFA;
-        }
+        .card-back { transform: rotateY(180deg); border-color: var(--accent); }
 
-        /* Butonlar */
-        .controls {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 400px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
+        .action-buttons {
+            display: flex; gap: 15px; opacity: 0; pointer-events: none; transition: 0.3s;
         }
+        .action-buttons.visible { opacity: 1; pointer-events: auto; }
+        .action-buttons button { flex: 1; }
+        .btn-zor { background: var(--danger); color: white; }
+        .btn-normal { background: var(--text-muted); color: white; }
+        .btn-kolay { background: var(--success); color: black; }
 
-        .controls.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        button {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        button:hover { opacity: 0.8; }
-        .btn-easy { background-color: var(--btn-easy); }
-        .btn-normal { background-color: var(--btn-normal); }
-        .btn-hard { background-color: var(--btn-hard); }
-
-        /* İlerleme Çubuğu ve Üst Bilgi */
-        .study-header {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 15px;
-        }
-        
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            text-decoration: underline;
-            padding: 0;
-            text-align: left;
-            flex: initial;
-        }
-
-        .progress-bar {
-            width: 100%;
-            max-width: 400px;
-            height: 8px;
-            background-color: #E0E0E0;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--accent);
-            width: 0%;
-            transition: width 0.3s;
-        }
+        .top-bar { display: flex; justify-content: space-between; margin-bottom: 20px; }
 
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">📚 Flashcard App</div>
-        <div class="timer-container">
-            <div>Odak Süresi</div>
-            <div id="timer">00:00</div>
+        <div class="logo">Nexus<span>Cards</span></div>
+        <div class="header-right">
+            <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
+            <div class="timer" id="timer">00:00</div>
         </div>
     </header>
 
     <main>
-        <!-- BÖLÜM SEÇİM EKRANI -->
-        <div id="deck-selection">
-            <h2 style="margin-bottom: 15px;">Çalışma Bölümleri</h2>
-            <div class="deck-scroll" id="deck-list">
-                <!-- Bölümler buraya JS ile yüklenecek -->
+        <!-- ANA EKRAN: KLASÖRLER -->
+        <div id="panel-home" class="panel active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 class="section-title">Klasörlerim</h2>
+                <button class="btn btn-outline" style="padding: 6px 12px;" onclick="promptNewDeck()">+ Yeni Klasör</button>
             </div>
             
-            <div id="resume-container" style="display: none; margin-top: 30px; text-align: center;">
-                <p style="color: var(--text-muted); margin-bottom: 10px;">Yarım kalan bir çalışman var!</p>
-                <button onclick="resumeStudy()" style="background-color: var(--accent); padding: 12px 24px;">Kaldığın Yerden Devam Et</button>
+            <div class="deck-slider" id="deck-list">
+                <!-- JS ile Doldurulacak -->
             </div>
         </div>
 
-        <!-- KART ÇALIŞMA EKRANI -->
-        <div id="study-area">
-            <div class="study-header">
-                <button class="back-btn" onclick="goHome()">← Bölümlere Dön</button>
-                <span id="card-counter" style="color: var(--text-muted); font-size: 0.9rem;">0 / 0</span>
+        <!-- DÜZENLEME EKRANI: KART EKLEME -->
+        <div id="panel-editor" class="panel">
+            <div class="top-bar">
+                <button class="btn btn-outline" onclick="showPanel('panel-home')">← Geri</button>
+                <button class="btn" onclick="startStudy()">Çalışmaya Başla ▶</button>
             </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-
-            <div class="flashcard-container" onclick="flipCard()">
-                <div class="flashcard" id="flashcard">
-                    <div class="card-face card-front" id="card-front">Soru Yükleniyor...</div>
-                    <div class="card-face card-back" id="card-back">Cevap Yükleniyor...</div>
+            
+            <h2 id="editor-title" style="margin-bottom: 20px;">Klasör Düzenle</h2>
+            
+            <div class="editor-container">
+                <h3>Yeni Kart Ekle</h3>
+                <div class="input-group" style="margin-top: 15px;">
+                    <input type="text" id="input-q" placeholder="Soru / Ön Yüz">
+                    <textarea id="input-a" placeholder="Cevap / Arka Yüz" rows="3"></textarea>
+                    <button class="btn" onclick="addCard()">Listeye Ekle</button>
+                </div>
+                
+                <h4 style="margin-top: 30px; border-bottom: 1px solid var(--surface-border); padding-bottom: 10px;">Bu Klasördeki Kartlar</h4>
+                <div class="question-list" id="question-list">
+                    <!-- JS ile Doldurulacak -->
                 </div>
             </div>
+        </div>
 
-            <div class="controls" id="controls">
-                <button class="btn-easy" onclick="answer('kolay')">Kolay</button>
-                <button class="btn-normal" onclick="answer('normal')">Normal</button>
-                <button class="btn-hard" onclick="answer('zor')">Zor</button>
+        <!-- ÇALIŞMA EKRANI -->
+        <div id="panel-study" class="panel">
+            <div class="study-area">
+                <div class="top-bar">
+                    <button class="btn btn-outline" onclick="showPanel('panel-home')">← Bitir</button>
+                    <span id="card-counter" style="color: var(--text-muted); font-weight: bold;">0 / 0</span>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+
+                <div class="flashcard-wrapper" onclick="flipCard()">
+                    <div class="flashcard" id="flashcard">
+                        <div class="card-face card-front" id="card-front">Soru Yükleniyor...</div>
+                        <div class="card-face card-back" id="card-back">Cevap Yükleniyor...</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons" id="action-buttons">
+                    <button class="btn btn-zor" onclick="answerCard('zor')">Zor</button>
+                    <button class="btn btn-normal" onclick="answerCard('normal')">Normal</button>
+                    <button class="btn btn-kolay" onclick="answerCard('kolay')">Kolay</button>
+                </div>
             </div>
         </div>
     </main>
 
     <script>
-        // İleride senin vereceğin kaynaklarla burayı dolduracağız. Şimdilik örnek veriler:
-        const rawData = {
-            "Tarih - Ünite 1": [
-                { q: "Fransız İhtilali kaç yılında gerçekleşmiştir?", a: "1789" },
-                { q: "Osmanlı'nın ilk anayasası nedir?", a: "Kanuni Esasi" },
-                { q: "Kavimler Göçü hangi yıl başlamıştır?", a: "375" }
-            ],
-            "Coğrafya - Haritalar": [
-                { q: "Dünyanın en derin çukuru nerededir?", a: "Mariana Çukuru" },
-                { q: "Türkiye hangi kıtalarda toprağa sahiptir?", a: "Asya ve Avrupa" }
-            ],
-            "Edebiyat - Dönemler": [
-                { q: "İlk yerli romanımız hangisidir?", a: "Taaşşuk-ı Talat ve Fitnat" },
-                { q: "Makber şiiri kime aittir?", a: "Abdülhak Hamit Tarhan" },
-                { q: "Mai ve Siyah romanının yazarı kimdir?", a: "Halit Ziya Uşaklıgil" },
-                { q: "İlk psikolojik roman denememiz?", a: "Zehra (Nabizade Nazım)" }
-            ]
-        };
-
-        let currentDeckName = "";
-        let learningQueue = [];
+        // Veritabanı Yapısı (Tarayıcı Hafızası)
+        let db = JSON.parse(localStorage.getItem('nexus_db')) || {};
+        let currentDeck = null;
+        
+        // Çalışma Algoritması Değişkenleri
+        let studyQueue = [];
         let completedCount = 0;
         let totalCards = 0;
         
-        // Kronometre Değişkenleri
-        let timerInterval;
+        // Kronometre
         let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            let s = (seconds % 60).toString().padStart(2, '0');
+            document.getElementById('timer').innerText = `${m}:${s}`;
+        }, 1000);
 
-        // Dizi karıştırma algoritması (Karmaşık gelmesi için)
-        function shuffleArray(array) {
-            let shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
+        // Tema Yönetimi
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', target);
         }
 
-        // Sayfa yüklendiğinde çalışacaklar
-        window.onload = () => {
-            renderDecks();
-            checkSavedProgress();
-            startTimer();
-        };
-
-        // Sayaç Başlatıcı
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                seconds++;
-                let m = Math.floor(seconds / 60).toString().padStart(2, '0');
-                let s = (seconds % 60).toString().padStart(2, '0');
-                document.getElementById('timer').innerText = `${m}:${s}`;
-            }, 1000);
+        function saveDB() {
+            localStorage.setItem('nexus_db', JSON.stringify(db));
+            renderHome();
         }
 
-        // Bölümleri Ekrana Çizme
-        function renderDecks() {
-            const deckList = document.getElementById('deck-list');
-            deckList.innerHTML = '';
-            for (let deck in rawData) {
-                const cardCount = rawData[deck].length;
-                deckList.innerHTML += `
-                    <div class="deck-card" onclick="startNewStudy('${deck}')">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 5px;">${deck}</h3>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">${cardCount} Kart</span>
+        // --- PANEL YÖNETİMİ ---
+        function showPanel(panelId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+            if(panelId === 'panel-home') renderHome();
+        }
+
+        // --- ANA EKRAN ---
+        function renderHome() {
+            const list = document.getElementById('deck-list');
+            list.innerHTML = '';
+            
+            for (let deckName in db) {
+                list.innerHTML += `
+                    <div class="deck-card" onclick="openEditor('${deckName}')">
+                        <h3>${deckName}</h3>
+                        <div class="count">${db[deckName].length} Kart</div>
                     </div>
                 `;
             }
         }
 
-        function startNewStudy(deckName) {
-            currentDeckName = deckName;
-            learningQueue = shuffleArray(rawData[deckName]);
+        function promptNewDeck() {
+            const name = prompt("Yeni klasörün (kitabın/dersin) adını girin:");
+            if (name && !db[name]) {
+                db[name] = [];
+                saveDB();
+            } else if (db[name]) {
+                alert("Bu isimde bir klasör zaten var!");
+            }
+        }
+
+        // --- EDİTÖR EKRANI ---
+        function openEditor(deckName) {
+            currentDeck = deckName;
+            document.getElementById('editor-title').innerText = deckName;
+            renderQuestionList();
+            showPanel('panel-editor');
+        }
+
+        function renderQuestionList() {
+            const list = document.getElementById('question-list');
+            list.innerHTML = '';
+            // Verileri döngüyle basıyoruz. Yeni eklenenler en üstte görünecek şekilde kurgulandı.
+            db[currentDeck].forEach((card, index) => {
+                list.innerHTML += `
+                    <div class="q-item">
+                        <div class="q-text"><strong>S:</strong> ${card.q}</div>
+                        <button onclick="deleteCard(${index})">Sil</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addCard() {
+            const q = document.getElementById('input-q').value.trim();
+            const a = document.getElementById('input-a').value.trim();
+            if (q && a) {
+                // unshift ile listeye en başından ekliyoruz (listenin en başına ekler)
+                db[currentDeck].unshift({ q, a }); 
+                document.getElementById('input-q').value = '';
+                document.getElementById('input-a').value = '';
+                saveDB();
+                renderQuestionList();
+            }
+        }
+
+        function deleteCard(index) {
+            if(confirm("Bu kartı silmek istiyor musunuz?")) {
+                db[currentDeck].splice(index, 1);
+                saveDB();
+                renderQuestionList();
+            }
+        }
+
+        // --- ÇALIŞMA EKRANI ---
+        function startStudy() {
+            if (db[currentDeck].length === 0) {
+                alert("Önce bu klasöre kart eklemelisiniz!");
+                return;
+            }
+            
+            // Diziyi karıştır
+            studyQueue = [...db[currentDeck]].sort(() => Math.random() - 0.5);
             completedCount = 0;
-            totalCards = learningQueue.length;
+            totalCards = studyQueue.length;
             
-            document.getElementById('deck-selection').style.display = 'none';
-            document.getElementById('study-area').style.display = 'flex';
-            
-            showNextCard();
+            showPanel('panel-study');
+            nextCard();
         }
 
-        function checkSavedProgress() {
-            const saved = localStorage.getItem('flashcard_save');
-            if (saved) {
-                document.getElementById('resume-container').style.display = 'block';
-            }
-        }
-
-        function resumeStudy() {
-            const saved = JSON.parse(localStorage.getItem('flashcard_save'));
-            if (saved) {
-                currentDeckName = saved.deckName;
-                learningQueue = saved.queue;
-                completedCount = saved.completedCount;
-                totalCards = saved.totalCards;
-
-                document.getElementById('deck-selection').style.display = 'none';
-                document.getElementById('study-area').style.display = 'flex';
-                showNextCard();
-            }
-        }
-
-        function saveProgress() {
-            if (learningQueue.length > 0) {
-                const state = { deckName: currentDeckName, queue: learningQueue, completedCount, totalCards };
-                localStorage.setItem('flashcard_save', JSON.stringify(state));
-            } else {
-                localStorage.removeItem('flashcard_save');
-            }
-            checkSavedProgress();
-        }
-
-        function goHome() {
-            saveProgress();
-            document.getElementById('study-area').style.display = 'none';
-            document.getElementById('deck-selection').style.display = 'block';
-            
-            // Kart ön yüzde kalsın diye sıfırlama
-            const flashcard = document.getElementById('flashcard');
-            flashcard.classList.remove('is-flipped');
-            document.getElementById('controls').classList.remove('visible');
-        }
-
-        function showNextCard() {
-            if (learningQueue.length === 0) {
-                alert("Tebrikler! Bu bölümdeki tüm kartları başarıyla tamamladın.");
-                localStorage.removeItem('flashcard_save');
-                goHome();
+        function nextCard() {
+            if (studyQueue.length === 0) {
+                alert("Harika! Bu klasördeki tüm kartları tamamladın.");
+                showPanel('panel-home');
                 return;
             }
 
-            const currentCard = learningQueue[0];
-            document.getElementById('card-front').innerText = currentCard.q;
-            document.getElementById('card-back').innerText = currentCard.a;
+            const card = studyQueue[0];
+            document.getElementById('card-front').innerText = card.q;
+            document.getElementById('card-back').innerText = card.a;
             
-            // UI Güncellemeleri
             document.getElementById('card-counter').innerText = `${completedCount} / ${totalCards}`;
-            const progressPercent = (completedCount / totalCards) * 100;
-            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            document.getElementById('progress-bar').style.width = `${(completedCount / totalCards) * 100}%`;
 
-            // Kartı Ön Yüze Çevir ve Butonları Gizle
-            const flashcard = document.getElementById('flashcard');
-            flashcard.classList.remove('is-flipped');
-            document.getElementById('controls').classList.remove('visible');
-            
-            saveProgress();
+            resetCardUI();
         }
 
         function flipCard() {
-            const flashcard = document.getElementById('flashcard');
-            if (!flashcard.classList.contains('is-flipped')) {
-                flashcard.classList.add('is-flipped');
-                document.getElementById('controls').classList.add('visible');
+            const fc = document.getElementById('flashcard');
+            if (!fc.classList.contains('flipped')) {
+                fc.classList.add('flipped');
+                document.getElementById('action-buttons').classList.add('visible');
             }
         }
 
-        function answer(difficulty) {
-            const currentCard = learningQueue.shift(); // İlk kartı sıradan çıkar
+        function resetCardUI() {
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('action-buttons').classList.remove('visible');
+        }
+
+        function answerCard(difficulty) {
+            const card = studyQueue.shift();
 
             if (difficulty === 'zor') {
-                // Zor dendiyse, kartı dizinin biraz ilerisine (2-4 adım sonrasına) tekrar ekle
-                const insertIndex = Math.min(Math.floor(Math.random() * 3) + 2, learningQueue.length);
-                learningQueue.splice(insertIndex, 0, currentCard);
-                // Zor denilen kart tam öğrenilmediği için totalCards havuzunu genişletiyoruz ki bar mantığı bozulmasın
+                // Zor dendiyse hemen 2 kart sonrasına tekrar sıkıştır
+                const index = Math.min(2, studyQueue.length);
+                studyQueue.splice(index, 0, card);
                 totalCards++; 
             } else if (difficulty === 'normal') {
-                // Normal dendiyse dizinin en sonuna at (bölüm bitmeden bir kez daha göster)
-                learningQueue.push(currentCard);
+                // Normal dendiyse en sona at
+                studyQueue.push(card);
                 totalCards++;
             } else {
-                // Kolay dendiyse tamamen diziden çıkar ve tamamlananları artır
                 completedCount++;
             }
 
-            // Kartın çevrilme animasyonunun bitmesini beklemeden arka planda veriyi değiştirirsek çirkin görünür. 
-            // Bu yüzden kartı düzeltip 300ms sonra yeni soruyu yüklüyoruz.
-            const flashcard = document.getElementById('flashcard');
-            flashcard.classList.remove('is-flipped');
-            document.getElementById('controls').classList.remove('visible');
-            
-            setTimeout(() => {
-                showNextCard();
-            }, 300);
+            resetCardUI();
+            setTimeout(nextCard, 300); // Dönüş animasyonu bitmeden yazılar değişmesin diye gecikme
         }
+
+        // Başlangıç
+        renderHome();
     </script>
 </body>
 </html>
