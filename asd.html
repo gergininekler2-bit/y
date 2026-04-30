@@ -1,517 +1,412 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Flashcard App</title>
-    <style>
-        /* Fütüristik & Bohem Temel Renkler (Karanlık Mod Varsayılan) */
-        :root {
-            --bg: #0A0A0F;
-            --surface: rgba(255, 255, 255, 0.03);
-            --surface-border: rgba(255, 255, 255, 0.08);
-            --accent: #E2B378; /* Bohem Kum/Altın */
-            --accent-glow: rgba(226, 179, 120, 0.2);
-            --text: #F0F0F2;
-            --text-muted: #8A8A93;
-            --danger: #FF5E5E;
-            --success: #32E0C4;
-            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        /* Aydınlık Mod Seçeneği */
-        [data-theme="light"] {
-            --bg: #F4F3F0;
-            --surface: #FFFFFF;
-            --surface-border: #E0DFDB;
-            --accent: #C28E46;
-            --accent-glow: rgba(194, 142, 70, 0.2);
-            --text: #2C2C30;
-            --text-muted: #73737A;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-main);
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Üst Menü */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            background: var(--surface);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--surface-border);
-        }
-
-        .logo { font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
-        .logo span { color: var(--accent); }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 20px;
-        }
-
-        .timer { font-family: monospace; font-size: 1.2rem; color: var(--accent); }
-        
-        .theme-toggle {
-            background: transparent;
-            border: 1px solid var(--surface-border);
-            color: var(--text);
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .theme-toggle:hover { border-color: var(--accent); }
-
-        main {
-            flex: 1;
-            padding: 30px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* Netflix Tarzı Klasör Kartları */
-        .section-title { margin-bottom: 15px; font-size: 1.2rem; font-weight: 600; }
-        
-        .deck-slider {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            scroll-snap-type: x mandatory;
-        }
-        
-        .deck-slider::-webkit-scrollbar { height: 6px; }
-        .deck-slider::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 10px; }
-
-        .deck-card {
-            flex: 0 0 auto;
-            width: 160px;
-            height: 160px;
-            background: var(--surface);
-            border: 1px solid var(--surface-border);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer;
-            scroll-snap-align: start;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .deck-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 20px var(--accent-glow);
-        }
-
-        .deck-card h3 { font-size: 1.1rem; word-wrap: break-word; }
-        .deck-card .count { font-size: 0.85rem; color: var(--text-muted); }
-
-        .add-deck-card {
-            border: 1px dashed var(--text-muted);
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-        }
-
-        /* Panel Geçişleri */
-        .panel { display: none; animation: fadeIn 0.4s ease; }
-        .panel.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Soru Ekleme Ekranı (İçeri Taşma Korumalı) */
-        .editor-container {
-            background: var(--surface);
-            border: 1px solid var(--surface-border);
-            border-radius: 16px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 1px solid var(--surface-border);
-            border-radius: 8px;
-            color: var(--text);
-            outline: none;
-            transition: 0.2s;
-        }
-        input:focus, textarea:focus { border-color: var(--accent); }
-        
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            background: var(--accent);
-            color: #000;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn:hover { opacity: 0.8; }
-        .btn-outline { background: transparent; border: 1px solid var(--surface-border); color: var(--text); }
-
-        .question-list {
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .q-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--surface-border);
-            border-radius: 8px;
-            word-break: break-word; /* Metin taşmalarını engeller */
-        }
-        
-        .q-text { flex: 1; padding-right: 10px; }
-        .q-item button {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            flex-shrink: 0; /* Butonun ezilip taşmasını engeller */
-        }
-
-        /* Fütüristik Çalışma Ekranı */
-        .study-area { max-width: 600px; margin: 0 auto; text-align: center; }
-        
-        .progress-container {
-            width: 100%; height: 6px; background: var(--surface-border);
-            border-radius: 3px; margin: 20px 0; overflow: hidden;
-        }
-        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: 0.3s; }
-
-        .flashcard-wrapper {
-            perspective: 1000px;
-            width: 100%;
-            height: 350px;
-            margin-bottom: 30px;
-        }
-
-        .flashcard {
-            width: 100%; height: 100%;
-            position: relative;
-            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-            transform-style: preserve-3d;
-            cursor: pointer;
-        }
-
-        .flashcard.flipped { transform: rotateY(180deg); }
-
-        .card-face {
-            position: absolute;
-            width: 100%; height: 100%;
-            backface-visibility: hidden;
-            background: var(--surface);
-            border: 1px solid var(--surface-border);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            font-size: 1.4rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .card-back { transform: rotateY(180deg); border-color: var(--accent); }
-
-        .action-buttons {
-            display: flex; gap: 15px; opacity: 0; pointer-events: none; transition: 0.3s;
-        }
-        .action-buttons.visible { opacity: 1; pointer-events: auto; }
-        .action-buttons button { flex: 1; }
-        .btn-zor { background: var(--danger); color: white; }
-        .btn-normal { background: var(--text-muted); color: white; }
-        .btn-kolay { background: var(--success); color: black; }
-
-        .top-bar { display: flex; justify-content: space-between; margin-bottom: 20px; }
-
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPL 1003 Çalışma Aracı</title>
+  <style>
+    :root{
+      --bg:#f5f7fb; --panel:rgba(255,255,255,.72); --panel2:rgba(255,255,255,.9); --text:#172033;
+      --muted:#697386; --line:rgba(52,70,105,.12); --blue:#3b82f6; --purple:#8b5cf6; --green:#10b981;
+      --red:#ef4444; --amber:#f59e0b; --shadow:0 24px 70px rgba(31,41,55,.12); --radius:26px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;background:
+      radial-gradient(circle at 10% 0%, rgba(59,130,246,.18), transparent 32%),
+      radial-gradient(circle at 90% 12%, rgba(139,92,246,.16), transparent 30%),
+      linear-gradient(135deg,#f8fbff,#eef2f7 45%,#f8fafc);color:var(--text);min-height:100vh}
+    button,input,select{font:inherit}
+    .app{max-width:1220px;margin:0 auto;padding:24px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+    .brand{display:flex;align-items:center;gap:14px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 15px 35px rgba(59,130,246,.28);display:grid;place-items:center;color:white;font-weight:800}.brand h1{font-size:22px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:13px}.pill{border:1px solid var(--line);background:rgba(255,255,255,.62);backdrop-filter:blur(18px);border-radius:999px;padding:10px 14px;color:var(--muted);display:inline-flex;gap:8px;align-items:center;box-shadow:0 8px 25px rgba(31,41,55,.06)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}.card{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(20px);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}.hero{grid-column:span 8;min-height:230px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;background:linear-gradient(135deg,rgba(59,130,246,.20),rgba(139,92,246,.20));border-radius:50%;filter:blur(4px)}.side{grid-column:span 4}.section-card{grid-column:span 4;transition:.2s ease;cursor:pointer}.section-card:hover{transform:translateY(-3px);box-shadow:0 30px 80px rgba(31,41,55,.16)}
+    h2{font-size:34px;letter-spacing:-.04em;margin:0 0 10px}.muted{color:var(--muted)}.big-stat{font-size:46px;font-weight:800;letter-spacing:-.05em}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.space{display:flex;align-items:center;justify-content:space-between;gap:12px}.btn{border:0;border-radius:16px;padding:12px 15px;cursor:pointer;background:#fff;color:var(--text);box-shadow:0 8px 25px rgba(31,41,55,.08);transition:.15s ease}.btn:hover{transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,var(--blue),var(--purple));color:white}.btn.ghost{background:rgba(255,255,255,.55);border:1px solid var(--line);box-shadow:none}.btn.danger{background:rgba(239,68,68,.1);color:#b91c1c}.btn.good{background:rgba(16,185,129,.12);color:#047857}.btn.warn{background:rgba(245,158,11,.14);color:#92400e}.btn.small{padding:8px 11px;border-radius:13px;font-size:13px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:rgba(255,255,255,.55);padding:9px 12px;border-radius:999px;cursor:pointer;color:var(--muted)}.tab.active{background:linear-gradient(135deg,rgba(59,130,246,.13),rgba(139,92,246,.13));color:var(--text);border-color:rgba(59,130,246,.22)}
+    .progress{height:10px;background:rgba(31,41,55,.08);border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:999px}.statline{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.mini{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:18px;padding:12px}.mini b{display:block;font-size:20px}.mode-wrap{max-width:980px;margin:0 auto}.study-card{min-height:410px;display:flex;flex-direction:column;justify-content:space-between}.question{font-size:24px;line-height:1.28;font-weight:750;letter-spacing:-.02em}.answer{font-size:18px;line-height:1.55;color:#243044}.note{border-left:4px solid rgba(59,130,246,.55);background:rgba(59,130,246,.08);padding:13px 14px;border-radius:14px;margin-top:14px}.trap{border-left-color:rgba(245,158,11,.75);background:rgba(245,158,11,.12)}.options{display:grid;gap:10px;margin-top:20px}.option{width:100%;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.68);border-radius:18px;padding:14px 15px;cursor:pointer;transition:.15s}.option:hover{transform:translateY(-1px);background:white}.option.correct{border-color:rgba(16,185,129,.55);background:rgba(16,185,129,.10)}.option.wrong{border-color:rgba(239,68,68,.55);background:rgba(239,68,68,.10)}.feedback{margin-top:18px;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:20px;padding:16px}.flipbox{perspective:1200px;min-height:320px}.flipinner{position:relative;min-height:320px;transition:transform .55s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}.flipped .flipinner{transform:rotateY(180deg)}.face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:24px;padding:24px;display:flex;flex-direction:column;justify-content:center}.back{transform:rotateY(180deg)}
+    .list{display:grid;gap:10px}.list-item{background:rgba(255,255,255,.62);border:1px solid var(--line);border-radius:18px;padding:14px}.badge{font-size:12px;border-radius:999px;padding:5px 8px;background:rgba(31,41,55,.07);color:var(--muted);display:inline-flex}.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:rgba(31,41,55,.07);border:1px solid var(--line);border-radius:8px;padding:2px 6px}.footer-note{font-size:12px;color:var(--muted);margin-top:20px}.search{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:16px;padding:12px 14px;outline:none}.confetti{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.98);opacity:.6}100%{transform:scale(1);opacity:1}}
+    @media(max-width:900px){.hero,.side,.section-card{grid-column:span 12}.grid{gap:14px}.app{padding:16px}.topbar{align-items:flex-start;flex-direction:column}.question{font-size:21px}h2{font-size:29px}.statline{grid-template-columns:1fr}.space{align-items:flex-start;flex-direction:column}}
+  </style>
 </head>
 <body>
+  <div id="app" class="app"></div>
 
-    <header>
-        <div class="logo">Nexus<span>Cards</span></div>
-        <div class="header-right">
-            <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
-            <div class="timer" id="timer">00:00</div>
-        </div>
-    </header>
-
-    <main>
-        <!-- ANA EKRAN: KLASÖRLER -->
-        <div id="panel-home" class="panel active">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 class="section-title">Klasörlerim</h2>
-                <button class="btn btn-outline" style="padding: 6px 12px;" onclick="promptNewDeck()">+ Yeni Klasör</button>
-            </div>
-            
-            <div class="deck-slider" id="deck-list">
-                <!-- JS ile Doldurulacak -->
-            </div>
-        </div>
-
-        <!-- DÜZENLEME EKRANI: KART EKLEME -->
-        <div id="panel-editor" class="panel">
-            <div class="top-bar">
-                <button class="btn btn-outline" onclick="showPanel('panel-home')">← Geri</button>
-                <button class="btn" onclick="startStudy()">Çalışmaya Başla ▶</button>
-            </div>
-            
-            <h2 id="editor-title" style="margin-bottom: 20px;">Klasör Düzenle</h2>
-            
-            <div class="editor-container">
-                <h3>Yeni Kart Ekle</h3>
-                <div class="input-group" style="margin-top: 15px;">
-                    <input type="text" id="input-q" placeholder="Soru / Ön Yüz">
-                    <textarea id="input-a" placeholder="Cevap / Arka Yüz" rows="3"></textarea>
-                    <button class="btn" onclick="addCard()">Listeye Ekle</button>
-                </div>
-                
-                <h4 style="margin-top: 30px; border-bottom: 1px solid var(--surface-border); padding-bottom: 10px;">Bu Klasördeki Kartlar</h4>
-                <div class="question-list" id="question-list">
-                    <!-- JS ile Doldurulacak -->
-                </div>
-            </div>
-        </div>
-
-        <!-- ÇALIŞMA EKRANI -->
-        <div id="panel-study" class="panel">
-            <div class="study-area">
-                <div class="top-bar">
-                    <button class="btn btn-outline" onclick="showPanel('panel-home')">← Bitir</button>
-                    <span id="card-counter" style="color: var(--text-muted); font-weight: bold;">0 / 0</span>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-
-                <div class="flashcard-wrapper" onclick="flipCard()">
-                    <div class="flashcard" id="flashcard">
-                        <div class="card-face card-front" id="card-front">Soru Yükleniyor...</div>
-                        <div class="card-face card-back" id="card-back">Cevap Yükleniyor...</div>
-                    </div>
-                </div>
-
-                <div class="action-buttons" id="action-buttons">
-                    <button class="btn btn-zor" onclick="answerCard('zor')">Zor</button>
-                    <button class="btn btn-normal" onclick="answerCard('normal')">Normal</button>
-                    <button class="btn btn-kolay" onclick="answerCard('kolay')">Kolay</button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // Veritabanı Yapısı (Tarayıcı Hafızası)
-        let db = JSON.parse(localStorage.getItem('nexus_db')) || {};
-        let currentDeck = null;
-        
-        // Çalışma Algoritması Değişkenleri
-        let studyQueue = [];
-        let completedCount = 0;
-        let totalCards = 0;
-        
-        // Kronometre
-        let seconds = 0;
-        setInterval(() => {
-            seconds++;
-            let m = Math.floor(seconds / 60).toString().padStart(2, '0');
-            let s = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('timer').innerText = `${m}:${s}`;
-        }, 1000);
-
-        // Tema Yönetimi
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const target = current === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', target);
-        }
-
-        function saveDB() {
-            localStorage.setItem('nexus_db', JSON.stringify(db));
-            renderHome();
-        }
-
-        // --- PANEL YÖNETİMİ ---
-        function showPanel(panelId) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-            if(panelId === 'panel-home') renderHome();
-        }
-
-        // --- ANA EKRAN ---
-        function renderHome() {
-            const list = document.getElementById('deck-list');
-            list.innerHTML = '';
-            
-            for (let deckName in db) {
-                list.innerHTML += `
-                    <div class="deck-card" onclick="openEditor('${deckName}')">
-                        <h3>${deckName}</h3>
-                        <div class="count">${db[deckName].length} Kart</div>
-                    </div>
-                `;
-            }
-        }
-
-        function promptNewDeck() {
-            const name = prompt("Yeni klasörün (kitabın/dersin) adını girin:");
-            if (name && !db[name]) {
-                db[name] = [];
-                saveDB();
-            } else if (db[name]) {
-                alert("Bu isimde bir klasör zaten var!");
-            }
-        }
-
-        // --- EDİTÖR EKRANI ---
-        function openEditor(deckName) {
-            currentDeck = deckName;
-            document.getElementById('editor-title').innerText = deckName;
-            renderQuestionList();
-            showPanel('panel-editor');
-        }
-
-        function renderQuestionList() {
-            const list = document.getElementById('question-list');
-            list.innerHTML = '';
-            // Verileri döngüyle basıyoruz. Yeni eklenenler en üstte görünecek şekilde kurgulandı.
-            db[currentDeck].forEach((card, index) => {
-                list.innerHTML += `
-                    <div class="q-item">
-                        <div class="q-text"><strong>S:</strong> ${card.q}</div>
-                        <button onclick="deleteCard(${index})">Sil</button>
-                    </div>
-                `;
-            });
-        }
-
-        function addCard() {
-            const q = document.getElementById('input-q').value.trim();
-            const a = document.getElementById('input-a').value.trim();
-            if (q && a) {
-                // unshift ile listeye en başından ekliyoruz (listenin en başına ekler)
-                db[currentDeck].unshift({ q, a }); 
-                document.getElementById('input-q').value = '';
-                document.getElementById('input-a').value = '';
-                saveDB();
-                renderQuestionList();
-            }
-        }
-
-        function deleteCard(index) {
-            if(confirm("Bu kartı silmek istiyor musunuz?")) {
-                db[currentDeck].splice(index, 1);
-                saveDB();
-                renderQuestionList();
-            }
-        }
-
-        // --- ÇALIŞMA EKRANI ---
-        function startStudy() {
-            if (db[currentDeck].length === 0) {
-                alert("Önce bu klasöre kart eklemelisiniz!");
-                return;
-            }
-            
-            // Diziyi karıştır
-            studyQueue = [...db[currentDeck]].sort(() => Math.random() - 0.5);
-            completedCount = 0;
-            totalCards = studyQueue.length;
-            
-            showPanel('panel-study');
-            nextCard();
-        }
-
-        function nextCard() {
-            if (studyQueue.length === 0) {
-                alert("Harika! Bu klasördeki tüm kartları tamamladın.");
-                showPanel('panel-home');
-                return;
-            }
-
-            const card = studyQueue[0];
-            document.getElementById('card-front').innerText = card.q;
-            document.getElementById('card-back').innerText = card.a;
-            
-            document.getElementById('card-counter').innerText = `${completedCount} / ${totalCards}`;
-            document.getElementById('progress-bar').style.width = `${(completedCount / totalCards) * 100}%`;
-
-            resetCardUI();
-        }
-
-        function flipCard() {
-            const fc = document.getElementById('flashcard');
-            if (!fc.classList.contains('flipped')) {
-                fc.classList.add('flipped');
-                document.getElementById('action-buttons').classList.add('visible');
-            }
-        }
-
-        function resetCardUI() {
-            document.getElementById('flashcard').classList.remove('flipped');
-            document.getElementById('action-buttons').classList.remove('visible');
-        }
-
-        function answerCard(difficulty) {
-            const card = studyQueue.shift();
-
-            if (difficulty === 'zor') {
-                // Zor dendiyse hemen 2 kart sonrasına tekrar sıkıştır
-                const index = Math.min(2, studyQueue.length);
-                studyQueue.splice(index, 0, card);
-                totalCards++; 
-            } else if (difficulty === 'normal') {
-                // Normal dendiyse en sona at
-                studyQueue.push(card);
-                totalCards++;
-            } else {
-                completedCount++;
-            }
-
-            resetCardUI();
-            setTimeout(nextCard, 300); // Dönüş animasyonu bitmeden yazılar değişmesin diye gecikme
-        }
-
-        // Başlangıç
-        renderHome();
-    </script>
+<script>
+const SECTIONS = [
+  {key:'paylar', name:'Paylar ve Pay Benzeri Menkul Kıymetler', short:'Paylar', icon:'📈'},
+  {key:'borclanma', name:'Borçlanma Araçları', short:'Borçlanma', icon:'🏦'},
+  {key:'fonlar', name:'Yatırım Fonu Katılma Payları', short:'Fonlar', icon:'🧺'},
+  {key:'turev', name:'Türev Araçlar', short:'Türev', icon:'⚡'},
+  {key:'kamu', name:'Kamu Borçlanma Araçları', short:'Kamu Borçlanma', icon:'🏛️'}
+];
+const rawFacts = {
+paylar: `
+Pay|Anonim ortaklık sermayesinin nominal değere göre bölünmüş parçasıdır.|Pay, sahibine ortaklık hakkı verir.|kritik
+Payın itibari değeri|Bir payın itibari değeri bir kuruştan az olamaz.|Borsada işlem gören ortaklıklarda genellikle 1 TL nominal değer görülür.|kritik,sure-oran
+Payın bölünmezliği|Pay ortaklığa karşı bölünmez; birden çok malik varsa ortak temsilciyle hak kullanılır.|Payın ekonomik olarak bölünmesi ile ortaklığa karşı temsilini karıştırma.|tuzak
+Pay senedi|Senede bağlanan paya pay senedi veya hisse senedi denir.|Pay haktır; pay senedi bu hakkı temsil eden kıymetli evraktır.|kritik
+Sermaye piyasası aracı olarak pay|Pay, sermaye piyasası mevzuatında menkul kıymet niteliğindeki araçlardandır.|Her anonim şirket payı otomatik olarak halka açık sermaye piyasası aracı gibi işlem görmez.|tuzak
+Payın vadesi|Payın belirli bir vadesi yoktur.|Borçlanma araçlarında vade varken payda ortaklık ilişkisi vardır.|kritik
+Payın sabit getirisi|Pay sahibine sabit getiri taahhüdü vermez.|Pay getirisi ortaklığın performansına bağlıdır.|kritik
+Pay getirisi|Pay getirisi kâr payı, tasfiye bakiyesi ve değer artış kazancından oluşabilir.|Sabit faiz gibi düşünme.|kritik
+Tasfiyede pay sahibinin sırası|Pay sahipleri tasfiyede borçlar ödendikten sonra kalan artık değer varsa pay alır.|Borçlanma aracı sahipleri pay sahiplerinden önce gelir.|tuzak
+Pay sahibinin sorumluluğu|Pay sahibinin sorumluluğu kural olarak taahhüt ettiği pay bedeliyle sınırlıdır.|Şirket borçlarından sınırsız sorumluluk yoktur.|kritik
+Nama yazılı pay|Sahibi adıyla belirlenen ve pay defteri kaydı önem taşıyan pay türüdür.|Devri hamiline yazılı paya göre daha şekli olabilir.|kritik
+Hamiline yazılı pay|Sahibinin senedi elinde bulundurmasıyla hak sahipliğinin öne çıktığı pay türüdür.|Genel kurulda MKK pay sahipleri çizelgesi önemlidir.|kritik
+Bedelli pay|Sermaye artırımı sırasında ortaklardan nakit veya ayni bedel alınarak çıkarılan paydır.|Rüçhan hakkı bu başlıkta sık sorulur.|kritik
+Bedelsiz pay|İç kaynaklardan sermaye artırımıyla ortaklara bedel alınmadan verilen paydır.|Şirketin özkaynağı sermayeye eklenir; şirkete yeni nakit girmez.|kritik,tuzak
+Primli pay|Nominal değerinin üzerinde bedelle ihraç edilen paydır.|Nominal değer ile satış fiyatı arasındaki fark emisyon primidir.|kritik
+Primsiz pay|Nominal değerinden ihraç edilen paydır.|İhraç fiyatı itibari değere eşittir.|kritik
+İmtiyazlı pay|Kâr payı, tasfiye payı, oy veya benzeri konularda üstün hak tanıyan paydır.|İmtiyaz paya bağlanır; kişiye değil.|kritik
+Adi pay|Herhangi bir imtiyaz taşımayan paydır.|Sınavda imtiyazlı payın karşıtı olarak sorulabilir.|kritik
+Kâr payı hakkı|Pay sahibinin dağıtılabilir kârdan pay alma hakkıdır.|Dağıtım kararı ve mevzuat koşulları önemlidir.|kritik
+Rüçhan hakkı|Mevcut ortakların sermaye artırımında yeni pay alma önceliğidir.|Bedelli sermaye artırımıyla birlikte düşün.|kritik
+Oy hakkı|Pay sahibinin genel kurul kararlarına katılmasını sağlayan ortaklık hakkıdır.|İmtiyazlı paylarda oy imtiyazı olabilir.|kritik
+Genel kurula katılma hakkı|Pay sahibinin ortaklığın genel kuruluna katılabilmesini ifade eder.|Katılımda sahiplik kayıtları önemlidir.|kritik
+Bilgi alma hakkı|Pay sahibinin şirket işleri hakkında bilgi talep edebilmesidir.|İnceleme hakkıyla birlikte karıştırılabilir.|kritik
+İnceleme hakkı|Pay sahibinin belirli belgeleri inceleyebilmesine ilişkin haktır.|Bilgi alma sözlü/yazılı bilgi; inceleme belge odaklıdır.|tuzak
+Tasfiye bakiyesine katılma hakkı|Tasfiye sonunda borçlar ödendikten sonra kalan değere pay oranında katılma hakkıdır.|Tasfiye bakiyesi garanti değildir.|kritik
+Pay benzeri menkul kıymet|Sermayede temsil edilmesi zorunlu olmayan, sabit getiri taahhüdü içermeyen ve pay sahipliği haklarından birini veya bir kısmını veren kıymettir.|Sabit getiri taahhüdü varsa pay benzeri mantığı bozulur.|kritik,tuzak
+Halka açılma|Halka açık olmayan ortaklığın halka açık ortaklık statüsü kazanmasıdır.|Statü değişimidir; satış işlemi olan halka arzla karıştırma.|kritik,tuzak
+Halka arz|Sermaye piyasası araçlarının satın alınması için halka çağrı yapılması ve satışıdır.|Halka arz işlem; halka açılma statüdür.|kritik,tuzak
+İhraççı|Sermaye piyasası aracını ihraç eden veya ihraç etmek üzere Kurula başvuran tüzel kişidir.|Halka arz eden ile aynı kişi olmak zorunda değildir.|kritik,tuzak
+Halka arz eden|Sahip olduğu sermaye piyasası araçlarını halka arz etmek üzere Kurula başvuran gerçek veya tüzel kişidir.|Mevcut payını satan ortak halka arz eden olabilir.|kritik,tuzak
+İzahname|Halka arzda yatırımcıya sunulacak ayrıntılı bilgi dokümanıdır.|Onay izahname içeriğinin doğruluğuna garanti sayılmaz.|kritik
+İhraç belgesi|Halka arz edilmeksizin ihraçlarda kullanılan Kurul onaylı belgedir.|İzahname ile karıştırma.|tuzak
+Tasarruf sahiplerine satış duyurusu|Halka arz sürecinde satışın koşullarını yatırımcılara duyuran metindir.|İzahname kadar kapsamlı düşünülmemelidir.|kritik
+Ek satış|Talep satışa sunulan pay miktarından fazla olursa önceden duyurulan ek payların dağıtıma eklenmesidir.|Azami nominal değer önceden belirlenip kamuya duyurulur.|kritik,tuzak
+Ödünç alımlı ek pay satışı|Ek satışa konu payların ödünç alınarak satılmasıdır.|Fiyat istikrarı ile aynı aracı kurum tarafından yapılması gerekir.|kritik,tuzak
+Fiyat istikrarı işlemleri|Halka arz sonrası borsa fiyatını desteklemeye yönelik alım işlemleridir.|Yapılacağı garanti değildir; izahnamede açıklanır.|kritik
+Fiyat istikrarı süresi|Payların borsada işlem görmeye başladığı tarihten itibaren en çok 30 gündür.|Süre sorusu olarak çok uygundur.|kritik,sure-oran
+Fiyat istikrarında fiyat kuralı|Halka arz fiyatının üzerinde alım emri verilemez.|Amaç fiyatı desteklemektir; sınırsız fiyatlama değildir.|kritik,sure-oran
+Fiyat istikrarı fon sınırı|Ortaklık hesabına yapılırsa kullanılacak fon brüt halka arz gelirinin yüzde yirmisini aşamaz.|Ortaklık dışı kişilerce sağlanan fonda bu sınır uygulanmaz.|kritik,sure-oran,tuzak
+Bedelli sermaye artırımı|Sermayenin yeni kaynak girişiyle artırılmasıdır.|Rüçhan hakkı ve yeni pay alma süreciyle birlikte çalış.|kritik
+Bedelsiz sermaye artırımı|İç kaynakların sermayeye eklenmesiyle pay verilmesidir.|Şirkete nakit girişi sağlamaz.|kritik,tuzak
+Şarta bağlı sermaye artırımı|Belirli hakların kullanılması üzerine sermayenin artmasına imkan veren yöntemdir.|Özellikle dönüştürülebilir araçlarla ilişkilendirilebilir.|kritik
+Nominal değer altında pay ihracı|Belirli koşullarda nominal değerin altında pay ihracına dayalı sermaye artırımıdır.|Kurul koşulları ve borsa fiyatı bağlantısı sınavda sorulabilir.|tuzak
+Sermaye azaltımı|Ortaklık sermayesinin mevzuat çerçevesinde azaltılmasıdır.|Azaltım, pay iptali veya nominal değer indirimi gibi yöntemlerle olabilir.|kritik
+Borsada işlem gören niteliğe dönüşüm|Borsada işlem görmeyen payların işlem gören niteliğe çevrilmesi sürecidir.|Halka açık ortaklık payları için teknik ama sorulabilir bir alandır.|tuzak
+Katılma intifa senedi|Ortaklık hakkı vermeyen ancak kâra, tasfiye bakiyesine veya yeni pay alma hakkına benzer mali haklar sağlayabilen senettir.|Pay değildir; ortaklık sermayesini temsil etmez.|kritik,tuzak
+Katılma intifa senedi Kurul ücreti|Katılma intifa senetlerinde Kurul ücreti ihraç değerinin binde ikisidir.|Süre-oran ezberi olarak ayır.|kritik,sure-oran
+Katılma intifa senedi satış ilkesi|KİS tamamen satılmadan veya satılmayanlar iptal edilmeden yeni KİS ihraç edilemez.|Bu ifade doğrudan yanlış-doğru sorusuna dönebilir.|kritik
+`,
+borclanma: `
+Kıymetli evrak|İçerdiği hakkın senetten ayrı ileri sürülemediği ve devredilemediği senettir.|Senet ile hak sıkı biçimde bağlıdır.|kritik
+Menkul kıymet|Para, çek, poliçe ve bono hariç; paylar, pay benzeri kıymetler ve borçlanma araçları gibi sermaye piyasası araçlarını kapsar.|Sermaye piyasası aracı üst kavramıyla ilişkilidir.|kritik
+Borçlanma aracı|İhraççının borçlu sıfatıyla düzenleyerek ihraç ettiği sermaye piyasası aracıdır.|Pay ortaklık; borçlanma aracı alacaklılık ilişkisi yaratır.|kritik,tuzak
+Borçlanma aracı türleri|Tahvil, PDT, DET, finansman bonosu, kıymetli maden bonosu ve Kurulca kabul edilen benzer araçlardır.|Liste sorularına çok uygundur.|kritik
+Yurt içi halka arz edilmeksizin satış|Nitelikli yatırımcıya satış ve tahsisli satış olarak yapılabilir.|Halka arz edilmese bile borçlanma aracı SPK düzenlemelerine tabidir.|kritik,tuzak
+Yetkili organ|Borçlanma aracı ihracında esas olarak genel kurul yetkilidir; yetki yönetim kuruluna devredilebilir.|Yetki devri süresi önemli bir tuzaktır.|kritik
+Yetki devri süresi|Genel kurul borçlanma aracı ihraç yetkisini en fazla 15 ay için yönetim kuruluna devredebilir.|15 ay bilgisi ezberlenmeli.|kritik,sure-oran
+Kredi derecelendirmesi|Derecelendirme yapılmışsa nota esas bilgiler vade boyunca yılda en az bir kez gözden geçirilir.|Derecelendirme varsa takip yükümlülüğü doğar.|kritik,sure-oran
+İhraç limiti|İhraççının çıkarabileceği borçlanma aracı azami tutarını ifade eder.|Finansal tablolar ve mevzuat sınırlamalarıyla ilişkilidir.|kritik
+Kurula başvuru|Borçlanma aracı ihracında izahname veya ihraç belgesi onayı için Kurula başvurulur.|Halka arz ve halka arz edilmeksizin satış ayrımı önemlidir.|kritik
+Kayden ihraç|Borçlanma araçlarının kayden izlenmesi ve MKK bildirimleri esastır.|Fiziki senet mantığıyla karıştırma.|tuzak
+Kurul ücreti|Borçlanma araçlarında vade aralığına göre farklı Kurul ücreti oranları uygulanır.|179 güne kadar, 180-364 gün, 365-730 gün gibi vadeler önemlidir.|sure-oran,tuzak
+Tahvil|İhraççının borçlu sıfatıyla çıkardığı, vade ve getiri esasları belirli borçlanma aracıdır.|Pay değildir; ortaklık hakkı vermez.|kritik
+Tahvil satışı|Tahviller iskontolu, primli veya nominal değer üzerinden satılabilir.|Kuponlu veya kuponsuz yapıyla birlikte sorulur.|kritik
+Sabit faizli tahvil|Faiz oranı ihraçta belirlenmiş olan tahvildir.|Piyasa faizi değişse de kupon oranı sabittir.|kritik
+Değişken faizli tahvil|Getirisi belirli bir endeks veya referans orana bağlı olarak değişen tahvildir.|Sabit faizli tahville karıştırma.|kritik,tuzak
+Erken itfa edilebilir tahvil|İzahname veya ihraç belgesinde yer alması koşuluyla vadesinden önce itfa edilebilen tahvildir.|Erken itfa hakkı önceden düzenlenmelidir.|kritik
+Kârdan paylı tahvil|Faize ek olarak kârdan pay verilmesi öngörülebilen tahvil türüdür.|Pay sahipliği hakkı vermez; borçlanma aracı niteliği sürer.|tuzak
+Paya dönüştürülebilir tahvil|İhraççı ortaklığın paylarına dönüştürme hakkı veren borçlanma aracıdır.|PDT kendi ihraççısının payına dönüşür.|kritik,tuzak
+PDT vadesi|PDT vadesi 365 günden az olamaz.|Paylara dönüştürme en erken vade başlangıcından 365 gün sonra yapılabilir.|kritik,sure-oran
+Dönüştürme fiyatı|PDT sahiplerine verilecek paylarda esas alınacak fiyattır.|PDT için dönüştürme kelimesini kullan.|kritik,tuzak
+Dönüştürme oranı|PDT nominal değeri karşılığında verilecek pay sayısını gösterir.|Fiyat ve oran ayrımını karıştırma.|kritik,tuzak
+PDT talep toplama süresi|Dönüştürmeye ilişkin talep toplama süresi 10 iş gününü geçemez.|KAP açıklaması en az 15 gün önce yapılır.|kritik,sure-oran
+PDT KAP açıklaması|Dönüştürme talep toplama başlangıcından en az 15 gün önce KAP açıklaması yapılır.|15 gün ve 10 iş günü birlikte sorulabilir.|kritik,sure-oran
+Değiştirilebilir tahvil|İhraççının çıkardığı ve borsada işlem gören başka ortaklık paylarıyla değiştirme hakkı veren borçlanma aracıdır.|DET başka ortaklığın payıyla değişir.|kritik,tuzak
+DET vadesi|DET vadesi 365 günden az olamaz.|Değiştirme en erken vade başlangıcından 365 gün sonra yapılabilir.|kritik,sure-oran
+Değiştirme fiyatı|DET sahiplerine verilecek paylarda esas alınacak fiyattır.|DET için değiştirme kelimesi kullanılır.|kritik,tuzak
+Değiştirme oranı|DET nominal değeri karşılığında verilecek pay sayısını gösterir.|Fiyat tutarı, oran pay sayısını ifade eder.|kritik,tuzak
+DET değiştirme giderleri|DET'lerin paylarla değiştirilmesine ilişkin giderlerin tamamı ihraççıya aittir.|Kısa ama soru değeri yüksek bir detaydır.|kritik
+Finansman bonosu|İhraççının nominal değeri vade tarihinde veya taksitle ödemeyi taahhüt ettiği, vadesi 30 günden az ve 364 günden fazla olmayan borçlanma aracıdır.|Kısa vadeli özel sektör finansmanı gibi düşün.|kritik,sure-oran
+Finansman bonosu satışı|Vadeye uygun iskonto oranıyla bulunan fiyat üzerinden satılır; kupon ödemeli ihraç da mümkündür.|Sadece iskontolu olabilir demek hatalıdır.|tuzak
+Kıymetli maden bonosu|Kıymetli maden aracı kurumlarının kıymetli maden cinsinden ihraç ettiği, 30 günden az ve 364 günden fazla olmayan borçlanma aracıdır.|Ödeme TL, döviz veya kıymetli maden esaslı olabilir.|kritik,sure-oran
+Borçlanma Aracı Sahipleri Kurulu|Borçlanma aracı sahiplerinin haklarını etkileyen konularda karar alabildiği kuruldur.|BASK kısaltmasıyla da karşına çıkabilir.|kritik
+Yeşil borçlanma aracı|Fonun çevresel olumlu etkili projelerin finansmanı veya yeniden finansmanında kullanıldığı borçlanma aracıdır.|Yeşil Rehberin dört temel bileşeniyle bağlantılıdır.|kritik
+Sürdürülebilir borçlanma aracı|Fonun çevresel ve toplumsal olumlu etkileri birlikte içeren projelerde kullanıldığı borçlanma aracıdır.|Sadece çevre değil sosyal etki de vardır.|kritik,tuzak
+Yeşil çerçeve belgesi|Yeşil veya sürdürülebilir ihraçta fon kullanımını, proje değerlendirmesini ve raporlamayı açıklayan belgedir.|İkinci taraf görüşüyle birlikte sorulabilir.|kritik
+İkinci taraf görüşü|Yeşil/sürdürülebilir ihraç çerçevesinin ilgili ilkelere uyumuna ilişkin dış değerlendirmedir.|Bağımsız değerlendirme mantığını unutma.|kritik
+Mavi borçlanma aracı|Deniz ve okyanus gibi su yaşam alanlarında olumlu çevresel, ekonomik ve iklimsel fayda sağlayan projeler için ihraç edilir.|Yeşil borçlanma ailesiyle bağlantılı güncel bir kavramdır.|tuzak
+BIST sürdürülebilirlik temalı endeksler|Yeşil ve sürdürülebilir borçlanma araçlarının günlük getirilerini ölçmeye yönelik endekslerdir.|Güncel ve sınavda seçici olabilir.|kritik
+`,
+fonlar: `
+Yatırım fonu|Tasarruf sahiplerinden katılma payı karşılığında toplanan varlıklarla, onlar hesabına, portföy yönetim şirketleri tarafından içtüzükle kurulan ve tüzel kişiliği bulunmayan malvarlığıdır.|Tanım uzun ama sınavın en kritik ezberlerinden biridir.|kritik
+Fonun tüzel kişiliği|Yatırım fonunun tüzel kişiliği yoktur.|Bazı sicil işlemleri için sınırlı istisnalar olsa da ana kural budur.|kritik,tuzak
+İnançlı mülkiyet|Fon varlıklarının tasarruf sahipleri hesabına yönetilmesini ifade eden temel yapıdır.|Fonun hukuki mantığını açıklar.|kritik
+Katılma payı|Yatırımcının fon portföyüne kaç payla katıldığını gösteren kaydi sermaye piyasası aracıdır.|Şirket payı gibi yönetim hakkı vermez.|kritik,tuzak
+Katılma payı sahibinin idari hakkı|Katılma payı sahibinin fon yönetimine katılma gibi idari hakları yoktur.|Pay sahipliği ile karıştırma.|kritik,tuzak
+Portföy yönetim şirketi|Yatırım fonunu kuran, temsil eden ve yöneten anonim ortaklıktır.|Kurucu rolü çok sorulur.|kritik
+Portföy saklayıcısı|Fon varlıklarının saklanmasına ilişkin hizmeti veren kuruluştur.|Yönetim ile saklama ayrıdır.|kritik,tuzak
+Fon malvarlığı|Kurucunun ve portföy saklayıcısının malvarlığından ayrıdır.|Fon alacaklıları dışında haczedilememesi mantığıyla çalış.|kritik
+Riskin dağıtılması ilkesi|Fon portföyünün tek bir varlığa yoğunlaşmayarak riskin dağıtılmasını amaçlamasıdır.|Yatırım fonlarının temel ilkelerindendir.|kritik
+Profesyonel yönetim|Fon portföyünün uzman portföy yöneticileri tarafından yönetilmesidir.|Bireysel yatırımcıya uzmanlık sağlar.|kritik
+Portföy yönetimi ilkesi|Fon varlıklarının fonun stratejisine ve mevzuata uygun yönetilmesidir.|Saklama ile karıştırma.|tuzak
+Şemsiye fon|Katılma payları tek bir içtüzük kapsamında ihraç edilen fonları kapsayan yapıdır.|Şemsiye fonun altındaki fonların varlık ve yükümlülükleri ayrıdır.|kritik,tuzak
+Şemsiye fon içtüzüğü|Şemsiye fonun kuruluşunu, yönetimini, saklamayı ve temel esaslarını düzenleyen belgedir.|İzahname ve yatırımcı bilgi formuyla karıştırma.|kritik,tuzak
+Fon izahnamesi|Fonun yatırım stratejisi, riskleri, giderleri ve işleyişi hakkında ayrıntılı bilgi veren belgedir.|Yatırımcı bilgi formundan daha kapsamlıdır.|kritik
+Yatırımcı bilgi formu|Fonun yapısını, yatırım stratejisini, risklerini ve alım satım esaslarını özetleyen kısa formdur.|Özet doküman olarak düşün.|kritik,tuzak
+Katılma payı değeri|Fon toplam değerinin tedavüldeki katılma payı sayısına bölünmesiyle hesaplanır.|Birim pay değeri hesabı sık sorulur.|kritik
+Fon portföyüne alınabilecek varlıklar|Paylar, borçlanma araçları, kira sertifikaları, repo-ters repo, vadeli mevduat, kıymetli madenler, türev araç teminatları ve benzeri varlıklar olabilir.|Liste sorularında dikkatli ol.|kritik
+Vadeli mevduat sınırı|Fon portföyüne alınabilecek vadeli mevduat ve katılma hesabının vadesi 12 aydan uzun olmamalıdır.|Süre detayıdır.|kritik,sure-oran
+Borsada işlem görme esası|Fon portföyündeki varlıkların borsada işlem görmesine ilişkin kurallar vardır.|Borsa dışı sözleşmeler ayrıca sınırlanır.|kritik
+Portföy sınırlamaları|Fonun varlık, ihraççı ve işlem bazında uyması gereken yoğunlaşma sınırlarıdır.|Oranlar sınavda seçici olabilir.|kritik
+Kolektif yatırım kuruluşu payı sınırlamaları|Fonun başka fon veya ortaklık paylarına yatırımında özel sınırlamalar uygulanır.|Fon sepeti fonlarıyla birlikte çalış.|tuzak
+Borsa dışı türev sözleşmeleri|Fonun borsa dışında taraf olduğu sözleşmelerde karşı taraf ve risk sınırlamaları önemlidir.|Risk yönetimiyle bağlantılıdır.|kritik
+Fonun kredi işlemleri|Fonun kredi kullanması, repo-ters repo ve vaad sözleşmeleri mevzuat sınırlarına tabidir.|Fonlar sınırsız borçlanamaz.|tuzak
+Fon ödünç işlemleri|Fon portföyündeki varlıkların ödünç verilmesine ilişkin sınırlamalar vardır.|Teminat ve risk kontrolü akılda tutulmalı.|kritik
+Para piyasası fonu|Kısa vadeli para piyasası araçlarına yatırım yapan fon türüdür.|Vade ve likidite vurgusu önemlidir.|kritik
+Borçlanma araçları fonu|Portföyünün ağırlıklı kısmını borçlanma araçlarına yatıran fondur.|Tahvil-bono fonu mantığıyla karıştırılabilir.|kritik
+Hisse senedi fonu|Portföyünün ağırlıklı kısmını ortaklık paylarına yatıran fondur.|Hisse senedi yoğun fon oranları ayrıca önemlidir.|kritik
+Kıymetli madenler fonu|Altın ve diğer kıymetli madenler ile bunlara dayalı araçlara yatırım yapar.|Emtia temalı fon sorularında çıkar.|kritik
+Fon sepeti fonu|Portföyünün ağırlıklı kısmını diğer fonların katılma paylarına yatıran fondur.|Fon alan fon olarak kodla.|kritik,tuzak
+Serbest fon|Katılma payları nitelikli yatırımcılara satılabilen ve daha esnek yatırım sınırlamalarına tabi fondur.|Nitelikli yatırımcı vurgusu çok önemlidir.|kritik,tuzak
+Garantili fon|Belirli koşullarda yatırımcıya garanti sağlayan fondur.|Garanti, garantörle ilişkilidir; fonun kendi vaadi gibi düşünme.|kritik,tuzak
+Koruma amaçlı fon|Belirli bir yatırım stratejisiyle anapara koruması hedefleyen fondur ancak garanti taahhüdü farklıdır.|Garantili fonla en çok karıştırılan konudur.|kritik,tuzak
+Katılım fonu|Faizsiz finans ilkelerine uygun varlık ve işlemlere yatırım yapan fondur.|Unvanda katılım ifadesi özel esaslar doğurur.|kritik
+Gayrimenkul yatırım fonu|Gayrimenkul ve gayrimenkule dayalı haklara yatırım yapan fon türüdür.|2024 değişikliğiyle şemsiye fona bağlı kurulabilme konusu önemlidir.|kritik
+Girişim sermayesi yatırım fonu|Girişim şirketlerine ve girişim sermayesi yatırımlarına yönelen fon türüdür.|Şemsiye fon bağlantısı güncel bir tuzaktır.|kritik
+Borsa yatırım fonu|Borsa endeksini veya belirli bir varlık sepetini takip eden, borsada işlem gören fon türüdür.|Şemsiye fona bağlı kurulamayacağı bilgisi kritik tuzaktır.|kritik,tuzak
+Bilgi verme yükümlülüğü|Fonlara ilişkin önemli bilgilerin yatırımcılara ve kamuya açıklanması gerekir.|KAP duyuruları ile birlikte çalış.|kritik
+Derecelendirme notu değerlendirmesi|Fon portföyündeki araçların derecelendirme notu değişimleri bakımından değerlendirme yapılır.|Borçlanma aracı portföyleri için önemlidir.|tuzak
+Fon toplam gider oranı|Fon malvarlığından karşılanan giderlerin üst sınırının belirlenmesi ve açıklanması gerekir.|Giderler net getiriyi etkiler.|kritik
+TEFAS|Türkiye Elektronik Fon Alım Satım Platformudur.|Fon alım satım altyapısı olarak kodla.|kritik
+Risk yönetim sistemi|Fonların yatırım stratejilerine ve risk düzeylerine uygun risklerin tanımlanması, ölçülmesi, izlenmesi ve kontrolünü sağlar.|Her fon için riskler sistematik izlenmelidir.|kritik
+Fonun sona ermesi|Fonun sona ermesi, devri, dönüştürülmesi veya birleştirilmesi mevzuat esaslarına tabidir.|Sadece yatırımcı talebiyle otomatik bitmez.|tuzak
+`,
+turev: `
+Türev araç|Değeri veya getirisi dayanak varlığın değerine bağlı olan finansal araçtır.|Dayanak varlık kavramı temel başlangıç noktasıdır.|kritik
+Dayanak varlık|Türev aracın değerini etkileyen mal, menkul kıymet, döviz, faiz, endeks, kıymetli maden veya başka göstergedir.|Sadece pay olmak zorunda değildir.|kritik
+Forward|Tarafların gelecekte belirli tarihte, belirli fiyattan alım satım yükümlülüğü üstlendiği tezgahüstü sözleşmedir.|Standart değildir; taraflarca belirlenir.|kritik,tuzak
+Futures|Borsada işlem gören, standartlaştırılmış vadeli işlem sözleşmesidir.|Takas kurumu ve günlük uzlaşma önemlidir.|kritik,tuzak
+Opsiyon|Alıcıya belirli bir varlığı belirli fiyattan alma veya satma hakkı veren sözleşmedir.|Alıcı hak sahibidir; satıcı yükümlüdür.|kritik,tuzak
+Swap|Tarafların belirli nakit akımlarını gelecekte değiş tokuş ettiği sözleşmedir.|Faiz ve döviz swapları temel türlerdir.|kritik
+Forward piyasası|Forward sözleşmeler genellikle tezgahüstü piyasada yapılır.|Karşı taraf riski daha belirgindir.|kritik,tuzak
+Futures piyasası|Futures sözleşmeler organize borsalarda işlem görür.|VİOP bu yapı için Türkiye örneğidir.|kritik
+Standartlaşma|Futures sözleşmelerde miktar, vade, kalite ve işlem esasları standarttır.|Forwardda esneklik daha fazladır.|kritik,tuzak
+Günlük uzlaşma|Futures pozisyonlarında kâr ve zararların günlük olarak hesaplanmasıdır.|Mark-to-market olarak da düşün.|kritik
+Başlangıç teminatı|Futures pozisyonu açmak için yatırılan ilk teminattır.|PDF'de genel örnek olarak sözleşme tutarının yüzde onu verilir.|kritik,sure-oran
+Sürdürme teminatı|Pozisyonun açık kalması için korunması gereken asgari teminat düzeyidir.|Altına düşerse teminat tamamlama çağrısı doğar.|kritik
+Teminat tamamlama çağrısı|Teminat sürdürme seviyesinin altına düşünce yatırımcıdan ek teminat istenmesidir.|Margin call olarak kodla.|kritik,tuzak
+Değişim teminatı|Günlük fiyat değişiminden kaynaklanan kâr veya zarar aktarımıdır.|Günlük uzlaşmayla bağlantılıdır.|kritik
+Uzun pozisyon|Sözleşmede alıcı konumunda olmayı veya fiyat artışından yararlanmayı ifade eder.|Futures ve opsiyonda farklı bağlamlarda sorulabilir.|kritik
+Kısa pozisyon|Sözleşmede satıcı konumunda olmayı veya fiyat düşüşünden yararlanmayı ifade eder.|Kısa pozisyon yükümlülük ve teminatla birlikte düşünülür.|kritik
+Alım opsiyonu|Alıcıya dayanak varlığı belirli fiyattan alma hakkı verir.|Call option olarak da bilinir.|kritik,tuzak
+Satım opsiyonu|Alıcıya dayanak varlığı belirli fiyattan satma hakkı verir.|Put option olarak da bilinir.|kritik,tuzak
+Opsiyon alıcısı|Prim ödeyerek hak elde eder; hakkını kullanmak zorunda değildir.|Zararı genellikle ödediği primle sınırlıdır.|kritik,tuzak
+Opsiyon satıcısı|Prim alır; alıcı hakkını kullanırsa yükümlülüğü yerine getirir.|Risk alıcıya göre daha yüksektir.|kritik,tuzak
+Opsiyon primi|Opsiyon alıcısının hakkı elde etmek için ödediği bedeldir.|Prim geri alınmaz.|kritik
+Kullanım fiyatı|Opsiyonun kullanılabileceği önceden belirlenen fiyattır.|Strike price olarak da bilinir.|kritik
+Vade|Opsiyonun kullanılabileceği veya sona ereceği süreyi ifade eder.|Vadeye kalan gün fiyatı etkiler.|kritik
+Amerikan tipi opsiyon|Vade sonuna kadar herhangi bir zamanda kullanılabilen opsiyondur.|Avrupa tipiyle en çok karışan ayrımdır.|kritik,tuzak
+Avrupa tipi opsiyon|Sadece vade sonunda kullanılabilen opsiyondur.|Coğrafi yer değil kullanım zamanıdır.|kritik,tuzak
+İçsel değer|Opsiyonun hemen kullanılması halinde sağlayacağı ekonomik değerdir.|Zaman değeriyle birlikte opsiyon fiyatını oluşturur.|kritik
+Zaman değeri|Opsiyonun vade sonuna kadar değer kazanma ihtimalinden kaynaklanan değerdir.|Vade kısaldıkça genellikle azalır.|kritik
+Volatilite|Dayanak varlık fiyatındaki oynaklığı ifade eder.|Volatilite arttıkça opsiyon primi genellikle artar.|kritik
+Risksiz faiz oranı|Opsiyon fiyatını etkileyen piyasa değişkenlerinden biridir.|Özellikle teorik fiyatlamada önemlidir.|kritik
+Temettü oranı|Pay opsiyonlarında dayanak varlığa ilişkin temettü beklentisi fiyatı etkiler.|Opsiyon fiyatı faktörleri içinde sayılır.|kritik
+Faiz swapı|Tarafların faiz ödemelerini belirli esaslara göre değiştirdiği swap türüdür.|Sabit-değişken faiz değişimi klasik örnektir.|kritik
+Döviz swapı|Tarafların farklı para birimindeki anapara veya faiz nakit akımlarını değiştirdiği swap türüdür.|Kur riski yönetiminde kullanılır.|kritik
+Riskten korunma|Mevcut veya beklenen riski azaltmak amacıyla türev araç kullanımıdır.|Hedging olarak da bilinir.|kritik,tuzak
+Spekülasyon|Fiyat beklentisinden kazanç sağlamak amacıyla risk alınmasıdır.|Riskten korunmanın tersine risk üstlenir.|kritik,tuzak
+Arbitraj|Farklı piyasalardaki fiyat uyumsuzluklarından risksiz veya düşük riskli kazanç hedefidir.|Aynı anda al-sat mantığı vardır.|kritik,tuzak
+Organize piyasa|Standart sözleşmelerin borsa ve takas sistemi içinde işlem gördüğü piyasadır.|VİOP örnektir.|kritik
+Tezgahüstü piyasa|Tarafların sözleşme koşullarını serbestçe belirlediği organize olmayan piyasadır.|Forward ve birçok swap işleminde görülür.|kritik,tuzak
+VİOP|Borsa İstanbul Vadeli İşlem ve Opsiyon Piyasasıdır.|Vadeli işlem ve opsiyon sözleşmeleri işlem görür.|kritik
+Nakdi uzlaşma|Vade sonunda fiziki teslim yerine fiyat farkının nakden ödenmesidir.|Fiziki teslimle karıştırma.|kritik,tuzak
+Fiziki teslimat|Vade sonunda dayanak varlığın teslim edilmesiyle uzlaşmadır.|Her sözleşmede zorunlu değildir.|kritik,tuzak
+Sözleşme kodu|VİOP'ta sözleşme grubu, dayanak varlık, vade ve uzlaşma gibi bilgileri içeren koddur.|Opsiyon kodlarında tip, sınıf ve kullanım fiyatı da bulunur.|tuzak
+`,
+kamu: `
+Kamu borçlanması|Kamu gelirleri ile giderleri arasındaki farkın finansmanı için kullanılan yöntemlerden biridir.|Bütçe açığı finansmanıyla bağlantılıdır.|kritik
+Kamu finansman kaynakları|Vergiler, emisyon ve borçlanma temel finansman alternatifleri olarak ele alınır.|Emisyonun enflasyonist etkisi olabilir.|kritik
+İç borçlanma|Kamu kesiminin yurt içi piyasalardan borçlanmasıdır.|DİBS bu başlıkta temel araçtır.|kritik
+Dış borçlanma|Kamu kesiminin yurt dışı piyasalardan borçlanmasıdır.|Eurobond ile ilişkilendirilebilir.|kritik
+Kısa vadeli borçlanma|Genel kabulde bir yıldan kısa vadeli borçlanmadır.|Hazine bonosu ile bağlantılıdır.|kritik
+Uzun vadeli borçlanma|Bir yıl ve daha uzun vadeli borçlanmadır.|Devlet tahvili ile bağlantılıdır.|kritik
+İsteğe bağlı borçlanma|Yatırımcının iradesiyle kamu borçlanma aracını satın almasıdır.|Zorunlu borçlanmanın karşıtıdır.|tuzak
+Zorunlu borçlanma|Kişilerin kanuni zorunlulukla borçlandırıldığı borçlanma türüdür.|Modern piyasa borçlanmasından ayrılır.|tuzak
+Borçlanma senetleri|Anapara ve faiz ödemesi içeren yurt içi DİBS'ler ile uluslararası piyasalarda ihraç edilen Eurobondlardan oluşur.|Kamu borçlanma araçlarının ana gövdesidir.|kritik
+DİBS|Hazine tarafından yurt içinde ihraç edilen Devlet Tahvili ve Hazine Bonolarının ortak adıdır.|Devlet İç Borçlanma Senedi kısaltmasıdır.|kritik,tuzak
+Devlet tahvili|İhraç tarihi itibarıyla bir yıl yani 364 gün ve daha uzun vadeli DİBS'tir.|Uzun vadeli kamu finansman aracıdır.|kritik,sure-oran,tuzak
+Hazine bonosu|İhraç tarihi itibarıyla 364 günden kısa vadeli DİBS'tir.|Para piyasası araçları içinde önemlidir.|kritik,sure-oran,tuzak
+Kira sertifikası|Varlık kiralama şirketlerince ihraç edilen ve sertifika sahiplerine belirli haklar sağlayan sermaye piyasası aracıdır.|Kamu kira sertifikaları DİBS sınıflandırmasında senet tipi olarak görülür.|kritik
+Kuponlu senet|Yatırımcısına belirli dönemlerde kupon ödemesi sağlayan senettir.|Sabit veya değişken faizli olabilir.|kritik,tuzak
+Kuponsuz senet|İskontolu satılan ve anapara-faiz ödemesi vade sonunda tek seferde yapılan senettir.|Getiri nominal değer ile iskontolu fiyat farkıdır.|kritik,tuzak
+TL cinsi senet|Ödeme ve değerlemesi Türk lirası üzerinden olan senettir.|Döviz ve altına dayalı senetlerden ayrılır.|kritik
+Döviz cinsi senet|Ödeme yükümlülüğü döviz üzerinden belirlenen senettir.|Dövize endeksli kavramıyla karıştırma.|tuzak
+Dövize endeksli senet|Anapara veya getirisi döviz kuruna endeksli olan senettir.|Döviz cinsi ile aynı değildir.|kritik,tuzak
+Altına dayalı senet|Değeri veya ödemesi altına dayalı olarak yapılandırılan kamu borçlanma senedidir.|Döviz yapısı sınıflamasında geçebilir.|kritik
+Sabit faizli DİBS|Kupon ödeme dönemlerinde veya vade sonunda ödenecek faiz ihraçta belli olan senettir.|Nakit akışı baştan bilinir.|kritik
+Değişken faizli DİBS|Faiz ödemesi belirli bir referans değere endekslenen senettir.|Ek getiri yani spread uygulanabilir.|kritik,tuzak
+Enflasyona endeksli senet|Getirisi veya anapara değeri enflasyon göstergesine bağlı olan senettir.|Reel getiri mantığıyla düşün.|kritik
+Nakit girişi sağlayan DİBS|Hazineye nakit girişi sağlayan Devlet Tahvili ve Hazine Bonosudur.|Özel tertiplerle karıştırma.|kritik,tuzak
+Nakit girişi sağlamayan DİBS|Genellikle özel tertip DİBS'lerdir.|Bütçe ödeneği ve özel amaçlı ihraçlar önemlidir.|tuzak
+Yurt içi ihraç|Hazine tarafından Türkiye iç piyasasında yapılan ihraçtır.|DİBS bu kapsamda doğar.|kritik
+Yurt dışı ihraç|Uluslararası piyasalarda yapılan kamu borçlanmasıdır.|Eurobond örneği akılda tutulur.|kritik
+Getiri|Yatırımdan sağlanan gelirin yatırım maliyetine oranının yıllık ifadesidir.|Faizle birlikte yorumlanır.|kritik
+Getiri eğrisi|Sabit getirili menkul kıymetlerin faiz oranları ile vadeleri arasındaki ilişkiyi gösterir.|DİBS'ler getiri eğrisi için temel araçlardır.|kritik
+Normal getiri eğrisi|Uzun vadeli faizlerin kısa vadeli faizlerden yüksek olduğu eğridir.|Vade riski primi mantığıyla düşün.|tuzak
+Ters getiri eğrisi|Kısa vadeli faizlerin uzun vadeli faizlerden yüksek olduğu eğridir.|Ekonomik beklentiler için sinyal kabul edilebilir.|tuzak
+İhale yöntemi|DİBS ihracında yatırımcı tekliflerinin toplandığı temel satış yöntemidir.|Tek fiyat ve çoklu fiyat ayrımı kritik.|kritik
+Çoklu fiyat ihalesi|Kazanan katılımcıların kendi teklif ettikleri fiyattan DİBS aldığı ihale yöntemidir.|Her kazanan farklı fiyattan alabilir.|kritik,tuzak
+Tek fiyat ihalesi|Kazanan katılımcıların Hazinece belirlenen tek fiyat üzerinden DİBS aldığı yöntemdir.|Kendi teklif fiyatından almaz.|kritik,tuzak
+TAP satış|İhale sonrasında belirlenen koşullarla yapılan satış yöntemidir; sadece piyasa yapıcılar katılabilir.|Piyasa yapıcı vurgusu önemli.|kritik,tuzak
+Doğrudan satış|Başlangıçta kime ve ne kadar satılacağı belli olan DİBS ihraç yöntemidir.|Kamu kurumları, bankalar ve finansal kuruluşlar alıcı olabilir.|kritik
+Halka arz yoluyla DİBS|DİBS'in halka arz edilmesi yöntemidir; piyasa yapıcı bankalar aracılık eder.|Aracılık eden bankalar komisyon alır.|kritik
+Piyasa yapıcılığı|DİBS piyasasında likiditeyi ve düzenli işleyişi destekleyen banka sistemidir.|TAP, halka arz ve geri alım-değişim ihaleleriyle bağlantılıdır.|kritik
+DİBS vergilendirme istisnası|Hazine tarafından ihraç edilen DİBS'lerin faiz ve anapara ödemeleriyle ilgili bazı gider, işlem ve kağıtlar vergi, resim, harç ve fondan istisnadır.|Vergi istisnası Kanun bağlantılıdır.|kritik
+Geri alım ihalesi|Daha önce ihraç edilmiş DİBS'in vadesinden önce itfa edilmesine yönelik işlemdir.|Sadece piyasa yapıcıların katılımı bilgisi sorulabilir.|tuzak
+Değişim ihalesi|Daha önce ihraç edilen DİBS'lerin başka bir DİBS ihracıyla değiştirilmesidir.|Geri alım ile karıştırma.|tuzak
+ROT|Rekabetçi Olmayan Teklif, ihale sistemine göre oluşan veya ortalama fiyattan verilen tekliftir.|Sadece kamu kurum ve kuruluşları ile piyasa yapıcılar tarafından verilebilir.|kritik,tuzak
+`
+};
+const rawComparisons = `
+paylar|Halka açık olmayan ortaklığın halka açık ortaklık statüsü kazanması hangi kavramdır?|Halka açılma~Halka arz~Ek satış|0|Halka açılma statü değişimidir.|Halka arz satış işlemidir.
+paylar|Sermaye piyasası araçlarının halka satışı hangi kavramdır?|Halka arz~Halka açılma~Borsada dönüşüm|0|Halka arz halka çağrı ve satış sürecidir.|Halka açılma statüdür.
+paylar|Şirkete yeni nakit girişi sağlamayan sermaye artırımı hangisidir?|Bedelsiz sermaye artırımı~Bedelli sermaye artırımı~Şarta bağlı sermaye artırımı|0|Bedelsiz artırım iç kaynaklardan yapılır.|Bedelli artırımda yeni kaynak girişi vardır.
+paylar|Mevcut ortakların yeni pay alma önceliği hangi haktır?|Rüçhan hakkı~Tasfiye hakkı~Bilgi alma hakkı|0|Rüçhan hakkı bedelli artırımla yakından ilgilidir.|Kâr payı hakkıyla karıştırma.
+paylar|Ek satışa konu payların ödünç alınarak satılması hangi kavramdır?|Ödünç alımlı ek pay satışı~Ek satış~Fiyat istikrarı|0|Ödünç alımlı ek pay satışında paylar ödünç alınır.|Ek satış tek başına ödünç unsurunu içermez.
+paylar|Payın sahibine sabit getiri taahhüdü verir ifadesi doğru mu?|Yanlış~Doğru|0|Payın sabit getirisi yoktur.|Bu özellik borçlanma araçlarına daha yakındır.
+paylar|Pay benzeri menkul kıymet için hangisi kritik değildir?|Sabit getiri taahhüdü~Pay sahipliği haklarından biri~Sermayede temsil zorunlu olmaması|0|Pay benzeri kıymette sabit getiri taahhüdü bulunmaz.|Bu nedenle sabit getiri seçeneği tuzaktır.
+paylar|KİS ortaklık sermayesini temsil eder mi?|Hayır~Evet|0|Katılma intifa senedi pay değildir.|Mali hak sağlayabilir ama pay sahipliği vermez.
+paylar|Fiyat istikrarı işlemleri en çok kaç gün sürebilir?|30 gün~15 gün~10 iş günü|0|Süre borsada işlem görmeye başlama tarihinden itibaren en çok 30 gündür.|10 iş günü PDT/DET talep toplama sürelerinde karşına çıkar.
+paylar|Fiyat istikrarında halka arz fiyatının üzerinde alım emri verilebilir mi?|Hayır~Evet|0|Halka arz fiyatının üzerinde alım emri verilemez.|Amaç sınırsız fiyat yükseltmek değildir.
+borclanma|İhraççının kendi paylarına dönüşen tahvil hangisidir?|PDT~DET~Finansman bonosu|0|PDT ihraççının kendi paylarına dönüştürülür.|Kısa kod: PDT = kendi payına dönüşür.
+borclanma|Başka ortaklık paylarıyla değiştirilebilen tahvil hangisidir?|DET~PDT~Tahvil|0|DET payları borsada işlem gören diğer ortaklık paylarıyla değiştirilir.|Kısa kod: DET = dış/diğer payla değişir.
+borclanma|PDT'de kullanılan doğru terim hangisidir?|Dönüştürme fiyatı~Değiştirme fiyatı~Kullanım fiyatı|0|PDT için dönüştürme kelimesi kullanılır.|Değiştirme DET içindir.
+borclanma|DET'te kullanılan doğru terim hangisidir?|Değiştirme oranı~Dönüştürme oranı~Kupon oranı|0|DET için değiştirme oranı kullanılır.|Dönüştürme PDT içindir.
+borclanma|Genel kurul borçlanma aracı ihraç yetkisini yönetim kuruluna en fazla ne kadar süreyle devredebilir?|15 ay~12 ay~30 gün|0|Yetki devrinde 15 ay kritik süredir.|30 gün fiyat istikrarı veya fon duyurularında çıkabilir.
+borclanma|Finansman bonosunun vadesi için hangisi doğrudur?|30 günden az ve 364 günden fazla olamaz~365 günden az olamaz~En az 2 yıl olmalıdır|0|Finansman bonosu kısa vadeli borçlanma aracıdır.|365 gün PDT/DET için kritik olabilir.
+borclanma|Kredi derecelendirmesi yapılmışsa not bilgileri ne sıklıkla gözden geçirilir?|Yılda en az bir kez~Her gün~Sadece vade sonunda|0|Vade boyunca yılda en az bir defa gözden geçirilir.|Derecelendirme yapılmışsa takip yükümlülüğü doğar.
+borclanma|Yeşil borçlanma aracında fon kullanımı hangi projelere yönelir?|Çevresel olumlu etkili projelere~Sadece toplumsal projelere~Her türlü işletme giderine|0|Yeşil araç çevresel projelerle ilgilidir.|Sürdürülebilir araçta çevresel ve toplumsal etki birlikte öne çıkar.
+borclanma|Sürdürülebilir borçlanma aracı hangi etki kombinasyonunu içerir?|Çevresel ve toplumsal olumlu etki~Sadece döviz getirisi~Sadece kısa vade|0|Sürdürülebilir araç çevre + toplum etkisini birlikte kapsar.|Yeşil araç daha çevre odaklıdır.
+borclanma|Kıymetli maden bonosunu kimler ihraç eder?|Kıymetli maden aracı kurumları~Sadece Hazine~Yatırım fonları|0|Kıymetli madenin işlem gördüğü borsalara üye aracı kurumlar ihraç eder.|DİBS ile karıştırma.
+fonlar|Yatırım fonunun tüzel kişiliği var mıdır?|Yoktur~Vardır|0|Ana kural yatırım fonunun tüzel kişiliği bulunmamasıdır.|Sınırlı istisna ana kuralı değiştirmez.
+fonlar|Katılma payı sahibinin fon yönetimine katılma hakkı var mı?|Yoktur~Vardır|0|Katılma payı şirket payı gibi idari hak vermez.|Şirket payı ile karıştırma.
+fonlar|Fonun kurucusu kimdir?|Portföy yönetim şirketi~Portföy saklayıcısı~MKK|0|Yatırım fonları portföy yönetim şirketleri tarafından kurulur.|Saklayıcı yönetmez; saklar.
+fonlar|Fon varlıklarının saklanması kimin görevidir?|Portföy saklayıcısı~Fon yöneticisi~Genel kurul|0|Saklama ve yönetim ayrıdır.|Fonun genel kurulu yoktur.
+fonlar|İçtüzük mü yatırımcı bilgi formu mu daha kurucu belgedir?|İçtüzük~Yatırımcı bilgi formu|0|İçtüzük fonun kuruluş ve işleyiş esaslarını düzenler.|Yatırımcı bilgi formu özet bilgi verir.
+fonlar|Fonun yapısı, stratejisi ve risklerini özetleyen belge hangisidir?|Yatırımcı bilgi formu~İçtüzük~Faaliyet raporu|0|Yatırımcı bilgi formu kısa ve özet dokümandır.|İzahname daha ayrıntılıdır.
+fonlar|Fon sepeti fonu neye yatırım yapar?|Diğer fon katılma paylarına~Sadece devlet tahvillerine~Sadece opsiyonlara|0|Fon alan fon mantığı vardır.|Karma fon ile karıştırma.
+fonlar|Serbest fonların katılma payları kime satılır?|Nitelikli yatırımcılara~Sadece küçük yatırımcılara~Sadece kamuya|0|Serbest fon = nitelikli yatırımcı vurgusu.|Bu en kritik fon tuzaklarındandır.
+fonlar|Garanti taahhüdü ile anapara koruma hedefi aynı mıdır?|Hayır~Evet|0|Garantili fon ile koruma amaçlı fon farklıdır.|Koruma hedefi garanti anlamına gelmeyebilir.
+fonlar|Borsa yatırım fonları şemsiye fona bağlı kurulabilir mi?|Hayır~Evet|0|PDF'deki güncel bilgiye göre borsa yatırım fonları şemsiye fona bağlı kurulamaz.|GYF ve GSYF için durum farklıdır.
+turev|Borsada işlem gören standart vadeli sözleşme hangisidir?|Futures~Forward~Swap|0|Futures organize piyasada ve standarttır.|Forward tezgahüstüdür.
+turev|Tezgahüstü, taraflarca serbest belirlenen vadeli sözleşme hangisidir?|Forward~Futures~Opsiyon|0|Forward standart değildir ve tezgahüstüdür.|Futures borsada işlem görür.
+turev|Opsiyon alıcısının pozisyonu nasıldır?|Hak sahibidir, kullanmak zorunda değildir~Yükümlüdür~Mutlaka teslimat yapar|0|Opsiyon alıcısı prim öder ve hak kazanır.|Satıcı yükümlüdür.
+turev|Call option Türkçe karşılığı hangisidir?|Alım opsiyonu~Satım opsiyonu~Swap|0|Alım opsiyonu alma hakkı verir.|Put satım opsiyonudur.
+turev|Put option Türkçe karşılığı hangisidir?|Satım opsiyonu~Alım opsiyonu~Forward|0|Satım opsiyonu satma hakkı verir.|Call ile karıştırma.
+turev|Vade sonuna kadar herhangi bir zamanda kullanılabilen opsiyon hangisidir?|Amerikan tipi~Avrupa tipi|0|Amerikan tipi kullanım zamanıyla ilgilidir.|Coğrafi yer değildir.
+turev|Sadece vade sonunda kullanılabilen opsiyon hangisidir?|Avrupa tipi~Amerikan tipi|0|Avrupa tipi sadece vade sonunda kullanılır.|Coğrafya değil, kullanım zamanıdır.
+turev|Mevcut riski azaltmak için türev kullanımı hangisidir?|Riskten korunma~Spekülasyon~Arbitraj|0|Hedging risk azaltma amaçlıdır.|Spekülasyon risk alma amaçlıdır.
+turev|Fiyat beklentisiyle risk alarak kazanç aramak hangisidir?|Spekülasyon~Hedging~Saklama|0|Spekülasyon beklentiyle risk üstlenir.|Hedging ile karıştırma.
+turev|Farklı piyasalardaki fiyat uyumsuzluğundan kazanç aramak hangisidir?|Arbitraj~Spekülasyon~Teminat çağrısı|0|Arbitraj fiyat farklılıklarını kullanır.|Tek yönlü beklenti spekülasyondur.
+kamu|Hazine tarafından yurt içinde ihraç edilen devlet tahvili ve hazine bonosunun ortak adı nedir?|DİBS~Eurobond~Pay senedi|0|DİBS = Devlet İç Borçlanma Senetleri.|Yurt dışı eurobond ile karıştırma.
+kamu|364 gün ve daha uzun vadeli DİBS hangisidir?|Devlet tahvili~Hazine bonosu~Finansman bonosu|0|Devlet tahvili uzun vadeli DİBS'tir.|Hazine bonosu kısa vadelidir.
+kamu|364 günden kısa vadeli DİBS hangisidir?|Hazine bonosu~Devlet tahvili~Kira sertifikası|0|Hazine bonosu kısa vadeli DİBS'tir.|Devlet tahvili 364 gün ve üzeridir.
+kamu|İskontolu satılıp anapara ve faizi vade sonunda tek seferde ödenen senet hangisidir?|Kuponsuz senet~Kuponlu senet~Değişken faizli senet|0|Kuponsuz senette getiri iskonto farkıdır.|Kuponlu senet dönemsel nakit akımı sağlar.
+kamu|Dönemsel kupon ödemesi sağlayan senet hangisidir?|Kuponlu senet~Kuponsuz senet~Pay senedi|0|Kuponlu senet vade boyunca nakit akımı sağlar.|Kuponsuzda ödeme vade sonunda tek seferdir.
+kamu|Kazananların kendi teklif fiyatlarından DİBS aldığı yöntem hangisidir?|Çoklu fiyat ihalesi~Tek fiyat ihalesi~Doğrudan satış|0|Çoklu fiyat yönteminde kazananlar farklı fiyatlardan alabilir.|Tek fiyat yönteminde tek fiyat uygulanır.
+kamu|Kazananların tek fiyat üzerinden DİBS aldığı yöntem hangisidir?|Tek fiyat ihalesi~Çoklu fiyat ihalesi~TAP dışı satış|0|Tek fiyat yönteminde Hazinece belirlenen fiyat uygulanır.|Çoklu fiyat kendi teklif fiyatıdır.
+kamu|Başlangıçta kime ve ne kadar satılacağı belli olan ihraç yöntemi hangisidir?|Doğrudan satış~Çoklu fiyat ihalesi~Halka arz|0|Doğrudan satışta alıcı ve tutar baştan bellidir.|İhale rekabetçi teklif toplar.
+kamu|TAP satışlarına kimler katılabilir?|Piyasa yapıcılar~Tüm bireysel yatırımcılar~Sadece fonlar|0|TAP satışlarında piyasa yapıcı vurgusu kritik.|Halka arzdan farklıdır.
+kamu|DİBS getiri eğrisi neyi gösterir?|Faiz oranları ile vadeler arasındaki ilişkiyi~Payların oy hakkını~Fon gider oranını|0|Getiri eğrisi sabit getirili araçlarda faiz-vade ilişkisidir.|Pay veya fon hakkı değildir.
+`;
+function parseFacts(section, raw){return raw.trim().split('\n').filter(Boolean).map((line,i)=>{const [concept,answer,note='',tags='']=line.split('|');return {id:`f_${section}_${i}`,section,concept:concept.trim(),answer:answer.trim(),note:note.trim(),tags:tags.split(',').map(x=>x.trim()).filter(Boolean)}})}
+function parseComparisons(raw){return raw.trim().split('\n').filter(Boolean).map((line,i)=>{const [section,prompt,opts,ans,explanation,trap='']=line.split('|');return {id:`c_${i}`,section:section.trim(),prompt:prompt.trim(),options:opts.split('~').map(x=>x.trim()),answer:Number(ans),explanation:explanation.trim(),trap:trap.trim(),tags:['tuzak']}})}
+const FACTS = Object.entries(rawFacts).flatMap(([sec,raw])=>parseFacts(sec,raw));
+const COMPARISONS = parseComparisons(rawComparisons);
+function hashStr(str){let h=2166136261; for(let i=0;i<str.length;i++){h^=str.charCodeAt(i); h=Math.imul(h,16777619)} return h>>>0}
+function seededShuffle(arr, seed){let a=[...arr], s=hashStr(seed); for(let i=a.length-1;i>0;i--){s=(s*1664525+1013904223)>>>0; const j=s%(i+1); [a[i],a[j]]=[a[j],a[i]]} return a}
+function pickWrong(pool, correctText, n, seed){const unique=[...new Map(pool.filter(x=>x && x!==correctText).map(x=>[x,x])).values()]; return seededShuffle(unique, seed).slice(0,n)}
+function sectionName(key){return SECTIONS.find(s=>s.key===key)?.short || 'Tümü'}
+function generatedQuestions(){
+  const qs=[];
+  FACTS.forEach(f=>{
+    const same=FACTS.filter(x=>x.section===f.section && x.id!==f.id);
+    const wrongAns=pickWrong(same.map(x=>x.answer), f.answer, 3, f.id+'a');
+    let packed=seededShuffle([{t:f.answer,c:true},...wrongAns.map(t=>({t,c:false}))], f.id+'def');
+    qs.push({id:`q_${f.id}_def`,section:f.section,kind:'test',question:`“${f.concept}” için aşağıdakilerden hangisi doğrudur?`,options:packed.map(x=>x.t),answer:packed.findIndex(x=>x.c),explanation:f.answer,trap:f.note,tags:f.tags});
+    const wrongConcepts=pickWrong(same.map(x=>x.concept), f.concept, 3, f.id+'b');
+    packed=seededShuffle([{t:f.concept,c:true},...wrongConcepts.map(t=>({t,c:false}))], f.id+'rev');
+    qs.push({id:`q_${f.id}_rev`,section:f.section,kind:'test',question:`“${f.answer}” açıklaması hangi kavrama aittir?`,options:packed.map(x=>x.t),answer:packed.findIndex(x=>x.c),explanation:`Doğru kavram: ${f.concept}. ${f.note||''}`,trap:f.tags.includes('tuzak')?'Bu kavram sınavda benzer başlıklarla karıştırılabilir.':'',tags:f.tags});
+  });
+  return qs;
+}
+const QUESTIONS = generatedQuestions();
+const STORAGE_KEY='spl1003StudyTool_v1';
+const defaultState=()=>({section:'all',mode:'dashboard',positions:{},records:{},hard:{},repeat:{},flashSeen:{},examDate:null,last:null,createdAt:new Date().toISOString()});
+let state=load(); let ui={flipped:false,feedback:null,query:''};
+function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));return s||defaultState()}catch(e){return defaultState()}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+function ensureExamDate(){if(!state.examDate){const d=new Date(); d.setDate(d.getDate()+30); state.examDate=d.toISOString().slice(0,10); save()}}
+ensureExamDate();
+function daysLeft(){const today=new Date(); today.setHours(0,0,0,0); const d=new Date(state.examDate+'T00:00:00'); return Math.max(0,Math.ceil((d-today)/86400000))}
+function filterBySection(list){return state.section==='all'?list:list.filter(x=>x.section===state.section)}
+function posKey(mode){return `${state.section}_${mode}`}
+function getPos(mode, len){const k=posKey(mode); if(state.positions[k]==null) state.positions[k]=0; if(len && state.positions[k]>=len) state.positions[k]=0; return state.positions[k]||0}
+function setPos(mode, val){state.positions[posKey(mode)]=val; state.last={mode,section:state.section,at:new Date().toISOString()}; save()}
+function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function pct(a,b){return b?Math.round(a*100/b):0}
+function statsFor(section='all'){
+  const q=section==='all'?QUESTIONS:[...QUESTIONS].filter(x=>x.section===section);
+  const c=section==='all'?COMPARISONS:COMPARISONS.filter(x=>x.section===section);
+  const ids=new Set([...q,...c].map(x=>x.id));
+  const rec=Object.entries(state.records).filter(([id])=>ids.has(id));
+  const answered=rec.length, correct=rec.filter(([,r])=>r.lastCorrect).length;
+  const hard=Object.keys(state.hard).filter(id=>section==='all'||id.includes('_'+section+'_')||COMPARISONS.find(c=>c.id===id&&c.section===section)||QUESTIONS.find(q=>q.id===id&&q.section===section)).length;
+  return {answered,correct,accuracy:pct(correct,answered),total:ids.size,hard};
+}
+function allCounts(section='all'){
+  const facts=section==='all'?FACTS:FACTS.filter(x=>x.section===section);
+  const comp=section==='all'?COMPARISONS:COMPARISONS.filter(x=>x.section===section);
+  const qs=section==='all'?QUESTIONS:QUESTIONS.filter(x=>x.section===section);
+  const crit=facts.filter(x=>x.tags.includes('kritik'));
+  return {facts: facts.length, comp:comp.length, qs:qs.length, crit:crit.length, total:facts.length+comp.length+qs.length+crit.length};
+}
+function renderShell(inner){
+  document.getElementById('app').innerHTML=`
+    <div class="topbar">
+      <div class="brand"><div class="logo">1003</div><div><h1>SPL 1003 Çalışma Aracı</h1><p>Sermaye Piyasası Araçları 1 • Flashkart + Kavram + Test</p></div></div>
+      <div class="row"><span class="pill">⏳ Sınava kalan: <b>${daysLeft()} gün</b></span><button class="btn ghost small" onclick="renderSettings()">Ayarlar</button></div>
+    </div>${inner}`;
+}
+function renderDashboard(){state.mode='dashboard'; save(); const counts=allCounts('all'); const st=statsFor('all'); const suggested=suggestToday();
+  renderShell(`
+    <div class="grid">
+      <section class="card hero">
+        <div style="position:relative;z-index:1"><span class="badge">Apple-futuristic offline çalışma paneli</span><h2>Bugün küçük ama akıllı bir tekrar yapalım.</h2><p class="muted">Kaldığın yer, yanlışların ve zor işaretlediklerin bu tarayıcıda saklanır. Uygulamayı kapatıp açınca başa sarmaz.</p>
+        <div class="row" style="margin-top:18px"><button class="btn primary" onclick="continueLast()">Çalışmaya Devam Et</button><button class="btn ghost" onclick="switchMode('critical')">Kritik Bilgiler</button><button class="btn ghost" onclick="switchMode('wrongs')">Yanlışlarım</button></div>
+        <div class="statline"><div class="mini"><b>${counts.total}</b><span class="muted">aktif eğitim öğesi</span></div><div class="mini"><b>${st.accuracy}%</b><span class="muted">son doğru oranı</span></div><div class="mini"><b>${st.answered}/${st.total}</b><span class="muted">çözülen soru</span></div></div></div>
+      </section>
+      <aside class="card side"><div class="space"><div><b>Bugünkü öneri</b><p class="muted" style="margin:6px 0 0">${suggested}</p></div><span class="badge">akıllı yönlendirme</span></div><div class="progress" style="margin-top:18px"><div class="bar" style="width:${Math.min(100,st.accuracy||6)}%"></div></div><p class="footer-note">Öneri, düşük doğru oranı ve az çözülmüş bölümlere göre otomatik oluşur.</p></aside>
+      ${SECTIONS.map(s=>sectionCard(s)).join('')}
+    </div>`)}
+function sectionCard(s){const st=statsFor(s.key), c=allCounts(s.key); return `<div class="card section-card" onclick="selectSection('${s.key}')"><div class="space"><div><span style="font-size:30px">${s.icon}</span><h3 style="margin:10px 0 5px">${s.name}</h3><p class="muted" style="margin:0">${c.facts} kart • ${c.comp} kavram • ${c.qs} test</p></div><span class="badge">${st.accuracy}%</span></div><div class="progress" style="margin-top:16px"><div class="bar" style="width:${pct(st.answered,st.total)}%"></div></div><div class="row" style="margin-top:14px"><button class="btn small primary" onclick="event.stopPropagation();selectSection('${s.key}','flash')">Flashkart</button><button class="btn small ghost" onclick="event.stopPropagation();selectSection('${s.key}','compare')">Kavram</button><button class="btn small ghost" onclick="event.stopPropagation();selectSection('${s.key}','test')">Test</button></div></div>`}
+function suggestToday(){const arr=SECTIONS.map(s=>({s,st:statsFor(s.key)})).sort((a,b)=>(a.st.accuracy||0)-(b.st.accuracy||0)||a.st.answered-b.st.answered); const first=arr[0].s; const second=arr[1].s; return `${first.short}: 15 test sorusu • ${second.short}: 12 flashkart • Yanlışlardan 10 tekrar`;}
+function selectSection(sec,mode){state.section=sec; save(); if(mode) switchMode(mode); else renderSectionHome()}
+function renderSectionHome(){const s=SECTIONS.find(x=>x.key===state.section); const st=statsFor(state.section); const c=allCounts(state.section); renderShell(`<div class="mode-wrap"><button class="btn ghost small" onclick="state.section='all';save();renderDashboard()">← Ana panel</button><div class="card" style="margin-top:14px"><div class="space"><div><span style="font-size:34px">${s.icon}</span><h2>${s.name}</h2><p class="muted">Bu bölümde ${c.total} çalışma öğesi var. Cevap sonrası kısa açıklama ve tuzak notları aktiftir.</p></div><div class="big-stat">${st.accuracy}%</div></div><div class="progress"><div class="bar" style="width:${pct(st.answered,st.total)}%"></div></div><div class="tabs"><button class="tab" onclick="switchMode('flash')">Flashkart Modu</button><button class="tab" onclick="switchMode('compare')">Karıştırılan Kavramlar</button><button class="tab" onclick="switchMode('test')">Çoktan Seçmeli Test</button><button class="tab" onclick="switchMode('critical')">Kritik Bilgiler</button><button class="tab" onclick="switchMode('wrongs')">Yanlışlarım</button></div></div></div>`)}
+function modeHeader(title, subtitle){const sections=`<button class="tab ${state.section==='all'?'active':''}" onclick="state.section='all';save();switchMode(state.mode)">Tümü</button>`+SECTIONS.map(s=>`<button class="tab ${state.section===s.key?'active':''}" onclick="state.section='${s.key}';save();switchMode(state.mode)">${s.short}</button>`).join(''); return `<div class="mode-wrap"><button class="btn ghost small" onclick="renderDashboard()">← Ana panel</button><div class="tabs">${sections}</div><div class="card" style="margin-bottom:14px"><div class="space"><div><h2 style="font-size:28px">${title}</h2><p class="muted" style="margin:0">${subtitle}</p></div><span class="badge">${sectionName(state.section)}</span></div></div>`}
+function switchMode(mode){state.mode=mode; ui.feedback=null; ui.flipped=false; save(); if(mode==='flash') renderFlash(); if(mode==='compare') renderCompare(); if(mode==='test') renderTest(); if(mode==='critical') renderCritical(); if(mode==='wrongs') renderWrongs();}
+function continueLast(){if(state.last){state.section=state.last.section||'all'; switchMode(state.last.mode||'flash')} else {state.section='all'; switchMode('flash')}}
+function renderFlash(){let list=filterBySection(FACTS); const q=ui.query?.toLowerCase(); if(q) list=list.filter(x=>(x.concept+x.answer+x.note).toLowerCase().includes(q)); const i=getPos('flash',list.length), item=list[i]; if(!item) return renderEmpty('Flashkart bulunamadı.'); renderShell(`${modeHeader('Flashkart Modu',`${list.length} kart • Kolay, tekrar et veya zor olarak işaretle.`)}<input class="search" placeholder="Kartlarda ara..." value="${esc(ui.query)}" oninput="ui.query=this.value;renderFlash()"><div class="card study-card" style="margin-top:14px"><div class="space"><span class="badge">${i+1}/${list.length}</span><span class="badge">${sectionName(item.section)}</span></div><div class="flipbox ${ui.flipped?'flipped':''}" onclick="ui.flipped=!ui.flipped;renderFlash()"><div class="flipinner"><div class="face front"><div class="question">${esc(item.concept)}</div><p class="muted">Cevabı görmek için karta tıkla.</p></div><div class="face back"><div class="answer"><b>Cevap:</b><br>${esc(item.answer)}</div>${item.note?`<div class="note ${item.tags.includes('tuzak')?'trap':''}"><b>Mini not:</b> ${esc(item.note)}</div>`:''}</div></div></div><div class="row"><button class="btn good" onclick="flashRate('${item.id}','easy',${i},${list.length})">Kolay</button><button class="btn warn" onclick="flashRate('${item.id}','repeat',${i},${list.length})">Tekrar Et</button><button class="btn danger" onclick="flashRate('${item.id}','hard',${i},${list.length})">Zor</button><button class="btn ghost" onclick="setPos('flash',Math.max(0,${i}-1));ui.flipped=false;renderFlash()">Önceki</button></div></div></div>`)}
+function flashRate(id,type,i,len){state.flashSeen[id]=(state.flashSeen[id]||0)+1; if(type==='hard') state.hard[id]=true; if(type==='repeat') state.repeat[id]=true; if(type==='easy'){delete state.repeat[id]} setPos('flash',(i+1)%len); ui.flipped=false; save(); renderFlash()}
+function renderCompare(){const list=filterBySection(COMPARISONS); const i=getPos('compare',list.length), item=list[i]; if(!item) return renderEmpty('Bu bölümde karşılaştırma kartı yok.'); renderQuestionMode('compare', list, i, item, 'Karıştırılan Kavramlar', `${list.length} kritik ayrım • Her cevap sonrası kısa açıklama var.`)}
+function renderTest(customList=null, title='Çoktan Seçmeli Test'){const list=customList || filterBySection(QUESTIONS); const i=getPos(customList?'wrongs':'test',list.length), item=list[i]; if(!item) return renderEmpty('Bu filtrede test sorusu bulunamadı.'); renderQuestionMode(customList?'wrongs':'test', list, i, item, title, `${list.length} soru • Doğru cevap + mini açıklama + tuzak notu.`)}
+function renderQuestionMode(mode,list,i,item,title,subtitle){const answered=ui.feedback&&ui.feedback.id===item.id; const selected=answered?ui.feedback.selected:null; const correct=answered?selected===item.answer:false; renderShell(`${modeHeader(title,subtitle)}<div class="card study-card"><div><div class="space"><span class="badge">${i+1}/${list.length}</span><span class="badge">${sectionName(item.section)}</span></div><div class="question" style="margin-top:18px">${esc(item.question||item.prompt)}</div><div class="options">${item.options.map((op,idx)=>`<button class="option ${answered?(idx===item.answer?'correct':idx===selected?'wrong':''):''}" ${answered?'disabled':''} onclick="answerItem('${mode}','${item.id}',${idx})"><b>${String.fromCharCode(65+idx)})</b> ${esc(op)}</button>`).join('')}</div>${answered?feedbackBox(correct,item):''}</div><div class="row"><button class="btn ghost" onclick="prevItem('${mode}',${i},${list.length})">Önceki</button>${answered?`<button class="btn primary" onclick="nextItem('${mode}',${i},${list.length})">Sonraki</button>`:''}<button class="btn warn" onclick="toggleHard('${item.id}');switchMode('${state.mode}')">${state.hard[item.id]?'Zordan çıkar':'Zor işaretle'}</button></div></div></div>`)}
+function feedbackBox(correct,item){return `<div class="feedback confetti"><b>${correct?'✅ Doğru.':'❌ Yanlış. Doğru cevap: '+String.fromCharCode(65+item.answer)+'.'}</b><p>${esc(item.explanation)}</p>${item.trap?`<div class="note trap"><b>Kritik not:</b> ${esc(item.trap)}</div>`:''}</div>`}
+function answerItem(mode,id,selected){const item=[...QUESTIONS,...COMPARISONS].find(x=>x.id===id); const correct=selected===item.answer; ui.feedback={id,selected}; const r=state.records[id]||{times:0,correctCount:0,wrongCount:0,section:item.section}; r.times++; r.lastCorrect=correct; r.lastAnswer=selected; r.updatedAt=new Date().toISOString(); if(correct){r.correctCount++; delete state.repeat[id]; delete state.wrong?.[id]} else {r.wrongCount++; state.repeat[id]=true; state.hard[id]=true; state.wrong=state.wrong||{}; state.wrong[id]=true} state.records[id]=r; state.last={mode: mode==='wrongs'?'wrongs':state.mode, section:state.section, at:new Date().toISOString()}; save(); if(mode==='compare') renderCompare(); else if(mode==='wrongs') renderWrongs(); else renderTest();}
+function nextItem(mode,i,len){setPos(mode,(i+1)%len); ui.feedback=null; if(mode==='compare') renderCompare(); else if(mode==='wrongs') renderWrongs(); else renderTest()}
+function prevItem(mode,i,len){setPos(mode,(i-1+len)%len); ui.feedback=null; if(mode==='compare') renderCompare(); else if(mode==='wrongs') renderWrongs(); else renderTest()}
+function toggleHard(id){if(state.hard[id]) delete state.hard[id]; else state.hard[id]=true; save()}
+function renderWrongs(){const ids=new Set(Object.keys(state.repeat||{}).concat(Object.keys(state.hard||{})).concat(Object.entries(state.records).filter(([,r])=>!r.lastCorrect).map(([id])=>id))); const list=filterBySection([...QUESTIONS,...COMPARISONS]).filter(x=>ids.has(x.id)); if(!list.length) return renderShell(`${modeHeader('Yanlışlarım ve Zorlandıklarım','Henüz tekrar gerektiren soru yok.')}</div>`); renderTest(list,'Yanlışlarım ve Zorlandıklarım')}
+function renderCritical(){let list=filterBySection(FACTS).filter(x=>x.tags.includes('kritik')); const q=ui.query?.toLowerCase(); if(q) list=list.filter(x=>(x.concept+x.answer+x.note).toLowerCase().includes(q)); renderShell(`${modeHeader('Kritik Bilgiler','Son hafta hızlı tekrar için kısa ve sınav odaklı bilgiler.')}<input class="search" placeholder="Kritik bilgilerde ara..." value="${esc(ui.query)}" oninput="ui.query=this.value;renderCritical()"><div class="card" style="margin-top:14px"><div class="list">${list.map(x=>`<div class="list-item"><div class="space"><b>${esc(x.concept)}</b><span class="badge">${sectionName(x.section)}</span></div><p>${esc(x.answer)}</p>${x.note?`<div class="note ${x.tags.includes('tuzak')?'trap':''}">${esc(x.note)}</div>`:''}</div>`).join('')}</div></div></div>`)}
+function renderEmpty(msg){renderShell(`${modeHeader('Boş liste',msg)}<div class="card"><p>${esc(msg)}</p></div></div>`)}
+function renderSettings(){const data=JSON.stringify(state,null,2); renderShell(`<div class="mode-wrap"><button class="btn ghost small" onclick="renderDashboard()">← Ana panel</button><div class="card" style="margin-top:14px"><h2>Ayarlar</h2><p class="muted">İlerleme verileri bu tarayıcıdaki localStorage alanında saklanır.</p><label>Sınav tarihi</label><input class="search" type="date" value="${state.examDate}" onchange="state.examDate=this.value;save();renderSettings()" style="margin:8px 0 16px"><div class="row"><button class="btn ghost" onclick="exportProgress()">İlerlemeyi dışa aktar</button><button class="btn danger" onclick="resetProgress()">Tüm ilerlemeyi sıfırla</button></div><p class="footer-note">Klavye ipucu: Kartın üzerine tıklayınca döner. Testlerde cevap sonrası açıklama otomatik görünür.</p></div></div>`)}
+function exportProgress(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='spl1003_ilerleme.json'; a.click(); URL.revokeObjectURL(a.href)}
+function resetProgress(){if(confirm('Tüm ilerleme, yanlışlar ve zor kartlar silinsin mi?')){localStorage.removeItem(STORAGE_KEY); state=defaultState(); ensureExamDate(); renderDashboard()}}
+window.addEventListener('keydown',e=>{if(state.mode==='flash'&&e.code==='Space'){e.preventDefault(); ui.flipped=!ui.flipped; renderFlash()}});
+renderDashboard();
+</script>
 </body>
 </html>
