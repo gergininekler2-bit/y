@@ -1,85 +1,60 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kurgu Terminali 95</title>
   <style>
     :root {
-      --win-gray: #c0c0c0;
-      --win-dark: #808080;
-      --win-light: #ffffff;
-      --win-black: #000000;
-      --win-blue: #000080;
-      --win-blue-bright: #0000a8;
-      --win-bg: #008080;
-      --win-text: #111111;
-      --danger: #800000;
+      --bg: #008080;
+      --gray: #c0c0c0;
+      --dark: #808080;
+      --light: #ffffff;
+      --black: #000000;
+      --blue: #000080;
+      --select: #0000a8;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
     body {
-      height: 100%;
       margin: 0;
-    }
-
-    body {
-      font-family: Tahoma, Arial, sans-serif;
-      font-size: 13px;
-      color: var(--win-text);
-      background:
-        linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
-        var(--win-bg);
-      background-size: 12px 12px;
-      overflow: hidden;
-    }
-
-    button,
-    input,
-    textarea,
-    select {
-      font-family: Tahoma, Arial, sans-serif;
-      font-size: 13px;
-    }
-
-    .desktop {
-      height: 100%;
+      min-height: 100vh;
       padding: 18px;
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
+      background: var(--bg);
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: 13px;
+      color: #111;
+    }
+
+    button, input, textarea, select {
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: 13px;
     }
 
     .window {
-      width: min(1280px, 100%);
-      height: min(820px, 100%);
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: 2px solid var(--win-black);
-      box-shadow: 3px 3px 0 rgba(0,0,0,0.45);
+      max-width: 1040px;
+      min-height: calc(100vh - 36px);
+      margin: 0 auto;
+      background: var(--gray);
+      border-top: 2px solid var(--light);
+      border-left: 2px solid var(--light);
+      border-right: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, .45);
       display: flex;
       flex-direction: column;
-      min-width: 960px;
     }
 
-    .title-bar {
+    .titlebar {
       height: 28px;
-      background: var(--win-blue);
-      color: var(--win-light);
+      background: var(--blue);
+      color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 3px 4px 3px 8px;
-      font-weight: 700;
-      letter-spacing: 0.1px;
-      user-select: none;
+      font-weight: bold;
     }
 
     .title-left {
@@ -88,1349 +63,956 @@
       gap: 8px;
     }
 
-    .app-icon {
+    .icon {
       width: 16px;
       height: 16px;
-      background: var(--win-gray);
-      border-top: 1px solid var(--win-light);
-      border-left: 1px solid var(--win-light);
-      border-right: 1px solid var(--win-black);
-      border-bottom: 1px solid var(--win-black);
+      background: var(--gray);
+      border-top: 1px solid var(--light);
+      border-left: 1px solid var(--light);
+      border-right: 1px solid var(--black);
+      border-bottom: 1px solid var(--black);
       position: relative;
     }
 
-    .app-icon::before {
+    .icon:after {
       content: "";
       position: absolute;
-      left: 3px;
+      left: 4px;
       top: 3px;
-      width: 8px;
-      height: 10px;
-      background: #fff;
-      border: 1px solid #000;
+      width: 7px;
+      height: 9px;
+      background: white;
+      border: 1px solid black;
     }
 
-    .window-actions {
-      display: flex;
-      gap: 3px;
-    }
+    .win-actions { display: flex; gap: 3px; }
 
-    .window-button {
+    .win-action {
       width: 20px;
       height: 20px;
-      line-height: 16px;
       padding: 0;
-      text-align: center;
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: 2px solid var(--win-black);
-      color: #000;
-      font-weight: 700;
-      cursor: default;
+      background: var(--gray);
+      border-top: 2px solid var(--light);
+      border-left: 2px solid var(--light);
+      border-right: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
+      font-weight: bold;
     }
 
-    .menu-bar,
-    .toolbar,
-    .status-bar {
-      flex: 0 0 auto;
-      background: var(--win-gray);
-    }
-
-    .menu-bar {
+    .menubar {
       height: 28px;
       display: flex;
       align-items: center;
-      padding: 0 6px;
-      border-bottom: 1px solid var(--win-dark);
       gap: 2px;
+      padding: 0 6px;
+      border-bottom: 1px solid var(--dark);
     }
 
-    .menu-item {
-      padding: 4px 8px;
-      cursor: default;
-    }
-
-    .menu-item:hover {
-      background: var(--win-blue);
-      color: var(--win-light);
-    }
+    .menuitem { padding: 4px 8px; cursor: default; }
+    .menuitem:hover { background: var(--blue); color: white; }
 
     .toolbar {
-      min-height: 42px;
       display: flex;
-      align-items: center;
       gap: 6px;
+      align-items: center;
       padding: 6px;
-      border-top: 1px solid var(--win-light);
-      border-bottom: 1px solid var(--win-dark);
+      border-top: 1px solid var(--light);
+      border-bottom: 1px solid var(--dark);
       flex-wrap: wrap;
     }
 
-    .tool-separator {
-      height: 26px;
-      width: 2px;
-      border-left: 1px solid var(--win-dark);
-      border-right: 1px solid var(--win-light);
-      margin: 0 2px;
-    }
-
-    .win-button {
+    .btn {
       min-height: 26px;
       padding: 4px 10px;
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: 2px solid var(--win-black);
-      color: #000;
+      background: var(--gray);
+      color: black;
+      border-top: 2px solid var(--light);
+      border-left: 2px solid var(--light);
+      border-right: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
       cursor: pointer;
-      white-space: nowrap;
     }
 
-    .win-button:active {
-      border-top: 2px solid var(--win-black);
-      border-left: 2px solid var(--win-black);
-      border-right: 2px solid var(--win-light);
-      border-bottom: 2px solid var(--win-light);
-      padding: 5px 9px 3px 11px;
+    .btn:active {
+      border-top: 2px solid var(--black);
+      border-left: 2px solid var(--black);
+      border-right: 2px solid var(--light);
+      border-bottom: 2px solid var(--light);
     }
 
-    .win-button.primary {
-      font-weight: 700;
-    }
+    .btn.primary { font-weight: bold; }
+    .btn.danger { color: #800000; }
 
-    .win-button.danger {
-      color: var(--danger);
-    }
-
-    .app-body {
-      flex: 1 1 auto;
+    .main {
+      flex: 1;
       display: grid;
-      grid-template-columns: 245px minmax(420px, 1fr) 305px;
+      grid-template-columns: 235px 1fr;
       gap: 8px;
       padding: 8px;
-      min-height: 0;
     }
 
     .panel {
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: 2px solid var(--win-black);
+      background: var(--gray);
+      border-top: 2px solid var(--light);
+      border-left: 2px solid var(--light);
+      border-right: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
       display: flex;
       flex-direction: column;
-      min-height: 0;
+      min-width: 0;
     }
 
     .panel-title {
-      flex: 0 0 auto;
-      background: var(--win-blue);
-      color: var(--win-light);
-      padding: 4px 7px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 24px;
+      background: var(--blue);
+      color: white;
+      padding: 5px 7px;
+      font-weight: bold;
+      min-height: 25px;
     }
 
-    .panel-content {
-      flex: 1 1 auto;
+    .panel-body {
       padding: 8px;
-      min-height: 0;
       overflow: auto;
+      flex: 1;
     }
 
     .inset {
-      background: var(--win-light);
-      border-top: 2px solid var(--win-dark);
-      border-left: 2px solid var(--win-dark);
-      border-right: 2px solid var(--win-light);
-      border-bottom: 2px solid var(--win-light);
+      background: white;
+      border-top: 2px solid var(--dark);
+      border-left: 2px solid var(--dark);
+      border-right: 2px solid var(--light);
+      border-bottom: 2px solid var(--light);
     }
 
-    .project-tree {
+    .steps {
       padding: 6px;
-      min-height: 160px;
-    }
-
-    .tree-item {
       display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 24px 1fr;
       align-items: center;
-      gap: 6px;
-      padding: 4px 5px;
+      gap: 7px;
+      padding: 5px;
       cursor: pointer;
-      user-select: none;
     }
 
-    .tree-item:hover,
-    .tree-item.active {
-      background: var(--win-blue-bright);
-      color: var(--win-light);
+    .step:hover, .step.active {
+      background: var(--select);
+      color: white;
     }
 
-    .tree-icon {
-      width: 15px;
-      height: 12px;
-      background: #ffff80;
-      border: 1px solid #000;
-      position: relative;
-      flex: 0 0 auto;
+    .step-no {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      background: var(--gray);
+      color: black;
+      border-top: 2px solid var(--light);
+      border-left: 2px solid var(--light);
+      border-right: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
+      font-weight: bold;
     }
 
-    .tree-icon::before {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: 1px;
-      width: 7px;
-      height: 4px;
-      background: #ffff80;
-      border-top: 1px solid #000;
-      border-left: 1px solid #000;
-      border-right: 1px solid #000;
+    .step.done .step-label:after {
+      content: "  tamam";
+      font-size: 11px;
+      font-weight: normal;
     }
 
-    .section-box {
+    .step small {
+      display: block;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .progress-box {
       margin-top: 10px;
       padding: 8px;
+      line-height: 1.4;
     }
 
-    .section-title {
-      font-weight: 700;
-      margin-bottom: 6px;
+    .progress-bar {
+      height: 18px;
+      background: white;
+      margin-top: 8px;
+      padding: 2px;
     }
 
-    .small-note {
-      color: #222;
-      font-size: 12px;
-      line-height: 1.35;
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--blue);
     }
 
-    .field-group {
-      margin-bottom: 8px;
+    .screen-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
     }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .badge {
+      background: white;
+      padding: 5px 8px;
+      white-space: nowrap;
+    }
+
+    .hint {
+      line-height: 1.45;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field { margin-bottom: 10px; }
 
     label {
       display: block;
-      margin-bottom: 3px;
-      font-weight: 700;
-    }
-
-    .win-input,
-    .win-textarea,
-    .win-select {
-      width: 100%;
-      background: #fff;
-      color: #000;
-      border-top: 2px solid var(--win-dark);
-      border-left: 2px solid var(--win-dark);
-      border-right: 2px solid var(--win-light);
-      border-bottom: 2px solid var(--win-light);
-      padding: 5px;
-      outline: none;
-    }
-
-    .win-input:focus,
-    .win-textarea:focus,
-    .win-select:focus {
-      box-shadow: inset 0 0 0 1px #000;
-    }
-
-    .win-textarea {
-      resize: none;
-      line-height: 1.45;
-    }
-
-    .editor-panel .panel-content {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .title-row {
-      display: grid;
-      grid-template-columns: 1fr 160px;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-
-    .main-editor {
-      flex: 1 1 auto;
-      min-height: 280px;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-
-    .tab-row {
-      display: flex;
-      gap: 3px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .tab-button {
-      padding: 4px 8px;
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: none;
-      cursor: pointer;
-    }
-
-    .tab-button.active {
-      background: #fff;
-      position: relative;
-      top: 2px;
-      font-weight: 700;
-    }
-
-    .tab-window {
-      padding: 8px;
-      min-height: 210px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .mini-card {
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: 2px solid var(--win-black);
-      padding: 7px;
-    }
-
-    .mini-card-title {
-      font-weight: 700;
+      font-weight: bold;
       margin-bottom: 4px;
     }
 
-    .mini-card-meta {
-      font-size: 12px;
-      line-height: 1.35;
+    .input, .textarea, .select {
+      width: 100%;
+      background: white;
+      color: black;
+      border-top: 2px solid var(--dark);
+      border-left: 2px solid var(--dark);
+      border-right: 2px solid var(--light);
+      border-bottom: 2px solid var(--light);
+      padding: 6px;
+      outline: none;
     }
 
-    .mini-card-actions {
-      margin-top: 6px;
+    .textarea {
+      min-height: 86px;
+      line-height: 1.45;
+      resize: vertical;
+    }
+
+    .story-editor {
+      min-height: 360px;
+      font-size: 15px;
+    }
+
+    .linear-actions {
       display: flex;
-      gap: 5px;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--dark);
       flex-wrap: wrap;
     }
 
-    .tiny-button {
-      min-height: 21px;
-      padding: 2px 7px;
-      font-size: 12px;
+    .left-actions, .right-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    .split-two {
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .card {
+      padding: 8px;
+      background: var(--gray);
+      border-top: 2px solid var(--light);
+      border-left: 2px solid var(--light);
+      border-right: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
+    }
+
+    .card-title { font-weight: bold; margin-bottom: 4px; }
+    .card-text { line-height: 1.4; white-space: pre-wrap; }
+    .card-actions { margin-top: 7px; display: flex; gap: 5px; flex-wrap: wrap; }
+    .tiny { min-height: 22px; padding: 2px 7px; font-size: 12px; }
+
+    .summary-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
 
-    .prompt-output {
-      min-height: 74px;
+    .summary-box {
       padding: 8px;
-      background: #fff;
       line-height: 1.45;
     }
 
-    .meter-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .check-row {
+    .statusbar {
       display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 6px;
-      align-items: start;
-      line-height: 1.35;
-    }
-
-    .fake-checkbox {
-      width: 14px;
-      height: 14px;
-      background: #fff;
-      border-top: 2px solid var(--win-dark);
-      border-left: 2px solid var(--win-dark);
-      border-right: 2px solid var(--win-light);
-      border-bottom: 2px solid var(--win-light);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    .fake-checkbox.ok::after {
-      content: "✓";
-    }
-
-    .status-bar {
-      height: 28px;
-      border-top: 1px solid var(--win-light);
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr 1fr 1.3fr;
+      grid-template-columns: 1fr 1fr 1fr 1.2fr;
       gap: 4px;
       padding: 4px 6px;
+      border-top: 1px solid var(--light);
     }
 
     .status-cell {
-      padding: 2px 6px;
-      background: var(--win-gray);
-      border-top: 1px solid var(--win-dark);
-      border-left: 1px solid var(--win-dark);
-      border-right: 1px solid var(--win-light);
-      border-bottom: 1px solid var(--win-light);
+      padding: 3px 6px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      border-top: 1px solid var(--dark);
+      border-left: 1px solid var(--dark);
+      border-right: 1px solid var(--light);
+      border-bottom: 1px solid var(--light);
     }
 
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
+    .hidden { display: none !important; }
 
-    .modal-window {
-      width: 440px;
-      background: var(--win-gray);
-      border-top: 2px solid var(--win-light);
-      border-left: 2px solid var(--win-light);
-      border-right: 2px solid var(--win-black);
-      border-bottom: 2px solid var(--win-black);
-      box-shadow: 3px 3px 0 rgba(0,0,0,0.45);
-    }
-
-    .modal-body {
-      padding: 12px;
-      line-height: 1.45;
-    }
-
-    .modal-actions {
-      padding: 0 12px 12px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 7px;
-    }
-
-    .desktop-note {
-      position: fixed;
-      right: 20px;
-      bottom: 18px;
-      color: #fff;
-      text-shadow: 1px 1px #000;
-      font-size: 12px;
-      opacity: 0.85;
-      pointer-events: none;
-    }
-
-    @media (max-width: 1050px) {
-      body {
-        overflow: auto;
-      }
-
-      .desktop {
-        height: auto;
-        min-height: 100%;
-      }
-
-      .window {
-        min-width: 0;
-        height: auto;
-        min-height: 780px;
-      }
-
-      .app-body {
-        grid-template-columns: 1fr;
-      }
-
-      .status-bar {
-        grid-template-columns: 1fr 1fr;
-        height: auto;
-      }
+    @media (max-width: 860px) {
+      body { padding: 8px; }
+      .window { min-height: calc(100vh - 16px); }
+      .main { grid-template-columns: 1fr; }
+      .form-grid, .summary-grid { grid-template-columns: 1fr; }
+      .statusbar { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
-  <div class="desktop">
-    <main class="window" aria-label="Kurgu Terminali 95 uygulama penceresi">
-      <header class="title-bar">
-        <div class="title-left">
-          <span class="app-icon" aria-hidden="true"></span>
-          <span>Kurgu Terminali 95</span>
-        </div>
-        <div class="window-actions" aria-hidden="true">
-          <button class="window-button">_</button>
-          <button class="window-button">□</button>
-          <button class="window-button">×</button>
-        </div>
-      </header>
+  <main class="window">
+    <header class="titlebar">
+      <div class="title-left"><span class="icon"></span><span>Kurgu Terminali 95</span></div>
+      <div class="win-actions" aria-hidden="true">
+        <button class="win-action">_</button>
+        <button class="win-action">□</button>
+        <button class="win-action">×</button>
+      </div>
+    </header>
 
-      <nav class="menu-bar" aria-label="Menü çubuğu">
-        <span class="menu-item">Dosya</span>
-        <span class="menu-item">Düzenle</span>
-        <span class="menu-item">Görünüm</span>
-        <span class="menu-item">Öykü</span>
-        <span class="menu-item">Araçlar</span>
-        <span class="menu-item">Yardım</span>
-      </nav>
+    <nav class="menubar">
+      <span class="menuitem">Dosya</span>
+      <span class="menuitem">Düzenle</span>
+      <span class="menuitem">Adımlar</span>
+      <span class="menuitem">Araçlar</span>
+      <span class="menuitem">Yardım</span>
+    </nav>
 
-      <section class="toolbar" aria-label="Araç çubuğu">
-        <button class="win-button" id="newProjectBtn">📄 Yeni</button>
-        <button class="win-button primary" id="saveBtn">💾 Kaydet</button>
-        <button class="win-button" id="exportBtn">📤 Dışa Aktar</button>
-        <span class="tool-separator"></span>
-        <button class="win-button" id="addSceneBtn">🎬 Sahne Ekle</button>
-        <button class="win-button" id="addCharacterBtn">🙂 Karakter Ekle</button>
-        <button class="win-button" id="addSymbolBtn">🔑 Nesne Ekle</button>
-        <span class="tool-separator"></span>
-        <button class="win-button primary" id="stuckBtn">⚠ Tıkandım!</button>
-        <button class="win-button" id="finalBtn">🏁 Final Dene</button>
-        <button class="win-button" id="healthBtn">🩺 Öykü Sağlığı</button>
-      </section>
+    <section class="toolbar">
+      <button class="btn primary" id="saveBtn">💾 Kaydet</button>
+      <button class="btn" id="exportBtn">📤 Dışa Aktar</button>
+      <button class="btn" id="stuckBtn">⚠ Tıkandım</button>
+      <button class="btn" id="newBtn">📄 Yeni Proje</button>
+    </section>
 
-      <section class="app-body">
-        <aside class="panel">
-          <div class="panel-title">Proje Gezgini</div>
-          <div class="panel-content">
-            <div class="project-tree inset" id="projectTree">
-              <div class="tree-item active" data-section="draft"><span class="tree-icon"></span><span>Taslak.txt</span></div>
-              <div class="tree-item" data-section="plan"><span class="tree-icon"></span><span>Plan</span></div>
-              <div class="tree-item" data-section="characters"><span class="tree-icon"></span><span>Karakterler</span></div>
-              <div class="tree-item" data-section="scenes"><span class="tree-icon"></span><span>Sahneler</span></div>
-              <div class="tree-item" data-section="symbols"><span class="tree-icon"></span><span>Nesneler & Semboller</span></div>
-              <div class="tree-item" data-section="endings"><span class="tree-icon"></span><span>Final Laboratuvarı</span></div>
-              <div class="tree-item" data-section="trash"><span class="tree-icon"></span><span>Fikir Çöplüğü</span></div>
-            </div>
-
-            <div class="section-box inset">
-              <div class="section-title">Bugünkü Yazma Görevi</div>
-              <div id="dailyTask" class="small-note">Bir sahnede karaktere söyleyemediği bir cümle ver.</div>
-              <button class="win-button tiny-button" id="taskBtn" style="margin-top: 7px;">Görevi Değiştir</button>
-            </div>
-
-            <div class="section-box inset">
-              <div class="section-title">Proje Dosyası</div>
-              <div class="small-note">Bu prototip tarayıcının localStorage alanına otomatik kayıt yapar.</div>
-            </div>
+    <section class="main">
+      <aside class="panel">
+        <div class="panel-title">Kurgu Akışı</div>
+        <div class="panel-body">
+          <div class="steps inset" id="steps"></div>
+          <div class="progress-box inset">
+            <strong>İlerleme</strong>
+            <div id="progressText">0 / 6 adım tamamlandı</div>
+            <div class="progress-bar inset"><div class="progress-fill" id="progressFill"></div></div>
           </div>
-        </aside>
-
-        <section class="panel editor-panel">
-          <div class="panel-title">
-            <span>Yazı Alanı</span>
-            <span id="saveIndicator">Hazır</span>
+          <div class="progress-box inset">
+            <strong>Felsefe</strong>
+            <div>Tek ekranda karmaşa yok. Her adımda sadece o anda gereken kararlar var.</div>
           </div>
-          <div class="panel-content">
-            <div class="title-row">
-              <div class="field-group">
-                <label for="storyTitle">Başlık</label>
-                <input id="storyTitle" class="win-input" type="text" placeholder="Öykünün adını yaz..." />
+        </div>
+      </aside>
+
+      <section class="panel">
+        <div class="panel-title" id="screenTitleBar">1. Fikir Dosyası</div>
+        <div class="panel-body">
+          <section class="screen" data-screen="0">
+            <div class="screen-header">
+              <div>
+                <h1>1. Fikir Dosyası</h1>
+                <p>Önce öykünün ham çekirdeğini kur. Burada güzel cümle değil, yön arıyoruz.</p>
               </div>
-              <div class="field-group">
-                <label for="writingMode">Yazma Modu</label>
-                <select id="writingMode" class="win-select">
-                  <option>Taslak Modu</option>
-                  <option>Sahne Modu</option>
-                  <option>Diyalog Modu</option>
-                  <option>Revizyon Modu</option>
-                  <option>Final Modu</option>
+              <div class="badge inset">Başlangıç</div>
+            </div>
+
+            <div class="hint inset">Formül: <strong>Sıradan insan + bastırılmış duygu + geri dönülmez olay.</strong></div>
+
+            <div class="field">
+              <label for="title">Öykü Başlığı</label>
+              <input id="title" class="input" placeholder="Örn: Annemin Telefonu">
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="ordinaryPerson">Sıradan İnsan</label>
+                <input id="ordinaryPerson" class="input" placeholder="Örn: Emekli bir öğretmen">
+              </div>
+              <div class="field">
+                <label for="hiddenEmotion">Bastırılmış Duygu</label>
+                <select id="hiddenEmotion" class="select">
+                  <option value="">Seç...</option>
+                  <option>Suçluluk</option>
+                  <option>Özlem</option>
+                  <option>Utanç</option>
+                  <option>Kıskançlık</option>
+                  <option>Korku</option>
+                  <option>Pişmanlık</option>
+                  <option>Yalnızlık</option>
+                  <option>Merak</option>
                 </select>
               </div>
             </div>
 
-            <textarea id="storyText" class="win-textarea main-editor" placeholder="Bir cümleyle başla. Güzel olması gerekmiyor; sadece kapıyı açması yeterli."></textarea>
-
-            <div class="tab-row" aria-label="Alt çalışma sekmeleri">
-              <button class="tab-button active" data-tab="scratch">Notlar</button>
-              <button class="tab-button" data-tab="plan">Plan</button>
-              <button class="tab-button" data-tab="trash">Çöplük</button>
+            <div class="field">
+              <label for="irreversibleEvent">Geri Dönülmez Olay</label>
+              <textarea id="irreversibleEvent" class="textarea" placeholder="Örn: Yıllar önce öldüğünü sandığı öğrencisinden bir mektup gelir."></textarea>
             </div>
 
-            <div id="tabScratch" class="tab-window inset">
-              <label for="scratchNotes">Serbest Notlar</label>
-              <textarea id="scratchNotes" class="win-textarea" style="height: 145px;" placeholder="Dağınık fikirler, cümle kırıntıları, atmosfer notları..."></textarea>
+            <div class="field">
+              <label for="coreIdea">Tek Cümlelik Öykü Fikri</label>
+              <textarea id="coreIdea" class="textarea" placeholder="Bir cümleyle öykünün kalbini yaz."></textarea>
             </div>
+          </section>
 
-            <div id="tabPlan" class="tab-window inset hidden">
-              <div class="split-two">
-                <div class="field-group">
-                  <label for="coreIdea">Çekirdek Fikir</label>
-                  <textarea id="coreIdea" class="win-textarea" style="height: 90px;" placeholder="Sıradan insan + bastırılmış duygu + geri dönülmez olay"></textarea>
-                </div>
-                <div class="field-group">
-                  <label for="mainQuestion">Ana Soru</label>
-                  <textarea id="mainQuestion" class="win-textarea" style="height: 90px;" placeholder="Okur hangi sorunun cevabını merak edecek?"></textarea>
-                </div>
+          <section class="screen hidden" data-screen="1">
+            <div class="screen-header">
+              <div>
+                <h1>2. Karakter Kartı</h1>
+                <p>Öyküyü olay değil, karakterin isteği taşır. Burada tek ana karaktere odaklan.</p>
               </div>
-              <div class="split-two">
-                <div class="field-group">
-                  <label for="openingHook">Açılış Kancası</label>
-                  <input id="openingHook" class="win-input" placeholder="İlk sahnedeki tuhaflık..." />
-                </div>
-                <div class="field-group">
-                  <label for="emotionalTarget">Finalde Kalsın İstenen His</label>
-                  <input id="emotionalTarget" class="win-input" placeholder="Hüzün, rahatsızlık, merak, boşluk..." />
-                </div>
+              <div class="badge inset">Kim?</div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="characterName">Karakter Adı</label>
+                <input id="characterName" class="input" placeholder="Örn: Nermin">
+              </div>
+              <div class="field">
+                <label for="characterMask">Dışarıdan Nasıl Görünüyor?</label>
+                <input id="characterMask" class="input" placeholder="Sakin, kontrollü, komik, sert...">
               </div>
             </div>
 
-            <div id="tabTrash" class="tab-window inset hidden">
-              <label for="trashBox">Fikir Çöplüğü</label>
-              <textarea id="trashBox" class="win-textarea" style="height: 145px;" placeholder="Silmek istemediğin ama şimdilik metinde durmayan şeyler..."></textarea>
-            </div>
-          </div>
-        </section>
-
-        <aside class="panel">
-          <div class="panel-title">Araç Kutusu</div>
-          <div class="panel-content">
-            <div class="field-group">
-              <label for="mainEmotion">Ana Duygu</label>
-              <select id="mainEmotion" class="win-select">
-                <option value="">Seç...</option>
-                <option>Suçluluk</option>
-                <option>Özlem</option>
-                <option>Utanç</option>
-                <option>Kıskançlık</option>
-                <option>Korku</option>
-                <option>Pişmanlık</option>
-                <option>Merak</option>
-                <option>Yalnızlık</option>
-                <option>Absürtlük</option>
-              </select>
+            <div class="form-grid">
+              <div class="field">
+                <label for="characterWant">En Çok Ne İstiyor?</label>
+                <textarea id="characterWant" class="textarea" placeholder="Affedilmek, kaçmak, saklamak, kanıtlamak..."></textarea>
+              </div>
+              <div class="field">
+                <label for="characterFear">En Çok Neden Korkuyor?</label>
+                <textarea id="characterFear" class="textarea" placeholder="Birinin gerçeği öğrenmesinden, yalnız kalmaktan..."></textarea>
+              </div>
             </div>
 
-            <div class="field-group">
-              <label for="characterWant">Karakter Ne İstiyor?</label>
-              <input id="characterWant" class="win-input" placeholder="Affedilmek, kaçmak, saklamak..." />
+            <div class="field">
+              <label for="characterSecret">Sırrı / Yalanı</label>
+              <textarea id="characterSecret" class="textarea" placeholder="Kimseye söylemediği ya da kendine bile itiraf edemediği şey."></textarea>
+            </div>
+          </section>
+
+          <section class="screen hidden" data-screen="2">
+            <div class="screen-header">
+              <div>
+                <h1>3. Çatışma Motoru</h1>
+                <p>Şimdi karakterin isteğini zorlaştır. Engel yoksa öykü durur.</p>
+              </div>
+              <div class="badge inset">Neden zor?</div>
             </div>
 
-            <div class="field-group">
-              <label for="centralConflict">Ana Çatışma</label>
-              <textarea id="centralConflict" class="win-textarea" style="height: 68px;" placeholder="Karakterin isteğini engelleyen şey..."></textarea>
+            <div class="field">
+              <label for="mainConflict">Ana Çatışma</label>
+              <textarea id="mainConflict" class="textarea" placeholder="Karakter istediği şeyi neden kolayca alamıyor?"></textarea>
             </div>
 
-            <div class="section-box inset" style="margin-top: 0;">
-              <div class="section-title">Tıkanıklık Çıktısı</div>
-              <div id="promptOutput" class="prompt-output inset">Tıkandığında üstteki “Tıkandım!” butonuna bas.</div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="pressure">Zaman / Baskı Unsuru</label>
+                <input id="pressure" class="input" placeholder="Gece bitmeden, cenazeden önce, tren kalkmadan...">
+              </div>
+              <div class="field">
+                <label for="objectSymbol">Önemli Nesne / Sembol</label>
+                <input id="objectSymbol" class="input" placeholder="Anahtar, mektup, telefon, kırık bardak...">
+              </div>
             </div>
 
-            <div class="section-box inset">
-              <div class="section-title">Öykü Sağlığı</div>
-              <div class="meter-list" id="healthList"></div>
+            <div class="field">
+              <label for="turningPoint">Kırılma Anı</label>
+              <textarea id="turningPoint" class="textarea" placeholder="Öykünün ortasında artık geri dönüşü olmayan ne olur?"></textarea>
+            </div>
+          </section>
+
+          <section class="screen hidden" data-screen="3">
+            <div class="screen-header">
+              <div>
+                <h1>4. Sahne Sırası</h1>
+                <p>Öyküyü küçük bloklara ayır. Her sahne bir şeyi değiştirmeli.</p>
+              </div>
+              <div class="badge inset">Plan</div>
             </div>
 
-            <div class="section-box inset">
-              <div class="section-title">Sahneler</div>
-              <div id="sceneList" class="card-list"></div>
+            <div class="form-grid">
+              <div class="field">
+                <label for="sceneTitle">Yeni Sahne Başlığı</label>
+                <input id="sceneTitle" class="input" placeholder="Örn: Eski eve dönüş">
+              </div>
+              <div class="field">
+                <label for="sceneChange">Bu Sahnede Ne Değişiyor?</label>
+                <input id="sceneChange" class="input" placeholder="Karakter ne öğreniyor, ne kaybediyor?">
+              </div>
             </div>
 
-            <div class="section-box inset">
-              <div class="section-title">Karakterler</div>
-              <div id="characterList" class="card-list"></div>
+            <button class="btn primary" id="addSceneBtn">🎬 Sahneyi Listeye Ekle</button>
+            <div class="cards" id="sceneCards"></div>
+          </section>
+
+          <section class="screen hidden" data-screen="4">
+            <div class="screen-header">
+              <div>
+                <h1>5. Taslak Yazımı</h1>
+                <p>Artık yazı alanı. Hedef mükemmel metin değil, bitmiş ham taslak.</p>
+              </div>
+              <div class="badge inset" id="wordBadge">0 kelime</div>
             </div>
 
-            <div class="section-box inset">
-              <div class="section-title">Nesneler & Semboller</div>
-              <div id="symbolList" class="card-list"></div>
+            <div class="hint inset" id="draftHint">Açılışta karakteri bir kararın, bekleyişin veya küçük bir tuhaflığın içine koy.</div>
+
+            <div class="field">
+              <label for="storyText">Taslak</label>
+              <textarea id="storyText" class="textarea story-editor" placeholder="Öyküyü buraya yaz..."></textarea>
             </div>
-          </div>
-        </aside>
+          </section>
+
+          <section class="screen hidden" data-screen="5">
+            <div class="screen-header">
+              <div>
+                <h1>6. Final & Paketleme</h1>
+                <p>Son adımda final hissini seç, kısa kontrol yap ve dışa aktar.</p>
+              </div>
+              <div class="badge inset">Bitiş</div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="endingType">Final Tipi</label>
+                <select id="endingType" class="select">
+                  <option>Sessiz final</option>
+                  <option>Açık final</option>
+                  <option>Ters köşe final</option>
+                  <option>Döngüsel final</option>
+                  <option>Karanlık final</option>
+                  <option>Duygusal final</option>
+                  <option>Absürt final</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="finalFeeling">Okurda Kalacak His</label>
+                <input id="finalFeeling" class="input" placeholder="Hüzün, rahatsızlık, boşluk, merak...">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="lastLine">Olası Son Cümle</label>
+              <textarea id="lastLine" class="textarea" placeholder="Final cümleni ya da final görüntünü dene."></textarea>
+            </div>
+
+            <div class="summary-grid">
+              <div class="summary-box inset">
+                <strong>Öykü Özeti</strong>
+                <div id="summaryBox">Henüz özet yok.</div>
+              </div>
+              <div class="summary-box inset">
+                <strong>Kontrol</strong>
+                <div id="checkBox">Eksikler burada görünecek.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="linear-actions">
+            <div class="left-actions">
+              <button class="btn" id="prevBtn">◀ Geri</button>
+              <button class="btn" id="nextBtn">İleri ▶</button>
+            </div>
+            <div class="right-actions">
+              <button class="btn primary" id="completeBtn">✓ Bu Adımı Tamamla</button>
+              <button class="btn" id="helpBtn">💡 Mini Yardım</button>
+            </div>
+          </section>
+        </div>
       </section>
+    </section>
 
-      <footer class="status-bar" aria-label="Durum çubuğu">
-        <div class="status-cell" id="wordCount">Kelime: 0</div>
-        <div class="status-cell" id="charCount">Karakter: 0</div>
-        <div class="status-cell" id="sceneCount">Sahne: 0</div>
-        <div class="status-cell" id="lastSaved">Son kayıt: -</div>
-        <div class="status-cell" id="modeStatus">Mod: Taslak Modu</div>
-      </footer>
-    </main>
-  </div>
-
-  <div class="desktop-note">Kurgu Terminali 95 • Eski masaüstü, yeni kurgu disiplini</div>
-
-  <div id="modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
-    <div class="modal-window">
-      <div class="title-bar">
-        <div class="title-left"><span class="app-icon" aria-hidden="true"></span><span id="modalTitle">Pencere</span></div>
-        <button class="window-button" id="modalClose">×</button>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-      <div class="modal-actions" id="modalActions"></div>
-    </div>
-  </div>
+    <footer class="statusbar">
+      <div class="status-cell" id="statusStep">Adım: 1 / 6</div>
+      <div class="status-cell" id="statusWords">Kelime: 0</div>
+      <div class="status-cell" id="statusSaved">Son kayıt: -</div>
+      <div class="status-cell" id="statusMessage">Hazır</div>
+    </footer>
+  </main>
 
   <script>
-    const STORAGE_KEY = "kurgu-terminali-95-v1";
+    const STORAGE_KEY = "kurgu-terminali-95-linear-v1";
 
-    const starterData = {
-      title: "Adsız Öykü",
-      text: "",
-      mode: "Taslak Modu",
-      notes: "",
-      trash: "",
+    const stepNames = [
+      { title: "Fikir Dosyası", sub: "Öykünün çekirdeği" },
+      { title: "Karakter Kartı", sub: "İstek, korku, sır" },
+      { title: "Çatışma Motoru", sub: "Engel ve kırılma" },
+      { title: "Sahne Sırası", sub: "Planı bloklara ayır" },
+      { title: "Taslak Yazımı", sub: "Ham metni çıkar" },
+      { title: "Final & Paketleme", sub: "Son his ve dışa aktar" }
+    ];
+
+    const defaultData = {
+      currentStep: 0,
+      completed: [],
+      title: "",
+      ordinaryPerson: "",
+      hiddenEmotion: "",
+      irreversibleEvent: "",
       coreIdea: "",
-      mainQuestion: "",
-      openingHook: "",
-      emotionalTarget: "",
-      mainEmotion: "",
+      characterName: "",
+      characterMask: "",
       characterWant: "",
-      centralConflict: "",
+      characterFear: "",
+      characterSecret: "",
+      mainConflict: "",
+      pressure: "",
+      objectSymbol: "",
+      turningPoint: "",
       scenes: [],
-      characters: [],
-      symbols: [],
+      storyText: "",
+      endingType: "Sessiz final",
+      finalFeeling: "",
+      lastLine: "",
       lastSaved: null
     };
 
     let data = loadData();
-    let currentSection = "draft";
-    let autosaveTimer = null;
+    let saveTimer = null;
 
-    const $ = (selector) => document.querySelector(selector);
-    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+    const nl = String.fromCharCode(10);
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
 
-    const fields = {
-      storyTitle: $("#storyTitle"),
-      storyText: $("#storyText"),
-      writingMode: $("#writingMode"),
-      scratchNotes: $("#scratchNotes"),
-      trashBox: $("#trashBox"),
-      coreIdea: $("#coreIdea"),
-      mainQuestion: $("#mainQuestion"),
-      openingHook: $("#openingHook"),
-      emotionalTarget: $("#emotionalTarget"),
-      mainEmotion: $("#mainEmotion"),
-      characterWant: $("#characterWant"),
-      centralConflict: $("#centralConflict")
-    };
+    const fieldIds = [
+      "title", "ordinaryPerson", "hiddenEmotion", "irreversibleEvent", "coreIdea",
+      "characterName", "characterMask", "characterWant", "characterFear", "characterSecret",
+      "mainConflict", "pressure", "objectSymbol", "turningPoint", "storyText",
+      "endingType", "finalFeeling", "lastLine"
+    ];
 
     const stuckPrompts = [
-      "Sahneye, karakterin görmek istemediği biri girsin.",
-      "Karakter bir şeyi yanlışlıkla itiraf etsin ama karşısındaki kişi bunu anlamamış gibi davransın.",
-      "Mekânı değiştir: aynı çatışmayı mutfak, otobüs veya hastane koridorunda dene.",
-      "Karakterin en küçük yalanını büyüt ve sahnenin merkezine koy.",
-      "Bir nesne kaybolsun. Herkes nesneyi ararken asıl sır ortaya çıksın.",
-      "Şimdi sadece diyalog yaz. Anlatıcıyı beş dakika sustur.",
-      "Zamanı on yıl ileri sar ve bu sahnenin sonucunu göster.",
-      "Finali önce yaz. Sonra karakteri o finale götüren en acı kararı bul.",
-      "Karakterin istediği şeyi ona hemen ver; sonra bunun bedelini göster.",
-      "Sahnedeki en sessiz karaktere bir cümle söylettir. O cümle her şeyi bozsun.",
-      "Karakterin çantasında, cebinde veya masasının çekmecesinde olmaması gereken bir şey bulunsun.",
-      "Okurun bildiği ama karakterin bilmediği küçük bir tehlike ekle."
+      "Karakterin sakladığı küçük yalanı büyüt.",
+      "Sahneye gelmemesi gereken birini sok.",
+      "Bir nesne kaybolsun; herkes onu ararken asıl mesele ortaya çıksın.",
+      "Şimdi sadece diyalog yaz. Anlatıcıyı sustur.",
+      "Karaktere istediği şeyi ver, sonra bedelini göster.",
+      "Aynı sahneyi daha dar bir mekanda dene: mutfak, asansör, otobüs, koridor.",
+      "Final görüntüsünü önce yaz, sonra geriye doğru ilerle."
     ];
 
-    const finalPrompts = [
-      "Sessiz final: Karakter hiçbir şeyi açıklamaz, sadece yapmadığı bir şeyi sonunda yapar.",
-      "Döngüsel final: İlk cümledeki görüntü sona döner ama anlamı değişmiştir.",
-      "Ters köşe final: Okurun olay hakkındaki yorumu değişir; karakterin niyeti baştan beri farklıdır.",
-      "Açık final: Karakter kapının önünde kalır. İçeri girip girmediğini söyleme.",
-      "Duygusal final: Büyük olay yerine küçük bir jest kullan. Bir bardağın yıkanması, bir mesajın silinmesi, bir anahtarın bırakılması.",
-      "Karanlık final: Karakter istediğini elde eder ama daha kötü birine dönüşür.",
-      "Absürt final: Ciddi çatışmanın ortasına mantıksız ama karaktere çok doğal gelen bir ayrıntı koy."
-    ];
-
-    const dailyTasks = [
-      "Bir sahnede karaktere söyleyemediği bir cümle ver.",
-      "Bugün sadece 300 kelime ham taslak yaz.",
-      "Bir karakterin sakladığı küçük bir yalanı belirle.",
-      "Öyküde tekrar edecek bir nesne seç.",
-      "Final için üç farklı son cümle dene.",
-      "Bir sahneyi sadece diyalogla yeniden yaz.",
-      "Açılış paragrafına küçük bir tuhaflık ekle.",
-      "Ana çatışmayı tek cümleye indir.",
-      "Fikir çöplüğünden bir parçayı geri çağır.",
-      "Karakterin en büyük korkusunu görünür yapan bir olay yaz."
+    const miniHelp = [
+      ["Fikir için: Birisi bir şeyi saklıyor ama bugün saklayamayacak.", "Fikir için: gündelik bir mekan seç ve oraya olmaması gereken bir nesne koy."],
+      ["Karakter için: dışarıdan güçlü görünen ama içeride utanan biri düşün.", "Karakter için: isteğiyle korkusunu birbirine zıt yap."],
+      ["Çatışma için: karakterin istediği şeyin bedelini ağırlaştır.", "Çatışma için: zaman baskısı ekle; gece bitmeden, biri gelmeden, tren kalkmadan."],
+      ["Sahne için: her kartta ne değişti sorusuna cevap ver.", "Sahne için: açılış, bozulan düzen, yüzleşme, karar, final şeklinde sırala."],
+      ["Taslak için: ilk paragrafta açıklama değil, hareket kullan.", "Taslak için: kötü yazmaya izin ver; revizyon sonraki iş."],
+      ["Final için: büyük açıklama yerine küçük bir jest seç.", "Final için: ilk görüntüyü sona döndür ama anlamını değiştir."]
     ];
 
     function loadData() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(starterData);
-        return { ...structuredClone(starterData), ...JSON.parse(raw) };
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return structuredClone(defaultData);
+        return Object.assign(structuredClone(defaultData), JSON.parse(saved));
       } catch (error) {
-        console.warn("Veri okunamadı:", error);
-        return structuredClone(starterData);
+        return structuredClone(defaultData);
       }
     }
 
-    function saveData(manual = false) {
+    function save(manual) {
       data.lastSaved = new Date().toISOString();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      renderStatus();
-      $("#saveIndicator").textContent = manual ? "Kaydedildi" : "Otomatik kayıt";
-      setTimeout(() => {
-        $("#saveIndicator").textContent = "Hazır";
-      }, 1200);
+      renderStatus(manual ? "Kaydedildi" : "Otomatik kayıt");
     }
 
     function scheduleSave() {
-      $("#saveIndicator").textContent = "Yazılıyor...";
-      clearTimeout(autosaveTimer);
-      autosaveTimer = setTimeout(() => saveData(false), 450);
+      renderStatus("Yazılıyor...");
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => save(false), 400);
     }
 
-    function hydrateFields() {
-      fields.storyTitle.value = data.title;
-      fields.storyText.value = data.text;
-      fields.writingMode.value = data.mode;
-      fields.scratchNotes.value = data.notes;
-      fields.trashBox.value = data.trash;
-      fields.coreIdea.value = data.coreIdea;
-      fields.mainQuestion.value = data.mainQuestion;
-      fields.openingHook.value = data.openingHook;
-      fields.emotionalTarget.value = data.emotionalTarget;
-      fields.mainEmotion.value = data.mainEmotion;
-      fields.characterWant.value = data.characterWant;
-      fields.centralConflict.value = data.centralConflict;
+    function hydrate() {
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = data[id] || "";
+      });
     }
 
     function bindFields() {
-      fields.storyTitle.addEventListener("input", () => {
-        data.title = fields.storyTitle.value;
-        scheduleSave();
-      });
-
-      fields.storyText.addEventListener("input", () => {
-        data.text = fields.storyText.value;
-        renderStatus();
-        renderHealth();
-        scheduleSave();
-      });
-
-      fields.writingMode.addEventListener("change", () => {
-        data.mode = fields.writingMode.value;
-        renderStatus();
-        scheduleSave();
-      });
-
-      fields.scratchNotes.addEventListener("input", () => {
-        data.notes = fields.scratchNotes.value;
-        scheduleSave();
-      });
-
-      fields.trashBox.addEventListener("input", () => {
-        data.trash = fields.trashBox.value;
-        scheduleSave();
-      });
-
-      fields.coreIdea.addEventListener("input", () => {
-        data.coreIdea = fields.coreIdea.value;
-        renderHealth();
-        scheduleSave();
-      });
-
-      fields.mainQuestion.addEventListener("input", () => {
-        data.mainQuestion = fields.mainQuestion.value;
-        scheduleSave();
-      });
-
-      fields.openingHook.addEventListener("input", () => {
-        data.openingHook = fields.openingHook.value;
-        scheduleSave();
-      });
-
-      fields.emotionalTarget.addEventListener("input", () => {
-        data.emotionalTarget = fields.emotionalTarget.value;
-        renderHealth();
-        scheduleSave();
-      });
-
-      fields.mainEmotion.addEventListener("change", () => {
-        data.mainEmotion = fields.mainEmotion.value;
-        renderHealth();
-        scheduleSave();
-      });
-
-      fields.characterWant.addEventListener("input", () => {
-        data.characterWant = fields.characterWant.value;
-        renderHealth();
-        scheduleSave();
-      });
-
-      fields.centralConflict.addEventListener("input", () => {
-        data.centralConflict = fields.centralConflict.value;
-        renderHealth();
-        scheduleSave();
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const eventName = el.tagName === "SELECT" ? "change" : "input";
+        el.addEventListener(eventName, () => {
+          data[id] = el.value;
+          updateWordCount();
+          updateSummary();
+          scheduleSave();
+        });
       });
     }
 
+    function renderSteps() {
+      const html = stepNames.map((step, index) => {
+        const active = index === data.currentStep ? "active" : "";
+        const done = data.completed.includes(index) ? "done" : "";
+        return `<div class="step ${active} ${done}" data-step="${index}"><div class="step-no">${index + 1}</div><div class="step-label"><strong>${step.title}</strong><small>${step.sub}</small></div></div>`;
+      }).join("");
+
+      $("#steps").innerHTML = html;
+      $$(".step").forEach(step => {
+        step.addEventListener("click", () => goToStep(Number(step.dataset.step)));
+      });
+    }
+
+    function renderScreen() {
+      $$(".screen").forEach(screen => {
+        screen.classList.toggle("hidden", Number(screen.dataset.screen) !== data.currentStep);
+      });
+      $("#screenTitleBar").textContent = `${data.currentStep + 1}. ${stepNames[data.currentStep].title}`;
+      $("#prevBtn").disabled = data.currentStep === 0;
+      $("#nextBtn").disabled = data.currentStep === stepNames.length - 1;
+      renderSteps();
+      updateProgress();
+      updateWordCount();
+      updateSummary();
+      renderStatus("Hazır");
+    }
+
+    function goToStep(index) {
+      data.currentStep = Math.max(0, Math.min(stepNames.length - 1, index));
+      save(false);
+      renderScreen();
+    }
+
+    function completeStep() {
+      if (!data.completed.includes(data.currentStep)) data.completed.push(data.currentStep);
+      if (data.currentStep < stepNames.length - 1) data.currentStep += 1;
+      save(true);
+      renderScreen();
+    }
+
+    function updateProgress() {
+      const done = data.completed.length;
+      const total = stepNames.length;
+      $("#progressText").textContent = `${done} / ${total} adım tamamlandı`;
+      $("#progressFill").style.width = `${Math.round((done / total) * 100)}%`;
+    }
+
     function wordCount(text) {
-      const words = text.trim().match(/\S+/g);
-      return words ? words.length : 0;
+      const trimmed = String(text || "").trim();
+      if (!trimmed) return 0;
+      return trimmed.split(" ").filter(Boolean).length;
+    }
+
+    function updateWordCount() {
+      const count = wordCount(data.storyText);
+      $("#wordBadge").textContent = `${count} kelime`;
+      $("#statusWords").textContent = `Kelime: ${count}`;
     }
 
     function formatTime(iso) {
       if (!iso) return "-";
-      const date = new Date(iso);
-      return date.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+      return new Date(iso).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
     }
 
-    function renderStatus() {
-      $("#wordCount").textContent = `Kelime: ${wordCount(data.text)}`;
-      $("#charCount").textContent = `Karakter: ${data.text.length}`;
-      $("#sceneCount").textContent = `Sahne: ${data.scenes.length}`;
-      $("#lastSaved").textContent = `Son kayıt: ${formatTime(data.lastSaved)}`;
-      $("#modeStatus").textContent = `Mod: ${data.mode}`;
-    }
-
-    function renderHealth() {
-      const checks = [
-        { label: "Başlık var", ok: data.title.trim().length > 0 && data.title !== "Adsız Öykü" },
-        { label: "Çekirdek fikir yazıldı", ok: data.coreIdea.trim().length > 12 },
-        { label: "Ana duygu seçildi", ok: data.mainEmotion.trim().length > 0 },
-        { label: "Karakter isteği belli", ok: data.characterWant.trim().length > 3 },
-        { label: "Ana çatışma belli", ok: data.centralConflict.trim().length > 10 },
-        { label: "En az 1 sahne var", ok: data.scenes.length > 0 },
-        { label: "En az 1 karakter var", ok: data.characters.length > 0 },
-        { label: "Finalde kalacak his belli", ok: data.emotionalTarget.trim().length > 3 },
-        { label: "Taslak 250+ kelimeye ulaştı", ok: wordCount(data.text) >= 250 }
-      ];
-
-      $("#healthList").innerHTML = checks.map(item => `
-        <div class="check-row">
-          <span class="fake-checkbox ${item.ok ? "ok" : ""}"></span>
-          <span>${item.label}</span>
-        </div>
-      `).join("");
-    }
-
-    function renderCards() {
-      renderScenes();
-      renderCharacters();
-      renderSymbols();
-      renderStatus();
-      renderHealth();
-    }
-
-    function renderScenes() {
-      const list = $("#sceneList");
-      if (!data.scenes.length) {
-        list.innerHTML = `<div class="small-note">Henüz sahne yok. “Sahne Ekle” ile başla.</div>`;
-        return;
-      }
-
-      list.innerHTML = data.scenes.map((scene, index) => `
-        <article class="mini-card">
-          <div class="mini-card-title">${index + 1}. ${escapeHTML(scene.title)}</div>
-          <div class="mini-card-meta">${escapeHTML(scene.summary || "Özet yok")}</div>
-          <div class="mini-card-actions">
-            <button class="win-button tiny-button" data-action="send-scene" data-index="${index}">Metne Ekle</button>
-            <button class="win-button tiny-button danger" data-action="delete-scene" data-index="${index}">Sil</button>
-          </div>
-        </article>
-      `).join("");
-    }
-
-    function renderCharacters() {
-      const list = $("#characterList");
-      if (!data.characters.length) {
-        list.innerHTML = `<div class="small-note">Henüz karakter yok.</div>`;
-        return;
-      }
-
-      list.innerHTML = data.characters.map((character, index) => `
-        <article class="mini-card">
-          <div class="mini-card-title">${escapeHTML(character.name)}</div>
-          <div class="mini-card-meta">
-            İstek: ${escapeHTML(character.want || "-")}<br />
-            Sır: ${escapeHTML(character.secret || "-")}
-          </div>
-          <div class="mini-card-actions">
-            <button class="win-button tiny-button" data-action="send-character" data-index="${index}">Notlara Ekle</button>
-            <button class="win-button tiny-button danger" data-action="delete-character" data-index="${index}">Sil</button>
-          </div>
-        </article>
-      `).join("");
-    }
-
-    function renderSymbols() {
-      const list = $("#symbolList");
-      if (!data.symbols.length) {
-        list.innerHTML = `<div class="small-note">Henüz nesne/sembol yok.</div>`;
-        return;
-      }
-
-      list.innerHTML = data.symbols.map((symbol, index) => `
-        <article class="mini-card">
-          <div class="mini-card-title">${escapeHTML(symbol.name)}</div>
-          <div class="mini-card-meta">
-            Anlam: ${escapeHTML(symbol.meaning || "-")}<br />
-            Geçtiği yer: ${escapeHTML(symbol.place || "-")}
-          </div>
-          <div class="mini-card-actions">
-            <button class="win-button tiny-button" data-action="send-symbol" data-index="${index}">Notlara Ekle</button>
-            <button class="win-button tiny-button danger" data-action="delete-symbol" data-index="${index}">Sil</button>
-          </div>
-        </article>
-      `).join("");
-    }
-
-    function escapeHTML(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function showModal(title, bodyHTML, actions = []) {
-      $("#modalTitle").textContent = title;
-      $("#modalBody").innerHTML = bodyHTML;
-      $("#modalActions").innerHTML = "";
-
-      actions.forEach(action => {
-        const button = document.createElement("button");
-        button.className = `win-button ${action.primary ? "primary" : ""} ${action.danger ? "danger" : ""}`;
-        button.textContent = action.label;
-        button.addEventListener("click", action.onClick);
-        $("#modalActions").appendChild(button);
-      });
-
-      $("#modal").classList.remove("hidden");
-    }
-
-    function closeModal() {
-      $("#modal").classList.add("hidden");
-    }
-
-    function promptModal(config) {
-      const fieldsHTML = config.fields.map(field => `
-        <div class="field-group">
-          <label for="modal-${field.key}">${field.label}</label>
-          ${field.type === "textarea"
-            ? `<textarea id="modal-${field.key}" class="win-textarea" style="height: ${field.height || 70}px;" placeholder="${field.placeholder || ""}"></textarea>`
-            : `<input id="modal-${field.key}" class="win-input" placeholder="${field.placeholder || ""}" />`
-          }
-        </div>
-      `).join("");
-
-      showModal(config.title, fieldsHTML, [
-        { label: "İptal", onClick: closeModal },
-        {
-          label: config.confirmLabel || "Ekle",
-          primary: true,
-          onClick: () => {
-            const result = {};
-            config.fields.forEach(field => {
-              result[field.key] = $(`#modal-${field.key}`).value.trim();
-            });
-            config.onSubmit(result);
-            closeModal();
-          }
-        }
-      ]);
+    function renderStatus(message) {
+      $("#statusStep").textContent = `Adım: ${data.currentStep + 1} / ${stepNames.length}`;
+      $("#statusSaved").textContent = `Son kayıt: ${formatTime(data.lastSaved)}`;
+      $("#statusMessage").textContent = message || "Hazır";
+      updateWordCount();
     }
 
     function addScene() {
-      promptModal({
-        title: "Yeni Sahne",
-        fields: [
-          { key: "title", label: "Sahne Başlığı", placeholder: "Örn: Eski eve dönüş" },
-          { key: "summary", label: "Sahne Özeti", type: "textarea", placeholder: "Bu sahnede ne değişiyor?" }
-        ],
-        onSubmit: (result) => {
-          if (!result.title && !result.summary) return;
-          data.scenes.push({
-            title: result.title || `Sahne ${data.scenes.length + 1}`,
-            summary: result.summary
-          });
-          saveData(true);
-          renderCards();
-        }
-      });
+      const title = $("#sceneTitle").value.trim();
+      const change = $("#sceneChange").value.trim();
+      if (!title && !change) return;
+      data.scenes.push({ title: title || `Sahne ${data.scenes.length + 1}`, change });
+      $("#sceneTitle").value = "";
+      $("#sceneChange").value = "";
+      save(true);
+      renderScenes();
+      updateSummary();
     }
 
-    function addCharacter() {
-      promptModal({
-        title: "Yeni Karakter",
-        fields: [
-          { key: "name", label: "Ad", placeholder: "Örn: Nermin" },
-          { key: "want", label: "Ne İstiyor?", placeholder: "Affedilmek, kaçmak, saklamak..." },
-          { key: "secret", label: "Sırrı", type: "textarea", placeholder: "Kimseye söylemediği şey..." }
-        ],
-        onSubmit: (result) => {
-          if (!result.name) return;
-          data.characters.push(result);
-          saveData(true);
-          renderCards();
-        }
-      });
+    function renderScenes() {
+      const root = $("#sceneCards");
+      if (!data.scenes.length) {
+        root.innerHTML = `<div class="hint inset">Henüz sahne yok. Önce açılış sahnesini ekle.</div>`;
+        return;
+      }
+
+      root.innerHTML = data.scenes.map((scene, index) => {
+        return `<div class="card"><div class="card-title">${index + 1}. ${escapeHTML(scene.title)}</div><div class="card-text">${escapeHTML(scene.change || "Bu sahnede ne değiştiği henüz yazılmadı.")}</div><div class="card-actions"><button class="btn tiny" data-scene-action="insert" data-index="${index}">Taslağa Ekle</button><button class="btn tiny danger" data-scene-action="delete" data-index="${index}">Sil</button></div></div>`;
+      }).join("");
     }
 
-    function addSymbol() {
-      promptModal({
-        title: "Yeni Nesne / Sembol",
-        fields: [
-          { key: "name", label: "Nesne", placeholder: "Örn: Eski anahtar" },
-          { key: "meaning", label: "Anlamı", placeholder: "Eve dönememe, suçluluk, bağ..." },
-          { key: "place", label: "Geçtiği Yer", placeholder: "Açılış, orta sahne, final..." }
-        ],
-        onSubmit: (result) => {
-          if (!result.name) return;
-          data.symbols.push(result);
-          saveData(true);
-          renderCards();
-        }
-      });
+    function escapeHTML(value) {
+      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
 
-    function appendToStory(text) {
-      const separator = data.text.trim() ? "\n\n" : "";
-      data.text += separator + text;
-      fields.storyText.value = data.text;
-      renderStatus();
-      renderHealth();
-      saveData(true);
-    }
+    function handleSceneActions(event) {
+      const button = event.target.closest("button[data-scene-action]");
+      if (!button) return;
+      const index = Number(button.dataset.index);
+      const action = button.dataset.sceneAction;
+      const scene = data.scenes[index];
 
-    function appendToNotes(text) {
-      const separator = data.notes.trim() ? "\n\n" : "";
-      data.notes += separator + text;
-      fields.scratchNotes.value = data.notes;
-      saveData(true);
+      if (action === "insert") {
+        const block = nl + nl + `[${scene.title}]` + nl + (scene.change || "") + nl;
+        data.storyText = (data.storyText || "") + block;
+        $("#storyText").value = data.storyText;
+      }
+
+      if (action === "delete") {
+        data.scenes.splice(index, 1);
+      }
+
+      save(true);
+      renderScenes();
+      updateWordCount();
+      updateSummary();
     }
 
     function randomFrom(items) {
       return items[Math.floor(Math.random() * items.length)];
     }
 
-    function handleStuck() {
-      const prompt = randomFrom(stuckPrompts);
-      $("#promptOutput").textContent = prompt;
-      appendToNotes(`[Tıkanıklık Önerisi]\n${prompt}`);
+    function stuck() {
+      const text = randomFrom(stuckPrompts);
+      $("#draftHint").textContent = text;
+      renderStatus("Tıkanıklık önerisi verildi");
     }
 
-    function handleFinal() {
-      const prompt = randomFrom(finalPrompts);
-      $("#promptOutput").textContent = prompt;
-      appendToNotes(`[Final Denemesi]\n${prompt}`);
+    function miniHelpForStep() {
+      alert(randomFrom(miniHelp[data.currentStep]));
     }
 
-    function showHealthModal() {
-      const scoreItems = $$("#healthList .fake-checkbox.ok").length;
-      const totalItems = $$("#healthList .fake-checkbox").length;
-      showModal(
-        "Öykü Sağlığı",
-        `<p>Şu anki kontrol puanın: <strong>${scoreItems}/${totalItems}</strong></p>
-         <p>Bu puan bir kalite yargısı değil; sadece öykünün temel parçalarının görünür olup olmadığını kontrol eder.</p>
-         <p>Eksik görünen yerleri doldurmak, tıkanıklığı azaltır.</p>`,
-        [{ label: "Tamam", primary: true, onClick: closeModal }]
-      );
+    function updateSummary() {
+      if (!$("#summaryBox")) return;
+      const summary = [
+        `<strong>Başlık:</strong> ${escapeHTML(data.title || "-")}`,
+        `<strong>Fikir:</strong> ${escapeHTML(data.coreIdea || "-")}`,
+        `<strong>Karakter:</strong> ${escapeHTML(data.characterName || "-")}`,
+        `<strong>İstek:</strong> ${escapeHTML(data.characterWant || "-")}`,
+        `<strong>Çatışma:</strong> ${escapeHTML(data.mainConflict || "-")}`,
+        `<strong>Sahne:</strong> ${data.scenes.length}`,
+        `<strong>Final:</strong> ${escapeHTML(data.endingType || "-")} / ${escapeHTML(data.finalFeeling || "-")}`
+      ].join("<br>");
+      $("#summaryBox").innerHTML = summary;
+
+      const missing = [];
+      if (!data.coreIdea.trim()) missing.push("Çekirdek fikir eksik.");
+      if (!data.characterName.trim()) missing.push("Ana karakter eksik.");
+      if (!data.characterWant.trim()) missing.push("Karakter isteği eksik.");
+      if (!data.mainConflict.trim()) missing.push("Ana çatışma eksik.");
+      if (!data.scenes.length) missing.push("En az bir sahne ekle.");
+      if (wordCount(data.storyText) < 250) missing.push("Taslak henüz kısa; 250+ kelime hedefle.");
+      if (!data.finalFeeling.trim()) missing.push("Okurda kalacak his eksik.");
+
+      $("#checkBox").innerHTML = missing.length ? missing.map(item => `• ${escapeHTML(item)}`).join("<br>") : "Temel parçalar tamam görünüyor.";
     }
 
-    function exportStory() {
+    function exportMarkdown() {
       const lines = [
         `# ${data.title || "Adsız Öykü"}`,
         "",
-        "## Taslak",
-        data.text || "",
+        "## 1. Fikir Dosyası",
+        `Sıradan insan: ${data.ordinaryPerson || "-"}`,
+        `Duygu: ${data.hiddenEmotion || "-"}`,
+        `Geri dönülmez olay: ${data.irreversibleEvent || "-"}`,
+        `Çekirdek fikir: ${data.coreIdea || "-"}`,
         "",
-        "## Plan",
-        `Çekirdek Fikir: ${data.coreIdea || "-"}`,
-        `Ana Soru: ${data.mainQuestion || "-"}`,
-        `Açılış Kancası: ${data.openingHook || "-"}`,
-        `Final Hissi: ${data.emotionalTarget || "-"}`,
+        "## 2. Karakter Kartı",
+        `Ad: ${data.characterName || "-"}`,
+        `Maske: ${data.characterMask || "-"}`,
+        `İstek: ${data.characterWant || "-"}`,
+        `Korku: ${data.characterFear || "-"}`,
+        `Sır/Yalan: ${data.characterSecret || "-"}`,
         "",
-        "## Karakterler",
-        ...(data.characters.length ? data.characters.map(c => `- ${c.name}: İstek: ${c.want || "-"} / Sır: ${c.secret || "-"}`) : ["-"]),
+        "## 3. Çatışma Motoru",
+        `Ana çatışma: ${data.mainConflict || "-"}`,
+        `Baskı: ${data.pressure || "-"}`,
+        `Nesne/Sembol: ${data.objectSymbol || "-"}`,
+        `Kırılma anı: ${data.turningPoint || "-"}`,
         "",
-        "## Sahneler",
-        ...(data.scenes.length ? data.scenes.map((s, i) => `${i + 1}. ${s.title}: ${s.summary || "-"}`) : ["-"]),
-        "",
-        "## Nesneler & Semboller",
-        ...(data.symbols.length ? data.symbols.map(s => `- ${s.name}: ${s.meaning || "-"} / ${s.place || "-"}`) : ["-"]),
-        "",
-        "## Notlar",
-        data.notes || "-",
-        "",
-        "## Fikir Çöplüğü",
-        data.trash || "-"
+        "## 4. Sahne Sırası"
       ];
 
-      const blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+      if (data.scenes.length) {
+        data.scenes.forEach((s, i) => lines.push(`${i + 1}. ${s.title}: ${s.change || "-"}`));
+      } else {
+        lines.push("-");
+      }
+
+      lines.push("", "## 5. Taslak", data.storyText || "-", "", "## 6. Final", `Final tipi: ${data.endingType || "-"}`, `Okurda kalacak his: ${data.finalFeeling || "-"}`, `Olası son cümle: ${data.lastLine || "-"}`);
+
+      const blob = new Blob([lines.join(nl)], { type: "text/markdown;charset=utf-8" });
       const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = `${(data.title || "kurgu-terminali-95").toLowerCase().replace(/[^a-z0-9ğüşöçıİĞÜŞÖÇ]+/gi, "-")}.md`;
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = (data.title || "kurgu-terminali-95") + ".md";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
       URL.revokeObjectURL(url);
     }
 
     function newProject() {
-      showModal(
-        "Yeni Proje",
-        `<p>Mevcut proje tarayıcı hafızasından silinip yeni bir boş dosya açılacak.</p><p>Devam etmek istiyor musun?</p>`,
-        [
-          { label: "Vazgeç", onClick: closeModal },
-          {
-            label: "Yeni Aç",
-            danger: true,
-            onClick: () => {
-              data = structuredClone(starterData);
-              hydrateFields();
-              saveData(true);
-              renderCards();
-              closeModal();
-            }
-          }
-        ]
-      );
-    }
-
-    function bindNavigation() {
-      $$(".tree-item").forEach(item => {
-        item.addEventListener("click", () => {
-          $$(".tree-item").forEach(node => node.classList.remove("active"));
-          item.classList.add("active");
-          currentSection = item.dataset.section;
-          handleSectionJump(currentSection);
-        });
-      });
-
-      $$(".tab-button").forEach(button => {
-        button.addEventListener("click", () => {
-          $$(".tab-button").forEach(btn => btn.classList.remove("active"));
-          button.classList.add("active");
-          const target = button.dataset.tab;
-          $("#tabScratch").classList.toggle("hidden", target !== "scratch");
-          $("#tabPlan").classList.toggle("hidden", target !== "plan");
-          $("#tabTrash").classList.toggle("hidden", target !== "trash");
-        });
-      });
-    }
-
-    function handleSectionJump(section) {
-      if (section === "draft") {
-        fields.storyText.focus();
-      }
-      if (section === "plan") {
-        activateTab("plan");
-        fields.coreIdea.focus();
-      }
-      if (section === "trash") {
-        activateTab("trash");
-        fields.trashBox.focus();
-      }
-      if (["characters", "scenes", "symbols", "endings"].includes(section)) {
-        const names = {
-          characters: "Karakterler sağdaki araç kutusunda listeleniyor.",
-          scenes: "Sahneler sağdaki araç kutusunda listeleniyor.",
-          symbols: "Nesneler ve semboller sağdaki araç kutusunda listeleniyor.",
-          endings: "Final denemeleri için üstteki “Final Dene” butonunu kullan."
-        };
-        $("#promptOutput").textContent = names[section];
-      }
-    }
-
-    function activateTab(tab) {
-      $$(".tab-button").forEach(button => {
-        const active = button.dataset.tab === tab;
-        button.classList.toggle("active", active);
-      });
-      $("#tabScratch").classList.toggle("hidden", tab !== "scratch");
-      $("#tabPlan").classList.toggle("hidden", tab !== "plan");
-      $("#tabTrash").classList.toggle("hidden", tab !== "trash");
-    }
-
-    function bindCardActions() {
-      document.body.addEventListener("click", (event) => {
-        const button = event.target.closest("button[data-action]");
-        if (!button) return;
-
-        const index = Number(button.dataset.index);
-        const action = button.dataset.action;
-
-        if (action === "send-scene") {
-          const scene = data.scenes[index];
-          appendToStory(`[${scene.title}]\n${scene.summary || ""}`);
-        }
-
-        if (action === "delete-scene") {
-          data.scenes.splice(index, 1);
-          saveData(true);
-          renderCards();
-        }
-
-        if (action === "send-character") {
-          const c = data.characters[index];
-          appendToNotes(`[Karakter]\nAd: ${c.name}\nİstek: ${c.want || "-"}\nSır: ${c.secret || "-"}`);
-        }
-
-        if (action === "delete-character") {
-          data.characters.splice(index, 1);
-          saveData(true);
-          renderCards();
-        }
-
-        if (action === "send-symbol") {
-          const s = data.symbols[index];
-          appendToNotes(`[Nesne/Sembol]\nNesne: ${s.name}\nAnlam: ${s.meaning || "-"}\nGeçtiği yer: ${s.place || "-"}`);
-        }
-
-        if (action === "delete-symbol") {
-          data.symbols.splice(index, 1);
-          saveData(true);
-          renderCards();
-        }
-      });
+      if (!confirm("Yeni proje açılırsa mevcut yerel kayıt silinecek. Devam edilsin mi?")) return;
+      data = structuredClone(defaultData);
+      hydrate();
+      save(true);
+      renderScenes();
+      renderScreen();
     }
 
     function bindButtons() {
-      $("#saveBtn").addEventListener("click", () => saveData(true));
-      $("#newProjectBtn").addEventListener("click", newProject);
-      $("#exportBtn").addEventListener("click", exportStory);
+      $("#prevBtn").addEventListener("click", () => goToStep(data.currentStep - 1));
+      $("#nextBtn").addEventListener("click", () => goToStep(data.currentStep + 1));
+      $("#completeBtn").addEventListener("click", completeStep);
+      $("#saveBtn").addEventListener("click", () => save(true));
+      $("#exportBtn").addEventListener("click", exportMarkdown);
+      $("#stuckBtn").addEventListener("click", stuck);
+      $("#helpBtn").addEventListener("click", miniHelpForStep);
       $("#addSceneBtn").addEventListener("click", addScene);
-      $("#addCharacterBtn").addEventListener("click", addCharacter);
-      $("#addSymbolBtn").addEventListener("click", addSymbol);
-      $("#stuckBtn").addEventListener("click", handleStuck);
-      $("#finalBtn").addEventListener("click", handleFinal);
-      $("#healthBtn").addEventListener("click", showHealthModal);
-      $("#taskBtn").addEventListener("click", () => {
-        $("#dailyTask").textContent = randomFrom(dailyTasks);
-      });
-      $("#modalClose").addEventListener("click", closeModal);
-      $("#modal").addEventListener("click", (event) => {
-        if (event.target.id === "modal") closeModal();
-      });
+      $("#newBtn").addEventListener("click", newProject);
+      document.body.addEventListener("click", handleSceneActions);
     }
 
     function boot() {
-      hydrateFields();
+      hydrate();
       bindFields();
-      bindNavigation();
       bindButtons();
-      bindCardActions();
-      renderCards();
-      renderStatus();
+      renderScenes();
+      renderScreen();
+      renderStatus("Hazır");
     }
 
     boot();
