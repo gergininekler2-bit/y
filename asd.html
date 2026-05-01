@@ -1,27 +1,774 @@
-<!DOCTYPE html> <html lang="tr"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>SPL 1003 Sermaye Piyasası Araçları 1 – Akıllı Çalışma Aracı</title> <style> :root{ --navy:#0b1f3a; --navy-2:#102b4f; --navy-3:#14365f; --bg:#f4f7fb; --card:#ffffff; --muted:#64748b; --line:#dbe5f0; --text:#102033; --accent:#12b8a6; --accent-2:#0f766e; --ok:#16a34a; --bad:#dc2626; --warn:#f59e0b; --info:#2563eb; --shadow:0 14px 35px rgba(11,31,58,.10); --radius:18px; } *{box-sizing:border-box} html{scroll-behavior:smooth} body{ margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background:var(--bg); color:var(--text); line-height:1.55; } button, input, select{font:inherit} button{cursor:pointer} .app{display:grid;grid-template-columns:310px 1fr;min-height:100vh} .sidebar{ position:sticky; top:0; height:100vh; overflow:auto; background:linear-gradient(180deg,var(--navy),#061426); color:#fff; padding:22px 18px; z-index:20; box-shadow:10px 0 30px rgba(2,8,23,.18); } .brand{display:flex;gap:12px;align-items:center;margin-bottom:20px} .logo{ width:46px;height:46px;border-radius:15px; background:linear-gradient(135deg,var(--accent),#8ff7ef); display:grid;place-items:center;color:var(--navy);font-weight:900; box-shadow:0 10px 25px rgba(18,184,166,.25); } .brand h1{font-size:1rem;margin:0;line-height:1.25} .brand p{font-size:.78rem;color:#c7d2fe;margin:.25rem 0 0} .nav-group-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:#93c5fd;margin:20px 8px 8px} .nav-btn{ width:100%; display:flex; align-items:center; gap:10px; border:0; border-radius:14px; background:transparent; color:#dbeafe; text-align:left; padding:12px; margin:5px 0; transition:.18s ease; } .nav-btn:hover,.nav-btn:focus{background:rgba(255,255,255,.10);outline:2px solid transparent} .nav-btn.active{background:rgba(18,184,166,.18);color:#fff;border:1px solid rgba(18,184,166,.35)} .nav-btn .small{font-size:.78rem;color:#a7f3d0;margin-left:auto} .main{min-width:0} .topbar{ position:sticky; top:0; z-index:10; background:rgba(244,247,251,.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); padding:14px 22px; display:flex; align-items:center; gap:14px; } .hamburger{ display:none; border:0; border-radius:12px; padding:10px 12px; background:var(--navy); color:white; } .progress-wrap{flex:1} .progress-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:6px} .progress{height:10px;border-radius:999px;background:#d9e4f0;overflow:hidden} .progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#35d399);width:0%;transition:.25s ease} .content{padding:26px;max-width:1280px;margin:0 auto} .hero{ background:radial-gradient(circle at top right,rgba(18,184,166,.25),transparent 36%), linear-gradient(135deg,var(--navy),var(--navy-2)); color:white; border-radius:26px; padding:30px; box-shadow:var(--shadow); margin-bottom:22px; } .hero h2{font-size:clamp(1.7rem,3vw,2.7rem);line-height:1.12;margin:0 0 10px} .hero p{margin:0;color:#dbeafe;max-width:850px} .grid{display:grid;gap:16px} .dashboard-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin:18px 0} .two-col{grid-template-columns:1.1fr .9fr} .three-col{grid-template-columns:repeat(3,minmax(0,1fr))} .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; } .metric{ background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); border-radius:18px; padding:16px; } .metric b{display:block;font-size:1.55rem;color:#fff} .metric span{font-size:.82rem;color:#dbeafe} .section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px} .section-title h2{margin:0;font-size:1.55rem;color:var(--navy)} .section-title p{margin:.25rem 0 0;color:var(--muted)} .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0} .pill,.badge{ display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:6px 10px; font-size:.78rem; font-weight:700; border:1px solid var(--line); background:#eef6ff; color:var(--navy-2); } .badge.ok{background:#dcfce7;color:#166534;border-color:#bbf7d0} .badge.bad{background:#fee2e2;color:#991b1b;border-color:#fecaca} .badge.warn{background:#fff7ed;color:#9a3412;border-color:#fed7aa} .badge.accent{background:#ccfbf1;color:#115e59;border-color:#99f6e4} .tabbar{ display:flex; overflow:auto; gap:8px; padding-bottom:8px; margin:8px 0 16px; } .tabbar button{ flex:0 0 auto; border:1px solid var(--line); background:#fff; color:var(--navy); padding:10px 12px; border-radius:999px; font-weight:800; } .tabbar button.active{background:var(--navy);color:#fff;border-color:var(--navy)} .topic-list{columns:2;column-gap:24px;margin:0;padding-left:20px} .topic-list li{break-inside:avoid;margin-bottom:5px} h3{color:var(--navy);margin:0 0 12px;font-size:1.12rem} h4{margin:0 0 8px;color:var(--navy-2)} .summary-block{ border:1px solid var(--line); border-radius:16px; padding:14px; background:#fbfdff; margin:10px 0; } .summary-block p{margin:0;color:#334155} .callout{ border-radius:16px; padding:14px 15px; margin:12px 0; border:1px solid; } .callout.warn{background:#fff7ed;border-color:#fed7aa;color:#7c2d12} .callout.tip{background:#ecfeff;border-color:#a5f3fc;color:#164e63} .callout.good{background:#f0fdf4;border-color:#bbf7d0;color:#14532d} .list-clean{padding-left:18px;margin:8px 0 0} .list-clean li{margin:7px 0} .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;margin-top:10px} table{width:100%;border-collapse:collapse;background:white;min-width:650px} th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top} th{background:#f1f5f9;color:var(--navy);font-size:.84rem} tr:last-child td{border-bottom:0} .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px} .btn{ border:0; border-radius:14px; padding:11px 14px; background:var(--navy); color:white; font-weight:800; min-height:44px; } .btn.secondary{background:#e2e8f0;color:var(--navy)} .btn.accent{background:var(--accent-2)} .btn.danger{background:var(--bad)} .btn:focus{outline:3px solid rgba(18,184,166,.35);outline-offset:2px} .question-card{border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0;background:#fff} .question-head{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px} .option{ width:100%; text-align:left; display:flex; gap:10px; border:1px solid var(--line); background:#f8fafc; color:#0f172a; border-radius:14px; padding:11px 12px; margin:8px 0; min-height:44px; } .option:hover:not(:disabled){background:#eef6ff} .option.correct{border-color:#86efac;background:#dcfce7} .option.wrong{border-color:#fecaca;background:#fee2e2} .option:disabled{cursor:default;opacity:1} .feedback{ border-radius:14px; padding:12px; margin-top:10px; font-size:.94rem; } .feedback.correct{background:#dcfce7;color:#14532d} .feedback.wrong{background:#fee2e2;color:#7f1d1d} .flash-wrap{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px} .flash-card{ min-height:230px; display:grid; place-items:center; text-align:center; border-radius:24px; padding:24px; color:white; background:linear-gradient(135deg,var(--navy),var(--navy-3)); box-shadow:var(--shadow); user-select:none; } .flash-card button{background:transparent;border:0;color:white} .flash-card strong{font-size:1.45rem;display:block;margin-bottom:10px} .flash-card p{font-size:1.06rem;color:#dbeafe;max-width:650px} .repeat-list{max-height:360px;overflow:auto} .repeat-item{border:1px solid var(--line);border-radius:14px;padding:10px;margin:8px 0;background:#fff} .weak-bars .bar{margin:10px 0} .weak-bars .bar-label{display:flex;justify-content:space-between;font-size:.86rem;margin-bottom:5px} .weak-bars .bar-track{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden} .weak-bars .bar-track span{display:block;height:100%;background:linear-gradient(90deg,#fb7185,var(--warn));min-width:4px} .exam-header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center} .timer{font-size:1.25rem;font-weight:900;color:var(--navy);background:#ecfeff;border:1px solid #a5f3fc;border-radius:14px;padding:9px 12px} .empty{color:var(--muted);font-style:italic} .footer-note{font-size:.82rem;color:var(--muted);margin-top:16px} @media (max-width:1050px){ .dashboard-grid,.three-col,.two-col{grid-template-columns:1fr 1fr} .flash-wrap{grid-template-columns:1fr} } @media (max-width:880px){ .app{grid-template-columns:1fr} .sidebar{ position:fixed; transform:translateX(-105%); transition:.2s ease; width:min(86vw,340px); } body.menu-open .sidebar{transform:translateX(0)} .hamburger{display:block} .content{padding:18px} .dashboard-grid,.three-col,.two-col{grid-template-columns:1fr} .topic-list{columns:1} .hero{padding:22px} } </style> </head> <body> <div class="app"> <aside class="sidebar" aria-label="Bölüm menüsü"> <div class="brand"> <div class="logo">1003</div> <div> <h1>SPL Akıllı Çalışma</h1> <p>Sermaye Piyasası Araçları 1</p> </div> </div>
-  <div class="nav-group-title">Genel</div>
-  <button class="nav-btn active" data-view="dashboard">📊 Dashboard</button>
-  <button class="nav-btn" data-view="exam">🧪 Deneme Modu <span class="small">25 soru</span></button>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPL 1003 - Sermaye Piyasası Araçları 1 | Akıllı Çalışma Aracı</title>
+    <style>
+        :root {
+            --primary: #0f172a;      /* Koyu Lacivert */
+            --primary-light: #1e293b;
+            --accent: #0d9488;       /* Turkuaz/Yeşil Vurgu */
+            --accent-hover: #0f766e;
+            --bg: #f8fafc;           /* Açık Gri Arka Plan */
+            --card-bg: #ffffff;
+            --text: #334155;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e2e8f0;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
 
-  <div class="nav-group-title">Ana Bölümler</div>
-  <div id="chapterNav"></div>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-  <div class="footer-note">
-    Not: İçerik, SPL 1003 çalışma notu temel alınarak sınav odaklı ve özgün özet formatında hazırlanmıştır. Mevzuat değişiklikleri için güncel SPK/SPL kaynakları kontrol edilmelidir.
-  </div>
-</aside>
+        /* YAPI: SOL MENÜ VE İÇERİK */
+        .sidebar { width: 280px; background-color: var(--primary); color: white; display: flex; flex-direction: column; transition: all 0.3s; z-index: 100; }
+        .sidebar-header { padding: 20px; font-size: 1.2rem; font-weight: bold; text-align: center; border-bottom: 1px solid var(--primary-light); }
+        .menu { flex: 1; overflow-y: auto; padding: 10px 0; }
+        .menu-item { padding: 15px 20px; cursor: pointer; border-left: 4px solid transparent; transition: all 0.2s; font-size: 0.95rem; }
+        .menu-item:hover, .menu-item.active { background-color: var(--primary-light); border-left-color: var(--accent); color: white; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* ÜST BAR VE İLERLEME */
+        .topbar { background-color: var(--card-bg); padding: 15px 30px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+        .hamburger { display: none; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: var(--primary); }
+        .progress-container { display: flex; gap: 20px; align-items: center; }
+        .stat-badge { background: var(--bg); padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--border); display: flex; align-items: center; gap: 5px; }
+        
+        /* İÇERİK ALANI */
+        .content-scroll { flex: 1; overflow-y: auto; padding: 30px; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        
+        /* KARTLAR VE KUTULAR */
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); margin-bottom: 25px; }
+        h1, h2, h3 { color: var(--primary); margin-bottom: 15px; }
+        h1 { border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 25px; }
+        p { line-height: 1.6; margin-bottom: 15px; }
+        
+        /* UYARI VE BİLGİ KUTULARI */
+        .alert-warning { background-color: #fffbeb; border-left: 4px solid var(--warning); padding: 15px; border-radius: 4px; margin-bottom: 15px; }
+        .alert-info { background-color: #f0fdfa; border-left: 4px solid var(--accent); padding: 15px; border-radius: 4px; margin-bottom: 15px; }
+        .alert-info strong { color: var(--accent-hover); }
 
-<main class="main">
-  <div class="topbar">
-    <button class="hamburger" id="menuToggle" aria-label="Menüyü aç/kapat">☰</button>
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>Genel tamamlama</span>
-        <strong id="progressText">0/5 konu</strong>
-      </div>
-      <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+        /* TABLOLAR */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: white; }
+        th, td { border: 1px solid var(--border); padding: 12px; text-align: left; font-size: 0.95rem; }
+        th { background-color: var(--primary-light); color: white; }
+        tr:nth-child(even) { background-color: var(--bg); }
+
+        /* SEKME MENÜSÜ */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-btn { background: var(--bg); border: 1px solid var(--border); padding: 10px 20px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: 600; transition: all 0.2s; color: var(--text-light); }
+        .tab-btn:hover { background: var(--border); }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* QUIZ ALANI */
+        .question-card { background: var(--bg); padding: 20px; border-radius: var(--radius); margin-bottom: 20px; border: 1px solid var(--border); }
+        .options { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .option { background: white; border: 2px solid var(--border); padding: 12px 15px; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; }
+        .option:hover:not(.disabled) { border-color: var(--accent); background: #f0fdfa; }
+        .option.correct { border-color: var(--success); background-color: #ecfdf5; color: #065f46; }
+        .option.wrong { border-color: var(--danger); background-color: #fef2f2; color: #991b1b; }
+        .option.disabled { cursor: default; pointer-events: none; }
+        .explanation { margin-top: 15px; padding: 15px; background: #e0f2fe; border-left: 4px solid #0284c7; border-radius: 4px; display: none; font-size: 0.95rem; }
+        .diff-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; background: var(--primary-light); color: white; float: right; }
+
+        /* FLASHCARDS */
+        .flashcard-container { display: flex; flex-direction: column; align-items: center; perspective: 1000px; margin-top: 20px;}
+        .flashcard { width: 100%; max-width: 500px; height: 250px; background: transparent; cursor: pointer; position: relative; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; border-radius: 12px; box-shadow: var(--shadow); font-size: 1.1rem; }
+        .card-front { background-color: var(--primary); color: white; }
+        .card-back { background-color: var(--accent); color: white; transform: rotateY(180deg); flex-direction: column; gap: 15px;}
+        .flashcard-controls { margin-top: 20px; display: flex; gap: 15px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
+        .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
+        .btn-warning { background: var(--warning); } .btn-warning:hover { background: #d97706; }
+        .btn-primary { background: var(--primary); } .btn-primary:hover { background: var(--primary-light); }
+
+        /* DENEME MODU */
+        #timer { font-size: 1.5rem; font-weight: bold; color: var(--danger); text-align: right; }
+        .result-screen { display: none; text-align: center; padding: 30px; }
+        .result-circle { width: 150px; height: 150px; border-radius: 50%; border: 8px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; margin: 0 auto 20px; }
+
+        /* MOBİL UYUM */
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: -280px; height: 100%; }
+            .sidebar.open { left: 0; }
+            .hamburger { display: block; }
+            .topbar { padding: 15px; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
+            .progress-container { flex-wrap: wrap; width: 100%; justify-content: flex-start; }
+            .content-scroll { padding: 15px; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">SPL 1003<br><span style="font-size: 0.8rem; color: var(--accent);">Çalışma Aracı</span></div>
+        <div class="menu">
+            <div class="menu-item active" onclick="nav('dashboard')">🏠 Dashboard</div>
+            <div class="menu-item" onclick="nav('sec1')">1. Paylar & Pay Benzeri</div>
+            <div class="menu-item" onclick="nav('sec2')">2. Borçlanma Araçları</div>
+            <div class="menu-item" onclick="nav('sec3')">3. Yatırım Fonları</div>
+            <div class="menu-item" onclick="nav('sec4')">4. Türev Araçlar</div>
+            <div class="menu-item" onclick="nav('sec5')">5. Kamu Borç. Araçları</div>
+            <div class="menu-item" onclick="nav('deneme')" style="border-top:1px solid #334155; margin-top:10px;">⏱️ Deneme Sınavı (25 Soru)</div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="topbar">
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+            <div class="progress-container">
+                <div class="stat-badge">📝 Çözülen: <span id="stat-solved">0</span></div>
+                <div class="stat-badge">✅ Başarı: %<span id="stat-success">0</span></div>
+                <div class="stat-badge" style="border-color:var(--danger)">⚠️ Zayıf Konu: <span id="stat-weak">-</span></div>
+                <button class="btn btn-warning" style="padding: 5px 10px; font-size: 0.8rem;" onclick="resetData()">Verileri Sıfırla</button>
+            </div>
+        </div>
+
+        <div class="content-scroll" id="content-scroll">
+            
+            <div id="dashboard" class="page active">
+                <h1>Sermaye Piyasası Araçları 1 - SPL 1003</h1>
+                <div class="card">
+                    <h2>Hoş Geldiniz</h2>
+                    <p>Bu araç, SPK lisanslama sınavlarına hazırlık sürecinde aktif hatırlama ve aralıklı tekrar yöntemleriyle öğrenmenizi hızlandırmak için tasarlanmıştır.</p>
+                    <p><strong>Nasıl Kullanılır?</strong></p>
+                    <ul>
+                        <li style="margin-bottom: 5px; margin-left: 20px;">Sol menüden çalışmak istediğiniz bölümü seçin.</li>
+                        <li style="margin-bottom: 5px; margin-left: 20px;">Önce <b>Konu Özeti</b> ve <b>Hap Bilgiler</b> sekmelerinden hap hap bilgileri okuyun.</li>
+                        <li style="margin-bottom: 5px; margin-left: 20px;"><b>Mini Test</b> ile öğrendiklerinizi sınayın, yanlışlarınızı anında görün.</li>
+                        <li style="margin-bottom: 5px; margin-left: 20px;"><b>Flashcard'lar</b> ile kavramları zihninize kazıyın.</li>
+                        <li style="margin-bottom: 5px; margin-left: 20px;">Hazır hissettiğinizde <b>Deneme Sınavı</b> moduna girerek süreye karşı yarışın.</li>
+                    </ul>
+                </div>
+                <div class="card" id="weak-topics-card" style="display: none; border-left: 4px solid var(--danger);">
+                    <h3 style="color: var(--danger);">Geliştirilmesi Gereken Alanlar</h3>
+                    <p>Sonuçlarınıza göre ağırlık vermeniz gereken konular:</p>
+                    <ul id="weak-topics-list" style="margin-left: 20px;"></ul>
+                </div>
+            </div>
+
+            <div id="section-container"></div>
+            
+            <div id="deneme" class="page">
+                <h1>Genel Deneme Sınavı</h1>
+                <div class="card" id="deneme-intro">
+                    <p>Tüm konulardan rastgele seçilmiş <b>25 soru</b>. Amacınız gerçek sınav simülasyonudur.</p>
+                    <p>Süre: <b>30 Dakika</b></p>
+                    <button class="btn btn-primary" onclick="startMockExam()">Sınavı Başlat</button>
+                </div>
+                
+                <div id="deneme-active" style="display: none;">
+                    <div id="timer">30:00</div>
+                    <div id="mock-questions-container"></div>
+                    <button class="btn btn-success" style="width: 100%; margin-top: 20px;" onclick="finishMockExam()">Sınavı Bitir</button>
+                </div>
+
+                <div id="deneme-result" class="result-screen card">
+                    <h2>Sınav Sonucu</h2>
+                    <div class="result-circle" id="mock-score-circle">%0</div>
+                    <p>Doğru: <span id="mock-correct">0</span> | Yanlış/Boş: <span id="mock-wrong">0</span></p>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border);">
+                    <h3 style="text-align: left;">Yanlış Yapılan Soruların Konuları:</h3>
+                    <ul id="mock-weak-list" style="text-align: left; margin-left: 20px; color: var(--danger);"></ul>
+                    <button class="btn btn-primary" style="margin-top:20px;" onclick="nav('dashboard')">Ana Ekrana Dön</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
-  <div id="content" class="content"></div>
-</main>
-</div> <script> const STORAGE_KEY = "spl1003_smart_study_v1"; const DATA = [ { id:"pay", title:"Paylar ve Pay Benzeri Menkul Kıymetler", short:"Pay kavramı, pay türleri, halka arz, sermaye artırımı/azaltımı ve KİS.", topics:[ "Genel olarak pay","Sermaye piyasası aracı olarak pay","Pay türleri","Payların sağladığı hak ve yükümlülükler", "Pay benzeri menkul kıymetler","Pay Tebliği","Halka açılma","İlk halka arz ön koşulları","Halka arz yöntemleri", "Halka açılma sonrası esaslar","Fiyat istikrarını sağlayıcı işlemler","Sermaye artırımları","Bedelli sermaye artırımı", "Bedelsiz sermaye artırımı","Şarta bağlı sermaye artırımı","Nominal değerin altında pay ihracı","Sermaye azaltımı", "Özellikli halka arz durumları","Borsada işlem gören niteliğe dönüştürme","Paylara ilişkin ortak hükümler", "Borsada işlem görmeyen halka açık ortaklıklar","Katılma intifa senetleri" ], summary:[ {t:"Payın özü",p:"Pay, anonim ortaklık sermayesinin belirli itibari değere bölünmüş parçasıdır. Sahibine ortaklık/mülkiyet ilişkisi kurar; borçlanma aracı gibi vade ve sabit getiri vaadi taşımaz."}, {t:"Sermaye piyasası aracı olarak pay",p:"Halka açık ortaklık payları ve borsada işlem gören paylar sermaye piyasası mevzuatının temel konusudur. Payların kayden izlenmesi, kamuyu aydınlatma, halka arz ve borsa işlemleri sınavda sık gelir."}, {t:"Pay türleri",p:"Nama/hamiline, adi/imtiyazlı, bedelli/bedelsiz, primli/primsiz ve itibari değerli/değersiz ayrımları kavranmalıdır. İmtiyaz genellikle paya tanınır; oyda imtiyaz için üst sınır mantığı sorulabilir."}, {t:"Halka açılma mantığı",p:"Halka açılma; sermaye artırımı, mevcut pay satışı veya ikisinin birlikte uygulanmasıyla yapılabilir. Sermaye artırımı şirkete fon sağlar; mevcut pay satışı satıcı ortağa nakit sağlar."}, {t:"Sermaye işlemleri",p:"Bedelli sermaye artırımı şirkete yeni fon girişi sağlar. Bedelsiz sermaye artırımı iç kaynak/kâr payı aktarımıdır, dışarıdan nakit girişi yaratmaz. Şarta bağlı sermaye artırımı, belirli hak sahiplerinin pay edinmesi için kurulan özel mekanizmadır."} ], keyPoints:[ "Payın itibari değeri kural olarak 1 kuruştan az olamaz.", "Payın vadesi ve sabit getirisi yoktur; getiri kâr payı, değer artışı ve tasfiye bakiyesinden doğabilir.", "Bedeli tamamen ödenmemiş pay için hamiline yazılı pay çıkarılamaz.", "Halka açık anonim ortaklıklarda azlık oranı genel olarak %5’tir.", "Pay sahibi sayısı 500’ü aşan anonim ortaklıkların payları halka arz edilmiş sayılır.", "Fiyat istikrarı işlemleri, izahnamede açıklanmak şartıyla halka arz sonrası en fazla 30 gün yürütülebilir.", "Fiyat istikrarında halka arz fiyatının üzerinde alım emri verilemez.", "Yeni pay alma hakkı kullanım süresi borsada işlem gören ortaklıklarda genellikle 15-60 gün aralığındadır.", "KİS, pay sahipliği hakkı vermez; fakat net kâr, tasfiye bakiyesi ve sınırlı hallerde yeni pay alma hakkı gibi ekonomik haklar verebilir.", "KİS toplam ihraç tutarı, ödenmiş/çıkarılmış sermayenin %50’sini aşamaz." ], confusions:[ ["Pay","Ortaklık hakkı verir; vadesi yoktur; sabit getiri taahhüdü yoktur.","Pay sahibi, şirket alacaklısı değil ortağıdır."], ["Pay benzeri menkul kıymet","Sermayeyi temsil etmesi zorunlu değildir; paya benzer bazı haklar verir.","Payla karıştırılır; her zaman oy veya ortaklık hakkı vermez."], ["Bedelli sermaye artırımı","Yeni fon girişi vardır; ortaklar rüçhan hakkını kullanabilir.","Şirketin nakit kaynağını artırır."], ["Bedelsiz sermaye artırımı","İç kaynak/kâr payı sermayeye eklenir; dış nakit girişi yoktur.","Pay sayısı artabilir ama şirket kasasına yeni para girmez."], ["Sermaye artırımıyla halka arz","Satış geliri şirkete gider.","Fonlama etkisi yüksektir."], ["Mevcut pay satışıyla halka arz","Satış geliri payını satan ortağa gider.","Şirket sermayesi artmaz."] ], patterns:[ "Aşağıdakilerden hangisi payın borçlanma aracından farklarından biridir?", "I, II ve III ifadelerinden hangileri pay benzeri menkul kıymetler için doğrudur?", "Halka arz yöntemlerinden hangisinde fon şirkete girer?", "Fiyat istikrarı işlemlerinde süre veya fiyat sınırı nasıl uygulanır?", "Bedelli ve bedelsiz sermaye artırımı arasındaki fark aşağıdakilerden hangisidir?", "Katılma intifa senetlerinde hangi hak tanınamaz?" ], lastDay:[ "Pay = ortaklık; borçlanma aracı = alacaklılık.", "Payda vade/sabit faiz yoktur.", "500 pay sahibi eşiği halka açık sayılma bakımından kritiktir.", "Fiyat istikrarı: en fazla 30 gün, halka arz fiyatı üzerinde alım yok.", "Bedelli = nakit fon girişi; bedelsiz = iç kaynak aktarımı.", "KİS pay değildir; ortaklık/oy hakkı vermesi beklenmez.", "Halka açık AŞ azlık oranı %5 olarak ezberlenmelidir." ], mustKnow:[ "Pay türleri ve haklar", "Halka arz yöntemleri", "Fiyat istikrarı sınırları", "Bedelli/bedelsiz/şarta bağlı sermaye artırımı", "Katılma intifa senetleri" ], mostLikely:"Bu bölümden en çok tanım-fark soruları, halka arz yöntemi ayrımı, fiyat istikrarı süresi/fiyat sınırı, bedelli-bedelsiz karşılaştırması ve KİS hakları gelir.", cards:[ ["Pay nedir?","Anonim ortaklık sermayesinin belirli itibari değere bölünmüş parçasıdır; ortaklık hakkı verir."], ["Pay neden borçlanma aracı değildir?","Çünkü vadesi ve sabit getiri taahhüdü yoktur; yatırımcı ortak olur."], ["Halka arz yöntemleri nelerdir?","Sermaye artırımı, mevcut pay satışı veya ikisinin birlikte kullanılması."], ["Bedelli sermaye artırımı nedir?","Nakit karşılığı yeni pay çıkarılmasıdır; şirkete fon girişi sağlar."], ["Bedelsiz sermaye artırımı nedir?","İç kaynakların veya kâr payının sermayeye eklenmesidir; dış kaynak girişi olmaz."], ["Fiyat istikrarı süresi nedir?","Halka arzdan sonra en fazla 30 gün uygulanabilir."], ["KİS ne sağlar?","Pay sahipliği değil; net kâr, tasfiye bakiyesi gibi ekonomik haklar sağlayabilir."], ["500 pay sahibi eşiği ne ifade eder?","Pay sahibi sayısı 500’ü aşan anonim ortaklıkların payları halka arz edilmiş sayılır."] ], questions:[ {id:"pay1",topic:"Pay tanımı",difficulty:"Kolay",q:"Payın sermaye piyasası araçları içindeki temel niteliği aşağıdakilerden hangisidir?",options:["Sabit faiz getirisi olan kısa vadeli borçlanma senedidir.","Anonim ortaklık sermayesinin belirli itibari değere bölünmüş parçasıdır.","Devlet tarafından ihraç edilen iskonto esaslı araçtır.","Yalnızca türev piyasada işlem gören sözleşmedir.","Sadece profesyonel yatırımcılara satılabilir."],answer:1,explain:"Pay, ortaklık hakkı veren sermaye parçasıdır; borçlanma veya türev sözleşme değildir."}, {id:"pay2",topic:"Pay tanımı",difficulty:"Kolay",q:"Aşağıdakilerden hangisi payın borçlanma aracından ayrılan özelliklerinden biridir?",options:["Vadesinin bulunmaması ve sabit getiri taahhüdü içermemesi","Her zaman iskonto ile satılması","İhraççının alacaklısı olma hakkı vermesi","Anaparanın vade sonunda geri ödenmesini taahhüt etmesi","Yalnızca kamu tarafından çıkarılması"],answer:0,explain:"Pay yatırımcısı alacaklı değil ortaktır; payda vade ve sabit faiz mantığı yoktur."}, {id:"pay3",topic:"Pay türleri",difficulty:"Orta",q:"Bedeli tamamen ödenmemiş paylar bakımından aşağıdaki ifadelerden hangisi doğrudur?",options:["Her durumda hamiline yazılı çıkarılabilir.","Hamiline yazılı çıkarılamaz.","İmtiyazlı olması zorunludur.","Yalnızca kamu ortaklıklarında çıkarılır.","MKK’da izlenemez."],answer:1,explain:"Bedeli tamamen ödenmemiş pay için hamiline yazılı pay çıkarılamaması sınavda klasik ayrımdır."}, {id:"pay4",topic:"Azlık hakları",difficulty:"Orta",q:"Halka açık anonim ortaklıklarda azlık oranı genel olarak aşağıdakilerden hangisidir?",options:["%1","%3","%5","%10","%25"],answer:2,explain:"Halka açık ortaklıklarda azlık oranı %5; halka kapalı şirketlerde genel eşik %10 olarak düşünülür."}, {id:"pay5",topic:"Halka açık sayılma",difficulty:"Orta",q:"Pay sahibi sayısı 500’ü aşan anonim ortaklıklar açısından doğru ifade hangisidir?",options:["Her durumda tasfiye edilmiş sayılır.","Payları halka arz edilmiş sayılır ve sermaye piyasası mevzuatı gündeme gelir.","Sadece borçlanma aracı ihraç edebilir.","Borsada işlem görmeleri yasaklanır.","Yönetim kurulu yetkileri sona erer."],answer:1,explain:"500 pay sahibi eşiği, halka açık sayılma bakımından kritik bir sınav bilgisidir."}, {id:"pay6",topic:"Halka arz yöntemleri",difficulty:"Kolay",q:"Halka arzda satış gelirinin doğrudan şirkete girdiği yöntem hangisidir?",options:["Mevcut pay satışı","Sermaye artırımı yoluyla halka arz","Sadece borsa dışı virman","KİS ihracı","Sermaye azaltımı"],answer:1,explain:"Sermaye artırımı yeni pay çıkarımıdır; elde edilen kaynak şirkete girer."}, {id:"pay7",topic:"Fiyat istikrarı",difficulty:"Zor",q:"Fiyat istikrarını sağlayıcı işlemlerle ilgili aşağıdakilerden hangisi doğrudur?",options:["Süre sınırı yoktur.","Halka arz fiyatının üzerinde alım emri verilebilir.","İzahnamede açıklanması şartıyla halka arz sonrası en fazla 30 gün uygulanabilir.","Yalnızca yatırımcı talebiyle yapılır.","Sadece bedelsiz sermaye artırımlarında uygulanır."],answer:2,explain:"Fiyat istikrarı için izahnamede açıklama, süre sınırı ve fiyat sınırı birlikte düşünülmelidir."}, {id:"pay8",topic:"Sermaye artırımı",difficulty:"Kolay",q:"Bedelsiz sermaye artırımı için en doğru ifade hangisidir?",options:["Şirkete dışarıdan nakit girişi sağlar.","Yalnızca borçlanma aracı ihracıyla yapılır.","İç kaynakların veya kâr payının sermayeye eklenmesiyle yapılır.","Ortakların pay sahipliği sona erer.","Sadece nominal değerin altında yapılır."],answer:2,explain:"Bedelsiz artırımda dış fon değil, iç kaynak aktarımı vardır."}, {id:"pay9",topic:"Şarta bağlı sermaye artırımı",difficulty:"Zor",q:"Şarta bağlı sermaye artırımıyla ilgili aşağıdakilerden hangisi sınav açısından doğru yaklaşımdır?",options:["Kayıtlı sermaye sistemiyle ilişkisizdir.","Yeni pay alma haklarının tamamen kısıtlanması mantığıyla birlikte ele alınır.","Sadece halka kapalı şirketlerde yapılır.","Her zaman mevcut ortaklara bedelsiz pay verir.","Pay benzeri menkul kıymetlerle ilgisi yoktur."],answer:1,explain:"Şarta bağlı artırımlar, belirli hak sahiplerinin pay edinmesine yönelik özel bir sermaye mekanizmasıdır."}, {id:"pay10",topic:"Katılma intifa senedi",difficulty:"Orta",q:"Katılma intifa senetleriyle ilgili doğru ifade hangisidir?",options:["Pay sahipliği ve oy hakkı verir.","Ortaklık payı olmayıp bazı ekonomik haklar sağlayabilir.","Her zaman devlet tarafından ihraç edilir.","Vadesi 30-364 gün olan borçlanma aracıdır.","Sadece VİOP’ta işlem görür."],answer:1,explain:"KİS pay değildir; net kâr veya tasfiye bakiyesi gibi ekonomik haklar verebilir."}, {id:"pay11",topic:"KİS sınırı",difficulty:"Zor",q:"Katılma intifa senetlerinde toplam ihraç tutarı için sınavda özellikle hatırlanması gereken sınır hangisidir?",options:["Sermayenin %10’u","Sermayenin %25’i","Sermayenin %50’si","Aktif toplamın %80’i","Net satışların %100’ü"],answer:2,explain:"KİS toplam ihraç tutarı ödenmiş/çıkarılmış sermayenin %50’sini aşamaz."}, {id:"pay12",topic:"Pay benzeri menkul kıymet",difficulty:"Orta",q:"Pay benzeri menkul kıymetlerin ayırt edici yönü aşağıdakilerden hangisidir?",options:["Her durumda sabit faiz getirisi sağlaması","Sermayede temsil edilmesi zorunlu olmadan paya benzer bazı haklar verebilmesi","Sadece Hazine tarafından çıkarılması","Yalnızca 1 yıldan kısa vadeli olması","Türev araç niteliğinde olması"],answer:1,explain:"Pay benzeri menkul kıymetler, paya benzer haklar verebilir; fakat sermayede temsil zorunluluğu ve sabit getiri mantığı yoktur."} ] }, { id:"borc", title:"Borçlanma Araçları", short:"Kıymetli evrak, tahvil, finansman bonosu, PDT/DET, BASK ve yeşil borçlanma araçları.", topics:[ "Kıymetli evrak","Menkul kıymet ilişkisi","Sermaye piyasası aracı olarak borçlanma araçları","Borçlanma araçlarının tanımı", "TTK’da borçlanma araçları","Borçlanma Araçları Tebliği","Yetkili organ kararı","Kredi derecelendirmesi","İhraç limiti", "Kurula başvuru","Kayden ihraç ve MKK bildirimi","İhraç ve satış","Kurul ücreti","İkinci el piyasa işlemleri", "Tahviller","Erken itfa edilebilir tahviller","Kârdan pay veren tahviller","Paya dönüştürülebilir tahviller", "Değiştirilebilir tahviller","Finansman bonoları","Kıymetli maden bonoları","Borçlanma aracı sahipleri kurulu", "Yeşil ve sürdürülebilir borçlanma araçları" ], summary:[ {t:"Borçlanma aracı mantığı",p:"Borçlanma aracı, ihraççının yatırımcıya karşı borçlu olduğu ve anapara/faiz veya benzeri ödeme yükümlülüğü doğuran sermaye piyasası aracıdır."}, {t:"Menkul kıymet ve kıymetli evrak ilişkisi",p:"Kıymetli evrakta hak senetten ayrı ileri sürülemez. Menkul kıymet ise yatırım amacı ve seri nitelik taşır. Sermaye piyasası araçları menkul kıymetten daha geniş bir kümedir."}, {t:"Tahvil ve kısa vadeli araçlar",p:"Tahvilin vadesi 365 gün veya daha uzundur. Finansman bonosu ve kıymetli maden bonosu 30-364 gün vadeli kısa vadeli borçlanma araçlarıdır."}, {t:"PDT ve DET ayrımı",p:"Paya dönüştürülebilir tahvil ihraççının kendi paylarına dönüşür. Değiştirilebilir tahvil ise ihraççı dışındaki, borsada işlem gören başka bir ortaklığın paylarıyla değiştirilir."}, {t:"BASK ve yeşil araçlar",p:"Borçlanma aracı sahipleri kurulu, borçlanma aracı yatırımcılarının kolektif karar mekanizmasıdır. Yeşil/sürdürülebilir borçlanma araçlarında fon kullanımı, çerçeve belgesi, ikinci taraf görüşü ve raporlama mantığı önemlidir."} ], keyPoints:[ "Borçlanma araçları; tahvil, PDT, DET, finansman bonosu, kıymetli maden bonosu ve Kurulca kabul edilen diğer araçları kapsar.", "TTK’da borçlanma aracı çıkarma yetkisi genel kuruldadır; yetki belirli şartlarla yönetim kuruluna devredilebilir.", "İhraç limiti halka açık ortaklıklarda genellikle özkaynağın 5 katı; halka açık olmayanlarda 3 katı olarak düşünülür.", "Kredi derecelendirmesi yapılmışsa notu etkileyen bilgiler vade boyunca izlenir; en az yıllık gözden geçirme mantığı vardır.", "Yurt içinde ihraç edilen borçlanma araçlarının MKK nezdinde kayden izlenmesi esastır.", "Tahvil vadesi 365 gün ve üzeridir.", "Finansman bonosu vadesi 30-364 gün aralığındadır.", "Kıymetli maden bonosu da 30-364 gün vadeli olup kıymetli maden aracı kurumlarınca ihraç edilir.", "BASK’ta asli hüküm ve şartlar faiz, vade ve anapara ekseninde değerlendirilir.", "Yeşil borçlanma aracında fonun yeşil projelere tahsisi ve raporlanması kritik sınav bilgisidir." ], confusions:[ ["Tahvil","365 gün veya daha uzun vadeli borçlanma aracıdır.","Orta-uzun vade sorularında gelir."], ["Finansman bonosu","30-364 gün vadeli kısa vadeli borçlanma aracıdır.","Tahville en sık karıştırılır."], ["Paya dönüştürülebilir tahvil","İhraççının kendi paylarına dönüşür.","Kendi payı vurgusunu yakala."], ["Değiştirilebilir tahvil","Başka bir ortaklığın borsada işlem gören paylarıyla değiştirilir.","Başka şirket payı vurgusu önemlidir."], ["Kıymetli evrak","Hak senetten ayrı ileri sürülemez/devredilemez.","Menkul kıymetle birebir aynı değildir."], ["Yeşil borçlanma aracı","Fon kullanımı çevresel/yeşil projelere yönelir ve raporlanır.","Sadece isimlendirme yeterli değildir; çerçeve/uyum gerekir."] ], patterns:[ "Aşağıdakilerden hangisi borçlanma aracı sayılır?", "Tahvil ile finansman bonosu arasındaki vade farkı nedir?", "PDT ve DET ayrımında dayanak pay kime aittir?", "İhraç limiti halka açık ve halka kapalı ortaklıklarda nasıl hesaplanır?", "BASK kararlarında hangi nisap veya onay süresi aranır?", "Yeşil borçlanma aracı için hangi belge/rapor gerekir?" ], lastDay:[ "Tahvil: 365 gün ve üzeri.", "Finansman bonosu: 30-364 gün.", "PDT = ihraççının kendi payı; DET = başka ortaklık payı.", "Halka açık ihraç limiti: özkaynağın 5 katı; halka açık olmayan: 3 katı.", "Yurt içi ihraçlarda kayden izleme/MKK mantığı önemlidir.", "Yeşil araçlarda çerçeve belgesi, ikinci taraf görüşü ve fon kullanım raporu aranır." ], mustKnow:[ "Borçlanma aracı tanımı", "İhraç limiti", "Tahvil-finansman bonosu vade ayrımı", "PDT-DET farkı", "BASK karar mantığı", "Yeşil/sürdürülebilir borçlanma araçları" ], mostLikely:"Bu bölümden en çok vade sınırları, PDT-DET ayrımı, ihraç limiti, Kurul/MKK süreci, BASK nisapları ve yeşil borçlanma aracı koşulları sorulur.", cards:[ ["Borçlanma aracı nedir?","İhraççının yatırımcıya borçlu olduğu, anapara/faiz veya benzeri ödeme yükümlülüğü doğuran sermaye piyasası aracıdır."], ["Tahvilin vadesi nedir?","365 gün veya daha uzun vadelidir."], ["Finansman bonosu nedir?","30-364 gün vadeli kısa vadeli borçlanma aracıdır."], ["PDT nedir?","İhraççının kendi paylarına dönüştürülebilen tahvildir."], ["DET nedir?","Başka bir ortaklığın borsada işlem gören paylarıyla değiştirilebilen tahvildir."], ["Halka açık ortaklık ihraç limiti?","Genel mantık: özkaynağın 5 katı."], ["BASK ne işe yarar?","Borçlanma aracı sahiplerinin kolektif karar mekanizmasıdır."], ["Yeşil borçlanma aracında kritik belgeler?","Çerçeve belgesi, ikinci taraf görüşü ve fon kullanım raporları."] ], questions:[ {id:"borc1",topic:"Kıymetli evrak",difficulty:"Kolay",q:"Kıymetli evrak için en doğru tanım aşağıdakilerden hangisidir?",options:["Hak senetten ayrı ileri sürülebilir.","İçerdiği hak senetten ayrı ileri sürülemeyen ve devredilemeyen senettir.","Sadece kamu tarafından çıkarılan araçtır.","Yalnızca pay senetlerinden oluşur.","Her zaman türev sözleşmedir."],answer:1,explain:"Kıymetli evrakta senet ile hak sıkı biçimde bağlıdır."}, {id:"borc2",topic:"Borçlanma aracı tanımı",difficulty:"Kolay",q:"Aşağıdakilerden hangisi borçlanma araçları arasında sayılabilir?",options:["Finansman bonosu","Alım opsiyonu primi","Katılma payı değeri","Yeni pay alma hakkı kuponu","Spot döviz kuru"],answer:0,explain:"Finansman bonosu borçlanma aracıdır; diğerleri borçlanma aracı tanımına girmez."}, {id:"borc3",topic:"İhraç limiti",difficulty:"Orta",q:"Borçlanma aracı ihraç limiti bakımından halka açık ortaklıklar için genel sınav kuralı hangisidir?",options:["Özkaynağın 1 katı","Özkaynağın 2 katı","Özkaynağın 3 katı","Özkaynağın 5 katı","Net satışların 10 katı"],answer:3,explain:"Halka açık ortaklıklar için genel ihraç limiti özkaynağın 5 katı olarak çalışılır."}, {id:"borc4",topic:"İhraç limiti",difficulty:"Orta",q:"Halka açık olmayan ortaklıkların borçlanma aracı ihraç limiti genel olarak hangi esasa göre hatırlanmalıdır?",options:["Özkaynağın 3 katı","Özkaynağın 5 katı","Aktif toplamın 10 katı","Kârın 2 katı","Sermayenin %10’u"],answer:0,explain:"Halka açık olmayan ortaklıklarda genel sınav kuralı özkaynağın 3 katıdır."}, {id:"borc5",topic:"Tahvil",difficulty:"Kolay",q:"Tahvil için vade bakımından doğru ifade hangisidir?",options:["7 günden kısa olmalıdır.","30 günden az olamaz, 364 günü aşamaz.","365 gün veya daha uzun vadelidir.","Vadesi yoktur.","Sadece 1 ay vadeli çıkarılır."],answer:2,explain:"Tahvil, 365 gün veya daha uzun vadeli borçlanma aracıdır."}, {id:"borc6",topic:"Finansman bonosu",difficulty:"Kolay",q:"Finansman bonosu vadesi için doğru aralık aşağıdakilerden hangisidir?",options:["1-7 gün","30-364 gün","365 gün ve üzeri","5 yıl ve üzeri","Vadesiz"],answer:1,explain:"Finansman bonosu kısa vadeli araçtır; 30-364 gün sınırı kritik bilgidir."}, {id:"borc7",topic:"PDT-DET ayrımı",difficulty:"Orta",q:"Paya dönüştürülebilir tahvil ile değiştirilebilir tahvil arasındaki temel fark hangisidir?",options:["PDT kamu, DET özel sektör tarafından çıkarılır.","PDT ihraççının kendi paylarına; DET başka ortaklık paylarına yönelir.","PDT kısa vadeli, DET vadesizdir.","PDT kaydi, DET fiziki olmak zorundadır.","Aralarında fark yoktur."],answer:1,explain:"PDT-kendi pay; DET-başka ortaklık payı ayrımı çok sık sınavlaştırılır."}, {id:"borc8",topic:"BASK",difficulty:"Zor",q:"Borçlanma aracı sahipleri kurulu açısından asli hüküm ve şartlar denildiğinde aşağıdaki unsurlardan hangisi özellikle akla gelir?",options:["Faiz, vade ve anapara","Şirket logosu ve ticaret unvanı rengi","Sosyal medya duyurusu","Genel kurul salonu adresi","İşlem saati tercihleri"],answer:0,explain:"BASK kararlarında faiz, vade ve anapara ana ekonomik şartlardır."}, {id:"borc9",topic:"Yeşil borçlanma araçları",difficulty:"Orta",q:"Yeşil borçlanma aracı ihracında aşağıdakilerden hangisi sınav açısından en kritik koşullardan biridir?",options:["Fonun herhangi bir işletme giderinde serbestçe kullanılması","Yönetim kurulunca onaylı çerçeve belgesi ve fonun yeşil projelere yönlendirilmesi","Sadece fiziki senet basılması","Vadenin mutlaka 30 gün olması","Sabit faiz yasağı"],answer:1,explain:"Yeşil araçlarda fon kullanımı, çerçeve belgesi, uyum ve raporlama birlikte değerlendirilir."}, {id:"borc10",topic:"Kayden ihraç",difficulty:"Orta",q:"Yurt içinde ihraç edilen borçlanma araçları açısından kayden izleme için doğru ifade hangisidir?",options:["MKK nezdinde kayden izleme esastır.","Kayden izleme yasaktır.","Sadece fiziki senet geçerlidir.","Yalnızca yabancı borsalarda izlenir.","Sadece paylar kayden izlenebilir, borçlanma araçları izlenemez."],answer:0,explain:"Yurt içi borçlanma aracı ihraçlarında MKK/kayden izleme mantığı önemlidir."}, {id:"borc11",topic:"Kıymetli maden bonosu",difficulty:"Orta",q:"Kıymetli maden bonosu için doğru ifade hangisidir?",options:["Sadece pay sahipliği hakkı verir.","30-364 gün vadeli olabilir ve kıymetli maden aracı kurumlarınca ihraç edilir.","365 gün ve üzeri vadeli devlet tahvilidir.","Opsiyon sözleşmesidir.","Fon katılma payıdır."],answer:1,explain:"Kıymetli maden bonosu da kısa vadeli borçlanma aracı mantığıyla çalışılır."}, {id:"borc12",topic:"Kredi derecelendirmesi",difficulty:"Zor",q:"Borçlanma aracı ihracında kredi derecelendirmesi yapılmışsa notu etkileyen bilgiler için sınav mantığı nasıldır?",options:["Vade boyunca izlenmez.","Sadece halka arz günü dikkate alınır.","Vade boyunca ve en az yıllık gözden geçirme mantığıyla izlenir.","Yalnızca yatırımcı talep ederse açıklanır.","BASK kararından sonra tamamen önemsizleşir."],answer:2,explain:"Derecelendirme notu statik değildir; notu etkileyen bilgiler ve dönemsel gözden geçirme önemlidir."} ] }, { id:"fon", title:"Yatırım Fonu Katılma Payları", short:"Kolektif yatırım, fon malvarlığı, şemsiye fon, fon türleri, TEFAS ve risk yönetimi.", topics:[ "Kolektif yatırım kavramı","Yatırım fonu","Yatırım fonlarına hâkim temel ilkeler","Fon malvarlığı","Kurucunun yetki ve sorumluluğu", "Şemsiye fon","Fon türleri","Fon unvanı","Katılma paylarının ihracı ve halka arzı","Yatırımcı bilgi formu", "Katılma payı değeri","Katılma payı alım satımı","Pay grupları","Portföy sınırlamaları","Fon türlerine özel esaslar", "Serbest fonlar","Fon sepeti fonları","Garantili ve koruma amaçlı fonlar","Katılım fonları", "Fonun sona ermesi, devri, dönüşümü, birleşmesi","Bilgi verme yükümlülüğü","Fon toplam gider sınırı", "TEFAS / Türkiye Elektronik Fon Alım Satım Platformu","Risk yönetim sistemi" ], summary:[ {t:"Yatırım fonunun hukuki yapısı",p:"Yatırım fonu, portföy yönetim şirketi tarafından içtüzükle kurulan, tüzel kişiliği olmayan ayrı bir malvarlığıdır. Tasarruf sahiplerinden katılma payı karşılığı toplanan varlıklar, yatırımcılar hesabına yönetilir."}, {t:"Fon malvarlığı koruması",p:"Fon malvarlığı kurucudan ve portföy saklayıcısından ayrıdır. Fon malvarlığı, fon borçları dışında kural olarak haczedilemez, rehnedilemez ve iflas masasına girmez."}, {t:"Şemsiye fon ve alt fonlar",p:"Şemsiye fon tek içtüzük altında farklı stratejiye sahip fonların kurulmasını sağlar. Her fonun varlık ve yükümlülükleri diğerlerinden ayrıdır."}, {t:"Fon türleri",p:"Borçlanma araçları, hisse senedi, kıymetli maden, para piyasası, karma, fon sepeti, garantili, koruma amaçlı, serbest ve katılım fonları sınavda tanım ve oran mantığıyla sorulur."}, {t:"Katılma payı değeri",p:"Katılma payı değeri, fon toplam değerinin tedavüldeki katılma payı sayısına bölünmesiyle bulunur. Bu formül aktif hatırlama için ezberlenmelidir."} ], keyPoints:[ "Yatırım fonunun tüzel kişiliği yoktur; ayrı bir malvarlığıdır.", "Fon kurucusu portföy yönetim şirketidir; saklama portföy saklayıcısı tarafından yapılır.", "Fon malvarlığı kural olarak haczedilemez, rehnedilemez ve iflas masasına girmez.", "Para piyasası fonunda portföyün tamamı vadesine en fazla 184 gün kalmış likit araçlardan oluşur; ağırlıklı ortalama vade en fazla 45 gündür.", "Hisse senedi yoğun fonda portföy değerinin en az %80’i borsada işlem gören paylarda tutulur.", "Yabancı ibaresi, yabancı varlıklara yoğun yatırım yapan fonlarda önemlidir; ibare yoksa yurt dışı araç sınırı mantığına dikkat edilir.", "Tek ihraççıya yatırımda genel %10 sınırı sınavda sık sorulur.", "Fon katılma payı değeri = fon toplam değeri / katılma payı sayısı.", "Serbest fonlar nitelikli yatırımcılara satılır ve birçok portföy sınırlamasından muafiyet mantığı taşır.", "TEFAS, yatırım fonu katılma paylarının elektronik fon alım satım platformudur." ], confusions:[ ["Yatırım fonu","Tüzel kişiliği olmayan ayrı malvarlığıdır.","Şirket gibi düşünme hatası yapılır."], ["Şemsiye fon","Tek içtüzük altında farklı fonlar kurulabilir.","Alt fonların varlık ve borçları ayrıdır."], ["Para piyasası fonu","Kısa vadeli ve likit araçlar; 184 gün / 45 gün mantığı.","Tahvil fonuyla karıştırılır."], ["Hisse senedi yoğun fon","En az %80 borsada işlem gören paylar.","Her hisse senedi fonu otomatik olarak yoğun fon değildir."], ["Garantili fon","Garanti veren kurumun taahhüdü vardır.","Koruma amaçlı fonda garanti değil en iyi gayret mantığı öne çıkar."], ["Serbest fon","Nitelikli yatırımcıya satılır; esnek sınırlara sahiptir.","Herkese açık standart fon gibi düşünülmemelidir."] ], patterns:[ "Yatırım fonu malvarlığı için aşağıdakilerden hangisi doğrudur?", "Katılma payı değeri nasıl hesaplanır?", "Para piyasası fonu için vade sınırlaması hangisidir?", "Serbest fonların yatırımcı kitlesi kimdir?", "Garantili fon ile koruma amaçlı fon arasındaki fark nedir?", "Fon unvanında yabancı/katılım/endeks ibaresi ne zaman kullanılır?" ], lastDay:[ "Yatırım fonu = tüzel kişiliği yok, ayrı malvarlığı var.", "Kurucu = portföy yönetim şirketi; saklayıcı = portföy saklayıcısı.", "Katılma payı değeri = fon toplam değeri / pay sayısı.", "Para piyasası: 184 gün kalan vade, 45 gün ağırlıklı ortalama vade.", "Hisse senedi yoğun: en az %80 borsada işlem gören pay.", "Serbest fon: nitelikli yatırımcı.", "Garantili fon garanti içerir; koruma amaçlı fon en iyi gayret mantığıdır." ], mustKnow:[ "Fonun tüzel kişiliği olmaması", "Fon malvarlığı koruması", "Şemsiye fon yapısı", "Fon türleri ve oran mantığı", "Katılma payı değeri formülü", "TEFAS ve risk yönetimi" ], mostLikely:"Bu bölümden en çok fon malvarlığının korunması, şemsiye fon, fon türü oranları, para piyasası vade sınırları, serbest fon ve katılma payı değeri formülü gelir.", cards:[ ["Yatırım fonu tüzel kişilik midir?","Hayır. Tüzel kişiliği olmayan ayrı bir malvarlığıdır."], ["Fon kurucusu kimdir?","Portföy yönetim şirketidir."], ["Fon malvarlığı neden önemlidir?","Kurucu/saklayıcı malvarlığından ayrıdır; haciz ve iflas koruması sınavda sorulur."], ["Katılma payı değeri formülü?","Fon toplam değeri / tedavüldeki katılma payı sayısı."], ["Para piyasası fonunda kritik vadeler?","Kalan vade en fazla 184 gün; ağırlıklı ortalama vade en fazla 45 gün."], ["Hisse senedi yoğun fon oranı?","Portföy değerinin en az %80’i borsada işlem gören paylarda olmalıdır."], ["Serbest fon kime satılır?","Nitelikli yatırımcılara."], ["TEFAS nedir?","Türkiye Elektronik Fon Alım Satım Platformu’dur."] ], questions:[ {id:"fon1",topic:"Yatırım fonu tanımı",difficulty:"Kolay",q:"Yatırım fonunun hukuki niteliği için doğru ifade hangisidir?",options:["Anonim ortaklıktır.","Tüzel kişiliği olmayan ayrı bir malvarlığıdır.","Devlet tahvilidir.","Vadeli işlem sözleşmesidir.","Bankacılık mevduatıdır."],answer:1,explain:"Yatırım fonu tüzel kişilik değil, yatırımcılar hesabına yönetilen ayrı malvarlığıdır."}, {id:"fon2",topic:"Kurucu ve saklayıcı",difficulty:"Kolay",q:"Yatırım fonunun kurucusu genel olarak hangi kuruluştur?",options:["Portföy yönetim şirketi","Belediye","Sigorta eksperi","Merkezi yönetim bütçesi","Takas üyesi olmayan gerçek kişi"],answer:0,explain:"Yatırım fonları portföy yönetim şirketlerince kurulur."}, {id:"fon3",topic:"Fon malvarlığı",difficulty:"Orta",q:"Fon malvarlığı için aşağıdakilerden hangisi doğrudur?",options:["Kurucunun borçları için haczedilebilir.","Kurucunun iflas masasına girer.","Fon borçları dışında kural olarak haczedilemez ve iflas masasına girmez.","Sadece nakitten oluşabilir.","Yatırımcıların kişisel borçlarına teminat olur."],answer:2,explain:"Fon malvarlığı ayrılığı ve koruma ilkesi sınavda çok önemlidir."}, {id:"fon4",topic:"Şemsiye fon",difficulty:"Orta",q:"Şemsiye fon yapısı için en doğru ifade hangisidir?",options:["Her alt fonun varlık ve yükümlülükleri birbirine karışır.","Tek içtüzük altında farklı fonların kurulmasına imkân verir.","Sadece tek yatırımcı için kurulur.","Türev araç kullanımını tamamen yasaklar.","Sadece kamu borçlanma araçlarından oluşur."],answer:1,explain:"Şemsiye fon, tek içtüzük altında farklı stratejili fonlara imkân verir; alt fonlar ayrıdır."}, {id:"fon5",topic:"Katılma payı değeri",difficulty:"Kolay",q:"Katılma payı değeri nasıl hesaplanır?",options:["Fon toplam değeri / katılma payı sayısı","Katılma payı sayısı / fon toplam değeri","Fon giderleri x kaldıraç oranı","Net satışlar / sermaye","İhraç limiti / özkaynak"],answer:0,explain:"Formül doğrudan ezberlenmelidir: fon toplam değeri bölü pay sayısı."}, {id:"fon6",topic:"Para piyasası fonu",difficulty:"Zor",q:"Para piyasası fonu için aşağıdaki vade ifadelerinden hangisi sınav açısından doğrudur?",options:["Portföyün tamamı vadesine en fazla 184 gün kalmış likit araçlardan oluşur; ağırlıklı ortalama vade en fazla 45 gündür.","Her varlık en az 365 gün vadeli olmalıdır.","Ağırlıklı ortalama vade 10 yıl olmalıdır.","Yalnızca pay senedi alabilir.","Vade sınırı bulunmaz."],answer:0,explain:"184 gün ve 45 gün bilgisi para piyasası fonu için kritik sınav bilgisidir."}, {id:"fon7",topic:"Hisse senedi yoğun fon",difficulty:"Orta",q:"Hisse senedi yoğun fon için temel oran aşağıdakilerden hangisidir?",options:["En az %20 pay","En az %40 pay","En az %51 pay","En az %80 borsada işlem gören pay","En fazla %10 pay"],answer:3,explain:"Hisse senedi yoğun fonlarda %80 oranı ezberlenmelidir."}, {id:"fon8",topic:"Portföy sınırlamaları",difficulty:"Zor",q:"Fon portföyünde tek ihraççıya yatırım için genel sınav kuralı hangi oranla hatırlanır?",options:["%3","%5","%10","%50","%100"],answer:2,explain:"Tek ihraççı sınırı genel olarak %10 mantığıyla sorulur; istisnalar ayrıca değerlendirilebilir."}, {id:"fon9",topic:"Serbest fon",difficulty:"Orta",q:"Serbest fonlar için doğru ifade hangisidir?",options:["Yalnızca küçük tasarruf sahiplerine satılır.","Nitelikli yatırımcılara satılır ve daha esnek portföy sınırlamalarına sahiptir.","Sadece devlet tahvili alabilir.","Fon malvarlığı yoktur.","Katılma payı çıkaramaz."],answer:1,explain:"Serbest fon = nitelikli yatırımcı + esnek yatırım sınırlamaları mantığıdır."}, {id:"fon10",topic:"Garantili ve koruma amaçlı fon",difficulty:"Orta",q:"Garantili fon ile koruma amaçlı fon arasındaki temel fark hangisidir?",options:["Garantili fonda garanti, koruma amaçlı fonda en iyi gayret mantığı öne çıkar.","Koruma amaçlı fon mutlaka devlet tahvilidir.","Garantili fonun katılma payı yoktur.","İkisi de türev araçtır.","Aralarında hiçbir fark yoktur."],answer:0,explain:"Garantili fonda garantör taahhüdü; koruma amaçlı fonda strateji ve en iyi gayret mantığı vurgulanır."}, {id:"fon11",topic:"TEFAS",difficulty:"Kolay",q:"TEFAS aşağıdakilerden hangisini ifade eder?",options:["Türkiye Elektronik Fon Alım Satım Platformu","Tahvil Erken Faiz Aktarım Sistemi","Türev Emir Fiyat Analiz Servisi","Tasfiye Edilen Fonlar Ana Sicili","Teminat Emanet Fonu Alt Sistemi"],answer:0,explain:"TEFAS, fon katılma paylarının elektronik alım satım platformudur."}, {id:"fon12",topic:"Risk yönetimi",difficulty:"Orta",q:"Yatırım fonlarında risk yönetim sistemi için doğru yaklaşım hangisidir?",options:["Fon stratejisi ve risk düzeyine uygun ölçüm, izleme ve kontrol mekanizması kurulmalıdır.","Sadece pazarlama amacıyla kullanılır.","Kurucunun sorumluluğunu tamamen ortadan kaldırır.","Yalnızca fiziki senet fonlarında aranır.","Portföy saklayıcısını devre dışı bırakır."],answer:0,explain:"Risk yönetimi fon stratejisi, portföy yapısı ve iç kontrolle birlikte düşünülür."} ] }, { id:"turev", title:"Türev Araçlar", short:"Forward, futures, opsiyon, swap, VİOP, riskten korunma, spekülasyon ve arbitraj.", topics:[ "Türev araç kavramı","Forward sözleşmeler","Futures sözleşmeler","Opsiyon sözleşmeleri","Swap sözleşmeleri", "Türev araçların kullanım yerleri","Riskten korunma","Spekülasyon","Arbitraj","Türev araçların faydaları", "Teşkilatlanmış piyasalar","Tezgah üstü piyasalar","Türev araçların gelişimi","Türkiye’de türev araçlar", "Türev araç düzenlemeleri","VİOP","VİOP’ta işlem gören sözleşmeler","Vadeli işlem örnekleri","Opsiyon örnekleri", "Alım opsiyonu / satım opsiyonu","Prim, kullanım fiyatı, vade, dayanak varlık","Kâr/zarar mantığı" ], summary:[ {t:"Türev araç mantığı",p:"Türev aracın değeri bir dayanak varlık, fiyat, oran veya göstergeden türetilir. Sınavda önce dayanak varlık bağlantısı yakalanmalıdır."}, {t:"Forward ve futures",p:"Forward tezgâh üstü, taraflar arasında serbestçe düzenlenen ve vade sonunda sonuçlanan sözleşmedir. Futures organize piyasada işlem gören, standart, teminatlı ve günlük uzlaşmalı vadeli işlem sözleşmesidir."}, {t:"Opsiyon",p:"Opsiyon alıcısına prim karşılığında alma veya satma hakkı verir; yükümlülük satıcıdadır. Alıcının zararı primle sınırlı, satıcının riski daha geniştir."}, {t:"Swap",p:"Swap, tarafların faiz veya döviz gibi nakit akımlarını belirli koşullarla değiştirdiği sözleşmedir. Faiz ve döviz swapı sınavda temel tanım düzeyinde sorulur."}, {t:"Kullanım amaçları",p:"Riskten korunma mevcut riski azaltmaya, spekülasyon fiyat beklentisinden kâr elde etmeye, arbitraj ise piyasa fiyat farklarından yararlanmaya yöneliktir."} ], keyPoints:[ "Türev araçların değeri dayanak varlığa bağlıdır.", "Forward tezgâh üstüdür; futures organize piyasada işlem görür.", "Futures sözleşmeler standarttır, teminatlıdır ve günlük kâr/zarar hesaplaması vardır.", "Forward sözleşmelerde kredi riski taraflar arasında daha belirgindir.", "Alım opsiyonu alıcıya satın alma hakkı verir.", "Satım opsiyonu alıcıya satma hakkı verir.", "Opsiyon alıcısının azami zararı ödediği primdir.", "Amerikan tipi opsiyon vadeye kadar herhangi bir zamanda, Avrupa tipi opsiyon sadece vadede kullanılabilir.", "Volatilite arttıkça alım ve satım opsiyonu primleri genel olarak artar.", "VİOP’ta merkezi karşı taraf ve teminat mekanizması piyasa güvenliği açısından önemlidir." ], confusions:[ ["Forward","Tezgâh üstü, standart değil, vade sonunda uzlaşma, taraf kredi riski yüksek.","Futures ile en sık karıştırılır."], ["Futures","Organize piyasa, standart sözleşme, günlük uzlaşma, teminat ve takas kurumu.","Forward’a göre piyasa riski yönetimi daha kurallıdır."], ["Alım opsiyonu","Alıcıya alma hakkı verir.","Fiyat yükselişi beklentisiyle ilişkilendirilir."], ["Satım opsiyonu","Alıcıya satma hakkı verir.","Fiyat düşüşü beklentisiyle ilişkilendirilir."], ["Riskten korunma","Mevcut riski azaltmak amacıyla işlem yapılır.","Spekülasyonla karıştırma."], ["Arbitraj","Fiyat farklarından eş anlı işlemle yararlanma mantığıdır.","Salt tahmin değil, fiyat uyumsuzluğu aranır."] ], patterns:[ "Forward ile futures arasındaki fark aşağıdakilerden hangisidir?", "Alım opsiyonu alıcısının hakkı nedir?", "Opsiyon primini artıran faktörlerden biri hangisidir?", "Riskten korunma, spekülasyon ve arbitraj arasındaki fark nasıl kurulur?", "Amerikan tipi ve Avrupa tipi opsiyon farkı nedir?", "VİOP’ta teminat ve günlük uzlaşma mantığı neyi sağlar?" ], lastDay:[ "Türev = dayanak varlığa bağlı değer.", "Forward = tezgâh üstü, standart değil, vade sonunda sonuç.", "Futures = borsa, standart, teminatlı, günlük uzlaşmalı.", "Call = alma hakkı; Put = satma hakkı.", "Opsiyon alıcısının zararı primle sınırlıdır.", "Amerikan = vadeye kadar; Avrupa = sadece vadede kullanım.", "Hedging = korunma; spekülasyon = beklenti; arbitraj = fiyat farkı." ], mustKnow:[ "Forward-futures farkları", "Opsiyon taraflarının hak/yükümlülükleri", "Prim, kullanım fiyatı, dayanak varlık", "Riskten korunma, spekülasyon, arbitraj", "VİOP ve organize piyasa mantığı" ], mostLikely:"Bu bölümden en çok forward-futures karşılaştırması, alım/satım opsiyonunda hak-yükümlülük, opsiyon kâr/zarar mantığı, Amerikan/Avrupa tipi opsiyon ve kullanım amaçları sorulur.", cards:[ ["Türev araç nedir?","Değeri dayanak varlık, fiyat, oran veya göstergeden türeyen araçtır."], ["Forward nedir?","Tezgâh üstü, taraflar arasında serbest düzenlenen vadeli sözleşmedir."], ["Futures nedir?","Organize piyasada işlem gören, standart ve günlük uzlaşmalı vadeli sözleşmedir."], ["Alım opsiyonu ne hakkı verir?","Dayanak varlığı alma hakkı verir."], ["Satım opsiyonu ne hakkı verir?","Dayanak varlığı satma hakkı verir."], ["Opsiyon alıcısının azami zararı?","Ödediği primle sınırlıdır."], ["Amerikan opsiyonu nedir?","Vadeye kadar herhangi bir zamanda kullanılabilir."], ["Arbitraj nedir?","Piyasalar arası fiyat farkından yararlanma işlemidir."] ], questions:[ {id:"turev1",topic:"Türev araç kavramı",difficulty:"Kolay",q:"Türev araçların temel özelliği aşağıdakilerden hangisidir?",options:["Değerinin dayanak varlık veya göstergeden türemesi","Her zaman kamu tarafından çıkarılması","Sadece ortaklık hakkı vermesi","Vadesiz ve risksiz olması","Yalnızca mevduat niteliğinde olması"],answer:0,explain:"Türev araçta temel fikir dayanak varlığa bağlı değerdir."}, {id:"turev2",topic:"Forward-futures",difficulty:"Kolay",q:"Forward sözleşmeler için doğru ifade hangisidir?",options:["Standart ve borsada işlem gören sözleşmelerdir.","Tezgâh üstü piyasada taraflarca serbestçe düzenlenir.","Günlük uzlaşma zorunludur.","Takas kurumu daima karşı taraftır.","Opsiyon primi içerir."],answer:1,explain:"Forward, OTC ve esnek yapılı sözleşmedir."}, {id:"turev3",topic:"Forward-futures",difficulty:"Orta",q:"Futures sözleşmeleri forward sözleşmelerden ayıran özelliklerden biri hangisidir?",options:["Hiçbir teminat gerektirmemesi","Borsada standart sözleşme olarak işlem görmesi ve günlük uzlaşma mantığı","Tarafların her unsuru serbestçe belirlemesi","Kredi riskinin daima sınırsız olması","Sadece fiziki senet şeklinde olması"],answer:1,explain:"Futures = organize piyasa + standart sözleşme + teminat + günlük uzlaşma."}, {id:"turev4",topic:"Opsiyon",difficulty:"Kolay",q:"Alım opsiyonu alıcısına hangi hakkı verir?",options:["Dayanak varlığı satma hakkı","Dayanak varlığı alma hakkı","Şirket yönetim kuruluna girme hakkı","Tahvili zorunlu itfa hakkı","Katılma payını iptal hakkı"],answer:1,explain:"Call option yani alım opsiyonu, alma hakkı verir."}, {id:"turev5",topic:"Opsiyon",difficulty:"Kolay",q:"Satım opsiyonu alıcısı hangi hakka sahiptir?",options:["Dayanak varlığı satma hakkı","Dayanak varlığı alma hakkı","Faiz kuponu alma hakkı","Oy hakkı kullanma hakkı","Kâr payı dağıtma hakkı"],answer:0,explain:"Put option yani satım opsiyonu, satma hakkı verir."}, {id:"turev6",topic:"Opsiyon kâr/zarar",difficulty:"Orta",q:"Opsiyon alıcısının azami zararı genel olarak neyle sınırlıdır?",options:["Ödediği prim","Dayanak varlığın toplam piyasa değeri","İhraççının özkaynağı","Borsanın günlük işlem hacmi","Sermayenin tamamı"],answer:0,explain:"Opsiyon alıcısı hak satın alır; primi öder ve zararı genellikle bu primle sınırlıdır."}, {id:"turev7",topic:"Opsiyon türleri",difficulty:"Orta",q:"Amerikan tipi opsiyonun Avrupa tipi opsiyondan farkı nedir?",options:["Sadece vade sonunda kullanılabilir.","Vadeye kadar herhangi bir zamanda kullanılabilir.","Hiç prim ödenmez.","Sadece devlet tahviline dayanır.","Yalnızca satım opsiyonu olabilir."],answer:1,explain:"Amerikan tipi vadeye kadar kullanılabilir; Avrupa tipi sadece vadede kullanılır."}, {id:"turev8",topic:"Opsiyon primi",difficulty:"Zor",q:"Volatilitenin artması opsiyon primi üzerinde genel olarak nasıl etki yapar?",options:["Alım ve satım opsiyonu primlerini artırır.","Alım opsiyonunu düşürür, satımı sıfırlar.","Her iki primi de sıfırlar.","Sadece kullanım fiyatını değiştirir.","Primle ilgisi yoktur."],answer:0,explain:"Belirsizlik/volatilite arttıkça opsiyonun değer potansiyeli artar; primler yükselme eğilimindedir."}, {id:"turev9",topic:"Kullanım amaçları",difficulty:"Kolay",q:"Mevcut fiyat, kur veya faiz riskini azaltmak amacıyla türev işlem yapılması hangi kavramla açıklanır?",options:["Riskten korunma","Tasfiye","Halka arz","İhraç limiti","Katılma payı değeri"],answer:0,explain:"Hedging, mevcut riski azaltma amacıyla yapılır."}, {id:"turev10",topic:"Arbitraj",difficulty:"Orta",q:"Arbitraj kavramı için en doğru ifade hangisidir?",options:["Sadece sezgisel fiyat tahmini yapmaktır.","Farklı piyasalardaki fiyat uyumsuzluklarından yararlanma mantığıdır.","Yalnızca zarar azaltma işlemidir.","Her zaman pay ihracı anlamına gelir.","Sadece kamu borçlanmasıdır."],answer:1,explain:"Arbitraj, fiyat farkı/uyumsuzluğu üzerinden işlem yapma mantığıdır."}, {id:"turev11",topic:"Swap",difficulty:"Orta",q:"Swap sözleşmeleri genel olarak neyi ifade eder?",options:["Tarafların belirli nakit akımlarını değiştirmesini","Anonim ortaklık payını","Kısa vadeli hazine bonosunu","Fon içtüzüğünü","Sadece bedelsiz sermaye artırımını"],answer:0,explain:"Swap, faiz veya döviz gibi nakit akımlarının değişimi mantığına dayanır."}, {id:"turev12",topic:"VİOP",difficulty:"Zor",q:"VİOP ve organize türev piyasa mantığında aşağıdakilerden hangisi önemlidir?",options:["Teminat, takas ve merkezi karşı taraf mekanizması","Her sözleşmenin standart dışı olması","Tüm işlemlerde teminat yasağı","Yalnızca fiziki pay basımı","Her zaman opsiyon primsiz işlem"],answer:0,explain:"VİOP’ta teminat ve takas/merkezi karşı taraf mekanizması piyasa güvenliği açısından temel unsurlardır."} ] }, { id:"kamu", title:"Kamu Borçlanma Araçları", short:"Kamu finansmanı, iç/dış borç, DİBS, hazine bonosu, devlet tahvili, ihale ve vergilendirme.", topics:[ "Kamunun borçlanması","İç borçlanma","Dış borçlanma","Kısa vadeli borçlanma","Uzun vadeli borçlanma", "İsteğe bağlı ve zorunlu borçlanma","Kamu sektörü ve kamu finansmanı","Kamu finansmanı temel düzenlemeleri", "Kamu finansmanı mevzuatı ile sermaye piyasası mevzuatı ilişkisi","Kamu borçlanma araçları","Borçlanma senetleri", "DİBS","Hazine bonosu","Devlet tahvili","Getiri/verim eğrisi","DİBS ihraç yöntemleri","Piyasa yapıcılığı","DİBS vergilendirmesi" ], summary:[ {t:"Kamu borçlanmasının amacı",p:"Kamu borçlanması bütçe açığı, vadesi gelen borçların finansmanı, olağanüstü giderler ve maliye politikası amaçlarıyla kullanılabilir. Ancak faiz yükü ve borç sürdürülebilirliği sınavda dikkat edilmesi gereken çerçevedir."}, {t:"İç ve dış borç ayrımı",p:"İç borçlanma yurt içi kaynaklardan; dış borçlanma yurt dışı kaynaklardan sağlanan finansman olarak değerlendirilir. Yerleşiklik ve ihraç piyasası ayrımı dikkatle okunmalıdır."}, {t:"DİBS",p:"Devlet İç Borçlanma Senetleri, Hazine tarafından yurt içinde ihraç edilen hazine bonosu ve devlet tahvillerinin ortak adıdır."}, {t:"Hazine bonosu ve devlet tahvili",p:"Hazine bonosu kısa vadeli, devlet tahvili bir yıl ve daha uzun vadeli DİBS’tir. PDF’de 4749 ve sermaye piyasası mevzuatında gün sayısı kullanımına ilişkin nüans bulunduğu için soruda verilen ifadeye göre cevaplanmalıdır."}, {t:"İhraç yöntemleri",p:"DİBS ihraçlarında ihale, TAP, doğrudan satış ve halka arz yöntemleri öne çıkar. İhalelerde TCMB’nin Hazine adına işlem yürütmesi sınavda sorulabilir."} ], keyPoints:[ "Kamu finansmanında temel kaynaklar vergiler, para basma/emisyon ve borçlanmadır.", "İç borçlanma kaynak aktarımı bakımından ekonomi içinde el değiştirme etkisi yaratır; dış borçlanma dış kaynak sağlar.", "DİBS, Hazinece yurt içinde ihraç edilen devlet tahvili ve hazine bonolarının ortak adıdır.", "Hazine bonosu kısa vadeli DİBS’tir; devlet tahvili bir yıl ve daha uzun vadeli DİBS’tir.", "Kuponsuz DİBS iskonto ile satılır; getiri nominal değer ile alış fiyatı farkından doğar.", "Getiri eğrisinde dikey eksen getiri/faiz, yatay eksen vadeye kalan süredir.", "DİBS ihaleleri TCMB tarafından Hazine adına gerçekleştirilebilir.", "Çoklu fiyat ihalesinde kazanan yatırımcılar kendi teklif fiyatlarından alır.", "Tek fiyat ihalesinde kazananlar Hazinece belirlenen tek fiyattan alır.", "Piyasa yapıcı bankalar birincil ve ikincil DİBS piyasasında etkinliği artırmak için seçilir." ], confusions:[ ["Hazine bonosu","Bir yıldan kısa vadeli DİBS’tir.","Kısa vadeli kamu borçlanma aracı."], ["Devlet tahvili","Bir yıl ve daha uzun vadeli DİBS’tir.","Uzun vade vurgusu önemlidir."], ["Kuponsuz DİBS","İskontolu satılır; gelir alış fiyatı ile nominal değer farkıdır.","Kupon ödemesi beklenmez."], ["Kuponlu DİBS","Dönemsel faiz/kupon ödemesi vardır.","Kuponsuzla karıştırılır."], ["Çoklu fiyat ihalesi","Kazananlar kendi teklif fiyatlarıyla alır.","Tek fiyatla karıştırılır."], ["Tek fiyat ihalesi","Kazananlar aynı kabul edilen fiyatla alır.","Çoklu fiyatın tersidir."] ], patterns:[ "Hazine bonosu ile devlet tahvili arasındaki vade farkı nedir?", "DİBS hangi araçların ortak adıdır?", "Kuponsuz DİBS’te yatırımcının getirisi nasıl oluşur?", "Getiri eğrisinde eksenler nasıl yorumlanır?", "Çoklu fiyat ihalesi ile tek fiyat ihalesi arasındaki fark nedir?", "Piyasa yapıcı bankaların hakları nelerdir?" ], lastDay:[ "DİBS = Hazine bonosu + devlet tahvili ortak adı.", "Hazine bonosu = kısa vadeli; devlet tahvili = 1 yıl ve üzeri.", "Kuponsuz = iskontolu satış, getiri nominal-alış fiyatı farkı.", "Getiri eğrisi: dikey getiri/faiz, yatay vade.", "DİBS ihalelerinde TCMB Hazine adına görev alabilir.", "Çoklu fiyat = herkes kendi teklifinden; tek fiyat = kazananlara aynı fiyat.", "DİBS vergilendirmesinde PDF’de genel istisna çerçevesi verilmiştir; stopaj gibi detaylar için güncel mevzuat ayrıca kontrol edilmelidir." ], mustKnow:[ "Kamu borçlanma nedenleri", "İç/dış borç ayrımı", "DİBS tanımı", "Hazine bonosu-devlet tahvili farkı", "Getiri eğrisi", "DİBS ihraç yöntemleri", "Piyasa yapıcılığı" ], mostLikely:"Bu bölümden en çok DİBS tanımı, hazine bonosu-devlet tahvili vade ayrımı, kuponsuz/kuponlu getiri mantığı, ihale türleri ve piyasa yapıcılığı gelir.", cards:[ ["DİBS nedir?","Hazine tarafından yurt içinde ihraç edilen hazine bonosu ve devlet tahvillerinin ortak adıdır."], ["Hazine bonosu nedir?","Bir yıldan kısa vadeli DİBS’tir."], ["Devlet tahvili nedir?","Bir yıl ve daha uzun vadeli DİBS’tir."], ["Kuponsuz DİBS getirisi nasıl oluşur?","İskontolu alış fiyatı ile nominal değer arasındaki farktan."], ["Getiri eğrisi neyi gösterir?","Faiz/getiri ile vadeye kalan süre arasındaki ilişkiyi."], ["Çoklu fiyat ihalesi nedir?","Kazananların kendi teklif ettikleri fiyatlardan alım yaptığı ihale türüdür."], ["Tek fiyat ihalesi nedir?","Kazananların aynı kabul edilen fiyattan alım yaptığı ihale türüdür."], ["Piyasa yapıcılığı amacı?","DİBS birincil ve ikincil piyasalarında etkinliği artırmaktır."] ], questions:[ {id:"kamu1",topic:"Kamu finansmanı",difficulty:"Kolay",q:"Kamu finansmanında temel kaynaklardan biri aşağıdakilerden hangisidir?",options:["Vergiler","Opsiyon primi","Pay defteri","Katılma intifa senedi","Özel denetçi raporu"],answer:0,explain:"Vergiler, emisyon/para basma ve borçlanma kamu finansmanının temel seçenekleridir."}, {id:"kamu2",topic:"İç-dış borç",difficulty:"Orta",q:"İç borçlanma için en doğru yaklaşım hangisidir?",options:["Yurt içi kaynaklardan sağlanan finansmandır.","Her zaman yabancı para cinsindendir.","Yalnızca IMF’den alınır.","Sadece pay ihracıyla yapılır.","Türev sözleşme niteliğindedir."],answer:0,explain:"İç borçlanma kaynak/yurt içi piyasa mantığıyla değerlendirilir."}, {id:"kamu3",topic:"DİBS",difficulty:"Kolay",q:"DİBS aşağıdakilerden hangisinin ortak adıdır?",options:["Hazine bonosu ve devlet tahvili","Pay ve intifa senedi","Forward ve futures","Yatırım fonu ve şemsiye fon","Alım ve satım opsiyonu"],answer:0,explain:"DİBS, Hazinece yurt içinde ihraç edilen hazine bonosu ve devlet tahvillerinin ortak adıdır."}, {id:"kamu4",topic:"Hazine bonosu",difficulty:"Kolay",q:"Hazine bonosu için doğru ifade hangisidir?",options:["Bir yıldan kısa vadeli DİBS’tir.","Bir yıl ve daha uzun vadeli DİBS’tir.","Pay sahipliği hakkı verir.","Opsiyon sözleşmesidir.","Fon katılma payıdır."],answer:0,explain:"Hazine bonosu kısa vadeli kamu borçlanma aracıdır."}, {id:"kamu5",topic:"Devlet tahvili",difficulty:"Kolay",q:"Devlet tahvili için doğru ifade hangisidir?",options:["Bir yıl ve daha uzun vadeli DİBS’tir.","30 günden kısa vadeli bonodur.","Yalnızca özel sektörce çıkarılır.","Sermaye artırımı belgesidir.","Pay benzeri menkul kıymettir."],answer:0,explain:"Devlet tahvili uzun vadeli DİBS olarak çalışılır."}, {id:"kamu6",topic:"Kuponsuz DİBS",difficulty:"Orta",q:"Kuponsuz DİBS’te yatırımcının getirisi temel olarak nasıl oluşur?",options:["İskontolu alış fiyatı ile nominal değer farkından","Oy hakkından","Kâr payı dağıtımından","Opsiyon priminin iadesinden","Fon toplam giderinden"],answer:0,explain:"Kuponsuz senetlerde getiri iskonto mantığıyla oluşur."}, {id:"kamu7",topic:"Getiri eğrisi",difficulty:"Orta",q:"Getiri/verim eğrisinde dikey ve yatay eksenler genel olarak neyi gösterir?",options:["Dikey getiri/faiz, yatay vadeye kalan süre","Dikey pay sayısı, yatay oy hakkı","Dikey opsiyon primi, yatay imtiyaz","Dikey fon gideri, yatay KAP duyurusu","Dikey BASK nisabı, yatay sermaye"],answer:0,explain:"Getiri eğrisi faiz/getiri ile vadeye kalan süre ilişkisini gösterir."}, {id:"kamu8",topic:"DİBS ihale",difficulty:"Orta",q:"DİBS ihaleleri bakımından sınavda sık gelen kurum ilişkisi hangisidir?",options:["TCMB’nin Hazine adına ihale işlemlerini yürütmesi","Belediyelerin tek başına VİOP kurması","MKK’nın vergi toplaması","SPK’nın para basması","Portföy saklayıcısının devlet tahvili ihraç etmesi"],answer:0,explain:"DİBS ihalelerinde TCMB-Hazine ilişkisi klasik sorudur."}, {id:"kamu9",topic:"İhale türleri",difficulty:"Zor",q:"Çoklu fiyat ihalesi için doğru ifade hangisidir?",options:["Kazananlar kendi teklif ettikleri fiyatlardan alım yapar.","Tüm kazananlar aynı tek fiyattan alım yapar.","Hiç teklif alınmaz.","Yalnızca halka arz yöntemidir.","Sadece opsiyon primini belirler."],answer:0,explain:"Çoklu fiyat = kazananların kendi teklif fiyatları; tek fiyat = aynı fiyat mantığıdır."}, {id:"kamu10",topic:"İhale türleri",difficulty:"Zor",q:"Tek fiyat ihalesi için doğru ifade hangisidir?",options:["Kazananlar aynı kabul edilen fiyattan alım yapar.","Her yatırımcı farklı kendi fiyatından alır.","Sadece KİS ihracında kullanılır.","Hiçbir fiyat belirlenmez.","Yalnızca türev araçlar için geçerlidir."],answer:0,explain:"Tek fiyat ihalesinde kazananlar aynı fiyat üzerinden alım yapar."}, {id:"kamu11",topic:"Piyasa yapıcılığı",difficulty:"Orta",q:"DİBS piyasa yapıcılığının temel amacı aşağıdakilerden hangisidir?",options:["Birincil ve ikincil DİBS piyasalarında etkinliği artırmak","Payların oy haklarını kaldırmak","Fon malvarlığını tasfiye etmek","Opsiyon primini sıfırlamak","Tüm borçları vergisiz hale getirmek"],answer:0,explain:"Piyasa yapıcılığı, DİBS piyasalarının likidite ve etkinliğini destekler."}, {id:"kamu12",topic:"DİBS vergilendirmesi",difficulty:"Zor",q:"PDF’de DİBS vergilendirmesi bakımından verilen genel çerçeveye en uygun ifade hangisidir?",options:["DİBS işlemleriyle ilgili bazı ödeme ve belgeler için özel istisna çerçevesi bulunur; gelir/kurumlar vergisi hükümleri ayrıca saklıdır.","DİBS her durumda tüm vergilerden tamamen bağımsızdır ve hiçbir istisna maddesi yoktur.","Sadece belediye vergisine tabidir.","DİBS vergilendirmesi türev araç primine göre yapılır.","DİBS için vergi konusu PDF’de hiç anılmaz."],answer:0,explain:"PDF’de genel istisna çerçevesi verilir; ayrıntılı güncel stopaj uygulamaları için mevzuat kontrolü gerekir."} ] } ]; const defaultState = { completed:{}, answers:{}, attempts:[], flash:{}, view:"dashboard", chapter:"pay", tab:"summary", exam:null, lastExam:null }; let state = loadState(); let flashIndex = {}; let examTimer = null; function loadState(){ try{ return {...defaultState, ...(JSON.parse(localStorage.getItem(STORAGE_KEY)) || {})}; }catch(e){ return structuredClone(defaultState); } } function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); updateTopProgress(); } const esc = (str) => String(str ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); const letters = ["A","B","C","D","E"]; const getChapter = id => DATA.find(c => c.id === id) || DATA[0]; const allQuestions = () => DATA.flatMap(c => c.questions.map(q => ({...q, chapterId:c.id, chapterTitle:c.title}))); const allCards = chapter => chapter.cards.map((c,i)=>({id:`${chapter.id}_card_${i}`,front:c[0],back:c[1],chapterId:chapter.id})); function stats(){ const total = state.attempts.length; const correct = state.attempts.filter(a=>a.correct).length; const wrong = total - correct; const complete = Object.values(state.completed).filter(Boolean).length; return {total,correct,wrong,complete,rate: total ? Math.round(correct*100/total) : 0}; } function weakTopics(chapterId=null){ const map = {}; state.attempts.filter(a=>!a.correct && (!chapterId || a.chapterId===chapterId)).forEach(a=>{ const key = a.topic || "Genel"; map[key] = (map[key]||0)+1; }); return Object.entries(map).sort((a,b)=>b[1]-a[1]); } function updateTopProgress(){ const s = stats(); document.getElementById("progressText").textContent = `${s.complete}/5 konu`; document.getElementById("progressBar").style.width = `${Math.round(s.complete*100/5)}%`; document.querySelectorAll(".nav-btn").forEach(btn=>{ btn.classList.toggle("active", btn.dataset.view===state.view || btn.dataset.chapter===state.chapter && state.view==="chapter"); }); } function renderNav(){ const nav = document.getElementById("chapterNav"); nav.innerHTML = DATA.map((c,i)=>` <button class="nav-btn" data-view="chapter" data-chapter="${c.id}"> <span>${i+1}. ${esc(c.title)}</span> ${state.completed[c.id] ? '<span class="small">✓</span>' : ''} </button> `).join(""); document.querySelectorAll(".nav-btn").forEach(btn=>{ btn.addEventListener("click",()=>{ if(btn.dataset.view==="chapter"){ state.view="chapter"; state.chapter=btn.dataset.chapter; state.tab="summary"; }else{ state.view=btn.dataset.view; } document.body.classList.remove("menu-open"); saveState(); render(); }); }); } function render(){ renderNav(); updateTopProgress(); if(state.view==="exam") return renderExam(); if(state.view==="chapter") return renderChapter(state.chapter); return renderDashboard(); } function renderDashboard(){ const s = stats(); const weak = weakTopics().slice(0,6); const repeatCount = Object.values(state.flash).filter(v=>v==="again").length; document.getElementById("content").innerHTML = ` <section class="hero"> <h2>SPL 1003 Sermaye Piyasası Araçları 1 – Akıllı Çalışma Aracı</h2> <p>Konu özeti, hap bilgiler, mini testler, flashcardlar ve deneme modu.</p> <div class="grid dashboard-grid"> <div class="metric"><b>${s.complete}/5</b><span>Tamamlanan konu</span></div> <div class="metric"><b>${s.total}</b><span>Çözülen soru</span></div> <div class="metric"><b>${s.rate}%</b><span>Doğru oranı</span></div> <div class="metric"><b>${repeatCount}</b><span>Tekrar kartı</span></div> </div> </section> <section class="grid two-col"> <div class="card"> <div class="section-title"> <div> <h2>Çalışma Rotası</h2> <p>Önce konu özetini oku, sonra mini test ve flashcard ile aktif hatırlama yap.</p> </div> </div> <div class="grid"> ${DATA.map((c,i)=>` <div class="summary-block"> <h4>${i+1}. ${esc(c.title)}</h4> <p>${esc(c.short)}</p> <div class="pill-row"> <span class="badge ${state.completed[c.id]?'ok':'warn'}">${state.completed[c.id]?'Tamamlandı':'Devam'}</span> <span class="badge accent">${c.questions.length} soru</span> <span class="badge">${c.cards.length} kart</span> </div> <button class="btn accent" onclick="openChapter('${c.id}')">Bölüme Git</button> </div> `).join("")} </div> </div> <div class="card"> <h3>En Çok Yanlış Yapılan Konular</h3> ${weak.length ? renderWeakBars(weak) : '<p class="empty">Henüz zayıf konu oluşmadı. Mini test veya deneme çözünce burada görünecek.</p>'} <div class="callout tip"> <strong>Öğrenme önerisi:</strong> Yanlış yaptığın konulardaki flashcardlarda “Tekrar Etmeliyim” seçeneğini kullan. Son gün listesiyle tekrar aralıklarını kısalt. </div> <div class="actions"> <button class="btn" onclick="startExam()">25 Soruluk Deneme Başlat</button> <button class="btn secondary" onclick="resetProgress()">İlerlemeyi Sıfırla</button> </div> </div> </section> <section class="card" style="margin-top:16px"> <h3>Son Deneme Sonucu</h3> ${state.lastExam ? ` <div class="grid three-col"> <div class="summary-block"><h4>Doğru</h4><p><strong>${state.lastExam.correct}</strong></p></div> <div class="summary-block"><h4>Yanlış/Boş</h4><p><strong>${state.lastExam.wrong}</strong></p></div> <div class="summary-block"><h4>Başarı</h4><p><strong>${state.lastExam.rate}%</strong></p></div> </div> <p><strong>Öneri:</strong> ${esc(state.lastExam.advice)}</p> ` : '<p class="empty">Henüz deneme çözülmedi.</p>'} </section> `; } function renderWeakBars(items){ const max = Math.max(...items.map(x=>x[1]),1); return `<div class="weak-bars"> ${items.map(([topic,count])=>` <div class="bar"> <div class="bar-label"><span>${esc(topic)}</span><strong>${count} yanlış</strong></div> <div class="bar-track"><span style="width:${Math.max(8, count*100/max)}%"></span></div> </div> `).join("")} </div>`; } function renderChapter(chapterId){ const c = getChapter(chapterId); const tabs = [ ["summary","Konu Özeti"], ["tips","Hap Bilgiler"], ["confusions","Karıştırılan"], ["patterns","Sınavda Nasıl Sorulur?"], ["test","Mini Test"], ["flash","Flashcard"], ["last","Son Gün"], ["weak","Zayıf Analiz"] ]; document.getElementById("content").innerHTML = ` <section class="card"> <div class="section-title"> <div> <h2>${esc(c.title)}</h2> <p>${esc(c.short)}</p> </div> <button class="btn ${state.completed[c.id]?'secondary':'accent'}" onclick="toggleComplete('${c.id}')"> ${state.completed[c.id] ? 'Tamamlandı ✓' : 'Konuyu Tamamla'} </button> </div> <div class="pill-row"> <span class="badge accent">${c.topics.length} alt başlık</span> <span class="badge">${c.questions.length} mini soru</span> <span class="badge">${c.cards.length} flashcard</span> </div> <div class="tabbar" role="tablist"> ${tabs.map(([id,label])=>`<button role="tab" class="${state.tab===id?'active':''}" onclick="setTab('${id}')">${label}</button>`).join("")} </div> <div id="chapterPanel">${renderChapterTab(c,state.tab)}</div> </section> `; } function renderChapterTab(c,tab){ if(tab==="summary"){ return ` <div class="grid two-col"> <div> <h3>Konu Özeti</h3> ${c.summary.map(x=>` <div class="summary-block"> <h4>${esc(x.t)}</h4> <p>${esc(x.p)}</p> </div> `).join("")} <div class="callout warn"><strong>⚠️ Sınavda Dikkat:</strong> ${esc(c.mostLikely)}</div> </div> <div> <h3>Alt Başlık Haritası</h3> <ul class="topic-list">${c.topics.map(t=>`<li>${esc(t)}</li>`).join("")}</ul> <div class="callout good"><strong>Mutlaka Bil:</strong><ul class="list-clean">${c.mustKnow.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div> </div> </div> `; } if(tab==="tips"){ return ` <h3>🎯 Hap Bilgiler</h3> <div class="grid two-col"> ${c.keyPoints.map((x,i)=>` <div class="callout tip"><strong>${i+1}.</strong> ${esc(x)}</div> `).join("")} </div> `; } if(tab==="confusions"){ return ` <h3>Karıştırılan Noktalar</h3> <div class="table-wrap"> <table> <thead><tr><th>Kavram</th><th>Net Ayrım</th><th>Sınav İpucu</th></tr></thead> <tbody> ${c.confusions.map(r=>`<tr><td><strong>${esc(r[0])}</strong></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join("")} </tbody> </table> </div> `; } if(tab==="patterns"){ return ` <h3>Sınavda Nasıl Sorulur?</h3> <div class="grid two-col"> ${c.patterns.map(x=>`<div class="summary-block"><p>“${esc(x)}”</p></div>`).join("")} </div> <div class="callout warn"><strong>⚠️ Soru okuma taktiği:</strong> “değildir”, “yalnızca”, “en fazla”, “en az”, “hangi durumda” ve “I-II-III” ifadelerinde önce kavram ayrımını kur, sonra süre/oran/sınır bilgisini kontrol et.</div> `; } if(tab==="test") return renderMiniTest(c); if(tab==="flash") return renderFlash(c); if(tab==="last"){ return ` <h3>Son Gün Tekrar Listesi</h3> <div class="grid two-col"> ${c.lastDay.map((x,i)=>`<div class="callout good"><strong>${i+1}.</strong> ${esc(x)}</div>`).join("")} </div> <div class="callout warn"><strong>⚠️ Sınavda Dikkat:</strong> ${esc(c.mostLikely)}</div> `; } if(tab==="weak"){ const weak = weakTopics(c.id); return ` <h3>Zayıf Konu Analizi</h3> ${weak.length ? renderWeakBars(weak) : '<p class="empty">Bu bölümde henüz yanlış yok. Mini test çözerek analiz oluşturabilirsin.</p>'} <div class="callout tip"><strong>Tekrar önerisi:</strong> Yanlış konuların hap bilgilerini tekrar et, sonra aynı bölümün mini testini sıfırla ve yeniden çöz.</div> `; } return ""; } function renderMiniTest(c){ return ` <div class="exam-header"> <div> <h3>Mini Test</h3> <p class="empty">Cevabı seçtiğinde anında geri bildirim alırsın. Yanlışların zayıf konu analizine kaydedilir.</p> </div> <button class="btn secondary" onclick="resetChapterAnswers('${c.id}')">Bu Testi Sıfırla</button> </div> ${c.questions.map((q,i)=>renderQuestion(q,c.id,c.title,i+1,"mini")).join("")} `; } function renderQuestion(q,chapterId,chapterTitle,number,mode){ const selected = mode==="mini" ? state.answers[q.id] : state.exam?.answers?.[q.id]; const answered = selected !== undefined && selected !== null; const correct = selected === q.answer; return ` <article class="question-card" aria-label="Soru ${number}"> <div class="question-head"> <div> <span class="badge accent">${esc(q.difficulty)}</span> <span class="badge">${esc(q.topic)}</span> </div> <strong>${number}</strong> </div> <h4>${esc(q.q)}</h4> <div> ${q.options.map((opt,idx)=>{ let cls = ""; if(answered && idx===q.answer) cls="correct"; if(answered && idx===selected && idx!==q.answer) cls="wrong"; const fn = mode==="mini" ? `answerMini('${chapterId}','${q.id}',${idx})` : `answerExam('${q.id}',${idx})`; return `<button class="option ${cls}" ${answered && mode==="mini" ? "disabled" : ""} onclick="${fn}"> <strong>${letters[idx]})</strong><span>${esc(opt)}</span> </button>`; }).join("")} </div> ${answered ? ` <div class="feedback ${correct?'correct':'wrong'}"> <strong>${correct ? 'Doğru.' : 'Yanlış.'}</strong> Doğru cevap: <strong>${letters[q.answer]}</strong>. ${esc(q.explain)} </div> ` : ""} </article> `; } function renderFlash(c){ if(flashIndex[c.id] === undefined) flashIndex[c.id] = 0; const cards = allCards(c); const card = cards[flashIndex[c.id] % cards.length]; const status = state.flash[card.id]; const repeat = cards.filter(x=>state.flash[x.id]==="again"); return ` <h3>Flashcard Modu</h3> <div class="flash-wrap"> <div> <div class="flash-card" tabindex="0" role="button" onclick="flipFlash()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();flipFlash()}"> <button id="flashContent" aria-label="Kartı çevir"> <span class="badge accent">${flashIndex[c.id]+1}/${cards.length}</span> <strong>${esc(card.front)}</strong> <p id="flashBack" style="display:none">${esc(card.back)}</p> <p id="flashHint">Cevabı görmek için karta tıkla veya Enter’a bas.</p> </button> </div> <div class="actions"> <button class="btn accent" onclick="markFlash('${card.id}','know')">Biliyorum</button> <button class="btn danger" onclick="markFlash('${card.id}','again')">Tekrar Etmeliyim</button> <button class="btn secondary" onclick="prevFlash('${c.id}')">Önceki</button> <button class="btn" onclick="nextFlash('${c.id}')">Sonraki</button> </div> <p class="footer-note">Bu kart durumu: <strong>${status ? (status==="know" ? "Biliyorum" : "Tekrar Etmeliyim") : "Henüz işaretlenmedi"}</strong></p> </div> <aside class="card"> <h3>Tekrar Edilecek Kartlar</h3> <div class="repeat-list"> ${repeat.length ? repeat.map(x=>`<div class="repeat-item"><strong>${esc(x.front)}</strong><br><span>${esc(x.back)}</span></div>`).join("") : '<p class="empty">Bu bölümde tekrar listesi boş.</p>'} </div> </aside> </div> `; } function renderExam(){ if(!state.exam){ document.getElementById("content").innerHTML = ` <section class="hero"> <h2>Deneme Modu</h2> <p>Tüm bölümlerden karışık 25 soru. Süre sayacı başlatılır; test sonunda net doğru, yanlış, başarı yüzdesi ve zayıf konular gösterilir.</p> <div class="actions"> <button class="btn accent" onclick="startExam()">Denemeyi Başlat</button> </div> </section> <section class="card"> <h3>Deneme Stratejisi</h3> <div class="grid three-col"> <div class="summary-block"><h4>1. Önce kolayları çöz</h4><p>Tanım ve vade sorularını hızlı geç.</p></div> <div class="summary-block"><h4>2. Oran/süre yakala</h4><p>%80, 30-364 gün, 365 gün, 30 gün gibi sınırları işaretle.</p></div> <div class="summary-block"><h4>3. Yanlıştan öğren</h4><p>Sonuç ekranındaki zayıf konuları son gün listesiyle tekrar et.</p></div> </div> </section> `; return; } const ids = state.exam.questions; const qs = ids.map(id => allQuestions().find(q=>q.id===id)).filter(Boolean); const answeredCount = Object.keys(state.exam.answers || {}).length; document.getElementById("content").innerHTML = ` <section class="card"> <div class="exam-header"> <div> <h2>Deneme Modu</h2> <p>${answeredCount}/25 soru işaretlendi. Boş bıraktıkların sonuçta yanlış sayılır.</p> </div> <div class="timer" id="timer">00:00</div> </div> <div class="actions"> <button class="btn accent" onclick="finishExam()">Testi Bitir</button> <button class="btn secondary" onclick="cancelExam()">Denemeyi İptal Et</button> </div> ${qs.map((q,i)=>renderQuestion(q,q.chapterId,q.chapterTitle,i+1,"exam")).join("")} </section> `; startTimer(); } function showExamResult(result){ const weak = result.weak.slice(0,6); document.getElementById("content").innerHTML = ` <section class="hero"> <h2>Deneme Sonucu</h2> <p>Karışık 25 soru tamamlandı. Sonuçları zayıf konu analizine işlendi.</p> <div class="grid dashboard-grid"> <div class="metric"><b>${result.correct}</b><span>Doğru</span></div> <div class="metric"><b>${result.wrong}</b><span>Yanlış / Boş</span></div> <div class="metric"><b>${result.rate}%</b><span>Başarı</span></div> <div class="metric"><b>${result.elapsed}</b><span>Süre</span></div> </div> </section> <section class="grid two-col"> <div class="card"> <h3>Zayıf Konular</h3> ${weak.length ? renderWeakBars(weak) : '<p class="empty">Bu denemede belirgin zayıf konu görünmedi.</p>'} </div> <div class="card"> <h3>Tekrar Önerisi</h3> <div class="callout tip">${esc(result.advice)}</div> <div class="actions"> <button class="btn" onclick="startExam()">Yeni Deneme Başlat</button> <button class="btn secondary" onclick="goDashboard()">Dashboard’a Dön</button> </div> </div> </section> `; } function setTab(tab){ state.tab = tab; saveState(); renderChapter(state.chapter); } function openChapter(id){ state.view="chapter"; state.chapter=id; state.tab="summary"; saveState(); render(); } function goDashboard(){ state.view="dashboard"; saveState(); render(); } function toggleComplete(id){ state.completed[id] = !state.completed[id]; saveState(); render(); } function answerMini(chapterId,qid,idx){ if(state.answers[qid] !== undefined) return; const c = getChapter(chapterId); const q = c.questions.find(x=>x.id===qid); const correct = idx === q.answer; state.answers[qid] = idx; state.attempts.push({qid,chapterId,topic:q.topic,correct,mode:"mini",ts:Date.now()}); saveState(); renderChapter(chapterId); } function resetChapterAnswers(chapterId){ const c = getChapter(chapterId); c.questions.forEach(q=>delete state.answers[q.id]); saveState(); renderChapter(chapterId); } function flipFlash(){ const back = document.getElementById("flashBack"); const hint = document.getElementById("flashHint"); if(!back) return; const hidden = back.style.display === "none"; back.style.display = hidden ? "block" : "none"; hint.style.display = hidden ? "none" : "block"; } function markFlash(cardId,value){ state.flash[cardId]=value; saveState(); renderChapter(state.chapter); } function nextFlash(chapterId){ const len = allCards(getChapter(chapterId)).length; flashIndex[chapterId] = ((flashIndex[chapterId] || 0) + 1) % len; renderChapter(chapterId); } function prevFlash(chapterId){ const len = allCards(getChapter(chapterId)).length; flashIndex[chapterId] = ((flashIndex[chapterId] || 0) - 1 + len) % len; renderChapter(chapterId); } function sample(arr,n){ const copy = [...arr]; for(let i=copy.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [copy[i],copy[j]] = [copy[j],copy[i]]; } return copy.slice(0,n); } function startExam(){ clearInterval(examTimer); const qs = sample(allQuestions(),25); state.view="exam"; state.exam = {questions:qs.map(q=>q.id),answers:{},startedAt:Date.now()}; saveState(); render(); } function answerExam(qid,idx){ state.exam.answers[qid]=idx; saveState(); renderExam(); } function cancelExam(){ clearInterval(examTimer); state.exam=null; saveState(); renderExam(); } function startTimer(){ clearInterval(examTimer); const timer = document.getElementById("timer"); if(!timer || !state.exam) return; const tick = ()=>{ const diff = Math.floor((Date.now()-state.exam.startedAt)/1000); const mm = String(Math.floor(diff/60)).padStart(2,"0"); const ss = String(diff%60).padStart(2,"0"); timer.textContent = `${mm}:${ss}`; }; tick(); examTimer = setInterval(tick,1000); } function finishExam(){ if(!state.exam) return; const all = allQuestions(); const qs = state.exam.questions.map(id=>all.find(q=>q.id===id)).filter(Boolean); let correct=0, wrong=0; const weakMap = {}; qs.forEach(q=>{ const selected = state.exam.answers[q.id]; const isCorrect = selected === q.answer; if(isCorrect) correct++; else { wrong++; weakMap[q.topic]=(weakMap[q.topic]||0)+1; } state.attempts.push({qid:q.id,chapterId:q.chapterId,topic:q.topic,correct:isCorrect,mode:"exam",ts:Date.now()}); }); const elapsedSec = Math.floor((Date.now()-state.exam.startedAt)/1000); const elapsed = `${String(Math.floor(elapsedSec/60)).padStart(2,"0")}:${String(elapsedSec%60).padStart(2,"0")}`; const rate = Math.round(correct*100/qs.length); const weak = Object.entries(weakMap).sort((a,b)=>b[1]-a[1]); const advice = weak.length ? `Öncelik verilecek konular: ${weak.slice(0,3).map(x=>x[0]).join(", ")}. Bu konuların hap bilgilerini oku, flashcardlarda “Tekrar Etmeliyim” işaretle ve ilgili mini testi yeniden çöz.` : "Sonuç güçlü görünüyor. Son gün listelerini kısa tekrar için kullan ve denemeyi farklı sırayla tekrar çöz."; const result = {correct,wrong,rate,weak,elapsed,advice,ts:Date.now()}; state.lastExam = result; state.exam = null; clearInterval(examTimer); saveState(); showExamResult(result); } function resetProgress(){ const ok = confirm("Tüm ilerleme, cevaplar, deneme sonuçları ve flashcard durumları silinsin mi?"); if(!ok) return; state = structuredClone(defaultState); saveState(); render(); } document.getElementById("menuToggle").addEventListener("click",()=>{ document.body.classList.toggle("menu-open"); }); document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") document.body.classList.remove("menu-open"); }); render(); </script> </body> </html> ::contentReference[oaicite:0]{index=0}
+
+    <script>
+        // ================= VERİ TABANI (MÜFREDATA GÖRE ÖZET, HAP BİLGİ, SORULAR VE FLASHCARDLAR) =================
+
+        const contentData = {
+            sec1: {
+                title: "1. Paylar ve Pay Benzeri Menkul Kıymetler",
+                summary: `<b>Genel Olarak Pay:</b> Anonim şirketlerin esas sermayesinin belirli bir bölümünü temsil eden kıymetli evraktır. <br>
+                <b>Türleri:</b> Hamiline ve Nama yazılı olmak üzere ikiye ayrılır. SPK mevzuatına göre sermaye piyasası araçları MKK (Merkezi Kayıt Kuruluşu) nezdinde <i>kayden</i> izlenir.<br>
+                <b>Halka Arz ve Sermaye Artırımı:</b> İhraç edilen payların çok sayıda yatırımcıya çağrı yoluyla satılmasıdır. Sermaye artırımları; bedelli (yeni fon girişi var), bedelsiz (iç kaynaklardan, fon girişi yok) ve şarta bağlı olabilir.<br>
+                <b>Pay Benzeri Menkul Kıymetler:</b> Katılma İntifa Senetleri, Oydan Yoksun Paylar vb. araçlar ortaklık hakkı vermez ancak kardan pay alma vb. mali haklar sağlar.`,
+                hap: [
+                    "🎯 SPK'ya göre borsada işlem görecek payların MKK nezdinde kaydileştirilmesi zorunludur.",
+                    "🎯 Bedelli sermaye artırımında şirkete nakit girişi olurken, bedelsiz sermaye artırımında sadece özkaynak kalemleri arasında yer değiştirme olur.",
+                    "🎯 Rüçhan Hakkı: Mevcut ortakların yeni ihraç edilecek payları öncelikle alma hakkıdır (Kısıtlanmadıkça kural olarak 15 ila 60 gün kullandırılır).",
+                    "🎯 Halka açık şirketlerde 'Kayıtlı Sermaye Sistemi'nde tavanı Yönetim Kurulu belirleyerek hızlı sermaye artırımı yapabilir.",
+                    "🎯 İntifa Senetleri: Ortaklık (oy) hakkı vermez, sadece mali (kar payı vs) hak verir."
+                ],
+                karistirma: `
+                    <table>
+                        <tr><th>Özellik</th><th>Bedelli Sermaye Artırımı</th><th>Bedelsiz Sermaye Artırımı</th></tr>
+                        <tr><td>Şirkete Nakit Girişi</td><td>Var</td><td>Yok</td></tr>
+                        <tr><td>Kaynak</td><td>Dış kaynak (Ortaklar para koyar)</td><td>İç kaynak (Yedekler, karlar vb.)</td></tr>
+                        <tr><td>Rüçhan Hakkı</td><td>Kullanılır</td><td>Otomatik pay dağıtımı yapılır</td></tr>
+                    </table>
+                `,
+                soruNasil: "Sınavda genellikle <b>Rüçhan hakkı kısıtlamaları</b>, <b>Kayıtlı ve Esas sermaye farkları</b> ve <b>Bedelli/Bedelsiz artırım sonuçları</b> sorulur. 'Aşağıdakilerden hangisi pay sahibinin şahsi (mali olmayan) haklarındandır?' tarzı sınıflandırma soruları sık gelir.",
+                flashcards: [
+                    { q: "Pay sahiplerinin yeni ihraç edilecek payları öncelikle alma hakkına ne denir?", a: "Rüçhan Hakkı (Yeni pay alma hakkı)" },
+                    { q: "Sadece mali hak (kar payı, tasfiye bakiyesi vb.) sağlayan, ortaklık ve oy hakkı vermeyen senede ne denir?", a: "İntifa Senedi" },
+                    { q: "Sermaye piyasası araçlarının fiziki basımının yapılmadığı, elektronik ortamda izlendiği sistem nedir?", a: "Kaydileştirme (MKK nezdinde)" }
+                ],
+                questions: [
+                    { text: "Aşağıdakilerden hangisi anonim ortaklıklarda pay sahiplerine tanınan mali haklardan biri değildir?", options: ["Kar payı alma hakkı", "Rüçhan hakkı", "Tasfiye bakiyesine katılma hakkı", "Oy hakkı", "Hazırlık döneminde faiz alma hakkı (şartlı)"], correct: 3, exp: "Oy hakkı mali (parasal) bir hak değil, kişisel/yönetimsel (şahsi) bir haktır." },
+                    { text: "Halka açık ortaklıkların sermaye artırımlarında iç kaynaklardan (yedek akçeler vb.) yapılan artırıma ne ad verilir?", options: ["Bedelli Sermaye Artırımı", "Bedelsiz Sermaye Artırımı", "Şarta Bağlı Sermaye Artırımı", "Tahsisli Satış", "İkincil Halka Arz"], correct: 1, exp: "İç kaynaklardan yapılan ve şirkete yeni fon girişi sağlamayan artırım türü Bedelsiz Sermaye Artırımıdır." },
+                    { text: "Sermaye piyasası mevzuatına göre paylar kural olarak nerede kayden izlenir?", options: ["Takasbank", "Borsa İstanbul", "Sermaye Piyasası Kurulu", "Merkezi Kayıt Kuruluşu (MKK)", "TCMB"], correct: 3, exp: "Sermaye piyasası araçları hak sahipleri bazında Merkezi Kayıt Kuruluşu (MKK) nezdinde kayden izlenir." },
+                    { text: "Yeni pay alma (rüçhan) hakkının kullanım süresi en az ve en çok kaç gün olabilir?", options: ["10 - 30 gün", "15 - 60 gün", "30 - 90 gün", "15 - 30 gün", "7 - 15 gün"], correct: 1, exp: "Rüçhan hakkı kullanım süresi 15 günden az, 60 günden fazla olamaz." },
+                    { text: "Aşağıdakilerden hangisi şirketlerin esas sözleşmelerinde hüküm bulunmak şartıyla çıkarabildikleri ve sahibine ortaklık hakkı vermeyen kıymetli evraktır?", options: ["Hamiline yazılı pay", "İntifa senedi", "Oydan yoksun pay", "Rüçhan hakkı kuponu", "Nama yazılı pay"], correct: 1, exp: "İntifa senetleri sahibine pay sahipliği (ortaklık) hakkı vermez, sadece malvarlıksal haklar sağlar." },
+                    { text: "Borsada işlem gören payların niteliğini (hamiline/nama) değiştirmek kimin yetkisindedir?", options: ["Yönetim Kurulu", "Genel Kurul", "SPK", "MKK", "Takasbank"], correct: 1, exp: "Pay türünün (nama veya hamiline) değiştirilmesi Esas Sözleşme değişikliği gerektirir ve bu yetki Genel Kurul'a aittir." },
+                    { text: "Kayıtlı sermaye sistemine kabul edilen halka açık anonim ortaklıklarda, kayıtlı sermaye tavanı içinde sermaye artırım kararı almaya kim yetkilidir?", options: ["Sermaye Piyasası Kurulu", "Genel Kurul", "Yönetim Kurulu", "Denetim Kurulu", "Borsa İstanbul Yönetimi"], correct: 2, exp: "Kayıtlı sermaye sisteminin en büyük avantajı, tavan içinde kalmak kaydıyla sermaye artırım yetkisinin Yönetim Kurulunda olmasıdır." },
+                    { text: "Bir şirketin nominal değerinin altında (iskontolu) pay ihracı yapabilmesi için hangi kanuna tabi olması ve hangi izni alması gerekir?", options: ["Sadece SPK izni yeterlidir", "Sadece TTK uyarınca Genel Kurul Kararı yeterlidir", "TTK'ya göre yasaktır, ancak SPK mevzuatı halka açık şirketlere istisna tanır", "Hiçbir şirket nominal değerin altında pay ihraç edemez", "Bankacılık Kanunu uyarınca BDDK izni gereklidir"], correct: 2, exp: "TTK'da payların nominal değerin altında ihracı yasaktır. Ancak SPK mevzuatı, halka açık ortaklıklar için piyasa fiyatının nominal değerin altında olması vb. durumlarda istisnai prosedürler (Kurul izni ile) öngörür." },
+                    { text: "Halka arzlarda fiyat istikrarını sağlayıcı işlemler en fazla kaç gün süreyle yapılabilir?", options: ["15 gün", "30 gün", "45 gün", "60 gün", "90 gün"], correct: 1, exp: "Fiyat istikrarını sağlayıcı işlemler, payların borsada işlem görmeye başlamasından itibaren en fazla 30 gün süreyle yapılabilir." },
+                    { text: "Katılma intifa senetleri kimlere verilebilir?", options: ["Sadece kuruculara", "Sadece yöneticilere", "Nakit karşılığı şirket dışındaki kişilere", "Sadece mevcut ortaklara", "Sadece devlet kurumlarına"], correct: 2, exp: "Katılma intifa senetleri, intifa senetlerinden farklı olarak bedeli (nakit) karşılığında şirket dışındaki kişilere de satılmak üzere ihraç edilen senetlerdir." }
+                ]
+            },
+            sec2: {
+                title: "2. Borçlanma Araçları",
+                summary: `<b>Kavram:</b> Şirketlerin veya kamunun fon ihtiyacını karşılamak için ihraç ettiği, sahibine alacaklılık hakkı veren, belirli bir vade sonunda anapara ve (genellikle) faiz ödemesi taahhüt eden kıymetli evraklardır.<br>
+                <b>Önemli Türler:</b> Tahvil (Vadesi 1 yıl ve daha uzun), Finansman Bonosu (Vadesi en çok 360 gün).<br>
+                <b>Özel Tahviller:</b> Paya dönüştürülebilir tahviller (PDT - vade sonunda şirketin payına dönüşür), Değiştirilebilir tahviller (DET - başka bir şirketin payı ile değiştirilir).`,
+                hap: [
+                    "🎯 Borçlanma aracı sahibi ortak değildir, şirketin alacaklısıdır.",
+                    "🎯 Tahvillerin vadesi en az 1 yıl (365 gün) olmak zorundadır.",
+                    "🎯 Finansman bonoları iskonto esasına göre satılır ve vadeleri en fazla 360 gündür.",
+                    "🎯 Borçlanma aracı ihraç yetkisi kural olarak Genel Kurul'dadır ancak esas sözleşme ile Yönetim Kurulu'na devredilebilir (en fazla 15 ay süreyle).",
+                    "🎯 Yeşil ve sürdürülebilir borçlanma araçları son dönemde çevresel/sosyal projeleri finanse etmek için yaygınlaşmıştır."
+                ],
+                karistirma: `
+                    <table>
+                        <tr><th>Özellik</th><th>Tahvil</th><th>Finansman Bonosu</th></tr>
+                        <tr><td>Vade</td><td>1 yıl (365 gün) ve daha uzun</td><td>En fazla 360 gün</td></tr>
+                        <tr><td>Getiri Türü</td><td>Kuponlu (faiz) veya iskontolu</td><td>Genellikle iskontolu</td></tr>
+                        <tr><td>Risk Düzeyi</td><td>Vade uzun olduğu için faiz riski yüksek</td><td>Vade kısa olduğu için nispeten düşük</td></tr>
+                    </table>
+                `,
+                soruNasil: "Özellikle <b>Vade süreleri (360 gün vs 365 gün)</b> ve <b>PDT ile DET farkı</b> kesin sorulur. İhraç limitleri hesaplamaları veya karardan kimin sorumlu olduğu test edilir.",
+                flashcards: [
+                    { q: "Vadesi 1 yıldan kısa (en fazla 360 gün) olan ve iskonto esasıyla satılan borçlanma aracı nedir?", a: "Finansman Bonosu" },
+                    { q: "İhraççı şirketin kendi paylarına dönüştürme hakkı veren tahvil türü nedir?", a: "Paya Dönüştürülebilir Tahvil (PDT)" },
+                    { q: "İhraççı dışında BAŞKA bir şirketin payları ile değiştirme hakkı veren tahvil nedir?", a: "Değiştirilebilir Tahvil (DET)" }
+                ],
+                questions: [
+                    { text: "Finansman bonolarının azami vadesi mevzuata göre kaç gündür?", options: ["90 gün", "180 gün", "360 gün", "365 gün", "730 gün"], correct: 2, exp: "Borçlanma Araçları Tebliğine göre finansman bonolarının vadesi en fazla 360 gündür." },
+                    { text: "Borçlanma aracı ihraç yetkisi kural olarak hangi organa aittir?", options: ["Yönetim Kurulu", "Genel Kurul", "SPK", "Denetim Kurulu", "İcra Kurulu"], correct: 1, exp: "Kural olarak ihraç yetkisi Genel Kurul'a aittir. Esas sözleşme ile bu yetki en çok 15 ay için Yönetim Kuruluna devredilebilir." },
+                    { text: "Aşağıdakilerden hangisi bir borçlanma aracı değildir?", options: ["Tahvil", "Finansman Bonosu", "İntifa Senedi", "Kıymetli Maden Bonosu", "Paya Dönüştürülebilir Tahvil"], correct: 2, exp: "İntifa senedi bir borçlanma aracı (alacak hakkı) değil, şirketten mali haklar (kar payı vb.) talep etme hakkı veren pay benzeri bir menkul kıymettir." },
+                    { text: "Borçlanma aracı sahiplerinin temel hukuki sıfatı nedir?", options: ["Ortak", "İmtiyazlı ortak", "Alacaklı", "Vekil", "Kurucu"], correct: 2, exp: "Borçlanma aracı (tahvil/bono) sahipleri şirkete borç verdikleri için hukuken 'alacaklı' sıfatına sahiptirler." },
+                    { text: "Hangi tahvil türünde yatırımcıya vade sonunda anapara yerine, ihraççı şirketin değil ancak ihraççının portföyündeki 'başka' bir şirketin paylarını alma hakkı verilir?", options: ["Paya Dönüştürülebilir Tahvil", "Değiştirilebilir Tahvil", "Garantili Tahvil", "Kardan Pay Veren Tahvil", "Erken İtfa Edilebilir Tahvil"], correct: 1, exp: "Değiştirilebilir tahvilde (DET) tahvil, ihraççı dışındaki başka bir şirketin payları ile değiştirilir." },
+                    { text: "Aşağıdaki borçlanma araçlarından hangisinde yatırımcı, vade bitiminden önce aracı ihraççıya geri satma hakkına sahip olabilir?", options: ["Erken itfa edilebilir tahviller", "Sabit faizli tahviller", "İskontolu tahviller", "Sıfır kuponlu tahviller", "Endekse bağlı tahviller"], correct: 0, exp: "Erken itfa edilebilir (put/call özellikli) tahvillerde, izahnamede belirtilen şartlarla yatırımcı geri satma veya ihraççı geri alma hakkını kullanabilir." },
+                    { text: "Yurtiçinde ihraç edilecek borçlanma araçları için yatırımcılara izahname dışında verilmesi gereken özet niteliğindeki dökümanın adı nedir?", options: ["Sirküler", "Tasarruf Sahiplerine Duyuru", "Yatırımcı Bilgi Formu", "Satış Formu", "Tertip İhraç Belgesi"], correct: 2, exp: "Yeni mevzuatta izahnameye ek olarak kısa ve anlaşılır özet bilgi sunan belge 'Yatırımcı Bilgi Formu'dur." },
+                    { text: "Tahvil ihraçlarında faiz oranı nasıl belirlenir?", options: ["TCMB tarafından belirlenir", "SPK tarafından sabitlenir", "Serbestçe belirlenir (piyasa koşulları)", "Devlet tahvili faizini geçemez", "Enflasyon oranına eşit olmak zorundadır"], correct: 2, exp: "Borçlanma araçlarının faiz ve getiri oranları, ilgili mevzuata aykırı olmamak şartıyla ihraççı ile yatırımcılar arasında serbestçe belirlenir." },
+                    { text: "Borçlanma aracı ihracında, izahnamede yer alan bilgilerin doğruluğundan ilk derecede sorumlu olan kimdir?", options: ["SPK", "Borsa İstanbul", "İhraççı şirket", "Bağımsız Denetim Şirketi", "MKK"], correct: 2, exp: "İzahnamede yer alan bilgilerin gerçeğe uygun olmasından ilk derecede ve müteselsilen İhraççı sorumludur." },
+                    { text: "Borçlanma aracı limiti belirlenirken hangi bilanço kalemi dikkate alınır?", options: ["Dönen Varlıklar", "Ödenmiş Sermaye", "Özkaynaklar", "Kısa Vadeli Yabancı Kaynaklar", "Net Kar"], correct: 2, exp: "Borçlanma aracı ihraç limiti genel olarak ihraççının 'Özkaynaklar' toplamı üzerinden hesaplanan bir katsayı ile bulunur." }
+                ]
+            },
+            sec3: {
+                title: "3. Yatırım Fonu Katılma Payları",
+                summary: `<b>Yatırım Fonu:</b> Yatırımcılardan (halka arz veya tahsisli) toplanan paralarla, inançlı mülkiyet esaslarına göre portföy işletmek amacıyla kurulan tüzel kişiliği <b>olmayan</b> malvarlığıdır.<br>
+                <b>Şemsiye Fon:</b> Fonların bağlı olduğu, genel kuralları içeren çatı fon yapısıdır. Alt fonlar şemsiye fona bağlı kurulur.<br>
+                <b>Özel Fon Türleri:</b> Serbest Fonlar (Sadece nitelikli yatırımcı), Garantili Fonlar (Anaparanın tamamını veya bir kısmını korumayı garanti eder), Fon Sepeti Fonları (Diğer fonlara yatırım yapar).<br>
+                <b>TEFAS:</b> Bütün fonların tek bir merkezden alınıp satılabildiği elektronik platformdur.`,
+                hap: [
+                    "🎯 Yatırım fonlarının tüzel kişiliği YOKTUR. Fonu, Kurucu (Portföy Yönetim Şirketi) temsil eder.",
+                    "🎯 Fon malvarlığı, kurucunun ve saklayıcının malvarlığından ayrıdır, haczedilemez, rehin edilemez.",
+                    "🎯 Serbest fonlara yalnızca 'Nitelikli Yatırımcılar' yatırım yapabilir.",
+                    "🎯 Katılım fonları, faizsiz finans ilkelerine (İslami finans) uygun araçlara yatırım yapar."
+                ],
+                karistirma: `
+                    <table>
+                        <tr><th>Özellik</th><th>Garantili Fon</th><th>Koruma Amaçlı Fon</th></tr>
+                        <tr><td>Garanti/Koruma Sağlayan</td><td>Kurucu veya Garantör (Üçüncü şahıs)</td><td>En iyi gayret (kesin garanti yok)</td></tr>
+                        <tr><td>Güvence Hedefi</td><td>Belirli bir getiri veya anaparanın belli kısmı</td><td>Uygun yatırım stratejisi ile koruma</td></tr>
+                    </table>
+                `,
+                soruNasil: "<b>Fonun tüzel kişiliği olmadığı</b> konusu defalarca sorulur. <b>Malvarlığının haczedilemezliği</b>, <b>Serbest fon yatırımcı şartı (Nitelikli)</b> ve <b>TEFAS</b> sistemi garanti sorulardır.",
+                flashcards: [
+                    { q: "Yatırım fonlarının tüzel kişiliği var mıdır?", a: "Hayır, tüzel kişilikleri yoktur. İnançlı mülkiyet esasına dayanır." },
+                    { q: "Sadece nitelikli yatırımcıların satın alabildiği ve portföy sınırlamalarından büyük ölçüde muaf olan fon türü nedir?", a: "Serbest Şemsiye Fon" },
+                    { q: "Yatırımcıların banka/aracı kurum fark etmeksizin tüm fonları alıp satabildiği platformun kısa adı nedir?", a: "TEFAS (Türkiye Elektronik Fon Alım Satım Platformu)" }
+                ],
+                questions: [
+                    { text: "Aşağıdakilerden hangisi yatırım fonlarının özelliklerinden biri değildir?", options: ["Tüzel kişiliğe sahip olmamaları", "İnançlı mülkiyet esasına dayanmaları", "Fon malvarlığının kurucunun malvarlığından ayrı olması", "Malvarlığının iflas masasına dahil edilebilmesi", "Katılma payı karşılığında nakit toplanması"], correct: 3, exp: "Fon malvarlığı kurucunun veya saklayıcının iflas masasına dahil edilemez, kamu alacakları için haczedilemez." },
+                    { text: "Yatırım fonlarının kurulabilmesi için aşağıdakilerden hangisinin oluşturulması zorunludur?", options: ["Bağlı ortaklık", "İştirak", "Şemsiye fon", "Yatırım ortaklığı", "Kooperatif"], correct: 2, exp: "Mevzuata göre yatırım fonları, SPK onaylı bir 'Şemsiye Fon' içtüzüğüne bağlı olarak (alt fon şeklinde) ihraç belgesi ile kurulur." },
+                    { text: "Sadece nitelikli yatırımcıların katılma payı satın alabildiği fon türü aşağıdakilerden hangisidir?", options: ["Para Piyasası Fonu", "Hisse Senedi Yoğun Fon", "Kıymetli Madenler Fonu", "Serbest Fon", "Karma Fon"], correct: 3, exp: "Serbest fonlar, sadece SPK düzenlemelerinde tanımlanan 'nitelikli yatırımcılara' satılabilen fonlardır." },
+                    { text: "Bir fonun portföyünün en az %80'ini devamlı olarak faize dayalı olmayan sermaye piyasası araçlarına yatıran fonlara ne ad verilir?", options: ["Serbest Fon", "Garantili Fon", "Karma Fon", "Katılım Fonu", "Borçlanma Araçları Fonu"], correct: 3, exp: "Katılım fonları, İslami finans (katılım bankacılığı) prensiplerine uygun (kira sertifikası, katılım hesabı, faizsiz hisse senedi vb.) varlıklara yatırım yapar." },
+                    { text: "Yatırım fonlarında fon sepeti fonunun temel özelliği nedir?", options: ["Sadece hisse senedi alması", "Portföyünün en az %80'ini diğer yatırım fonu ve borsa yatırım fonu katılma paylarına yatırması", "Sadece devlet tahvili alması", "Yabancı döviz kurlarına yatırım yapması", "Garantör kurum barındırması"], correct: 1, exp: "Fon sepeti fonları, adından anlaşılacağı üzere doğrudan menkul kıymet almak yerine, diğer 'fonları' portföyüne katan fonlardır." },
+                    { text: "Yatırım fonunun günlük değerini belirleyen fiyata ne ad verilir?", options: ["Nominal değer", "Piyasa değeri", "Birim pay değeri (Katılma payı fiyatı)", "Tasfiye değeri", "İhraç değeri"], correct: 2, exp: "Fon toplam değerinin, dolaşımdaki pay sayısına bölünmesiyle günlük 'Birim pay (katılma payı) değeri' bulunur." },
+                    { text: "TEFAS'ın açılımı aşağıdakilerden hangisidir?", options: ["Türkiye Ekonomik Fon Analiz Sistemi", "Türkiye Elektronik Fon Alım Satım Platformu", "Türkiye Emeklilik Fonları Aktarım Sistemi", "Tekil Elektronik Finans Ağ Sistemi", "Temel Endeks Fonları Araştırma Sistemi"], correct: 1, exp: "TEFAS: Türkiye Elektronik Fon Alım Satım Platformu. Takasbank tarafından işletilir." },
+                    { text: "Fon portföyünde yer alan varlıkların saklanması kim tarafından yapılır?", options: ["Portföy Yönetim Şirketi (Kurucu)", "Sermaye Piyasası Kurulu (SPK)", "Portföy Saklayıcısı (Takasbank veya yetkili bankalar)", "Merkezi Kayıt Kuruluşu (MKK)", "Yatırımcıların kendisi"], correct: 2, exp: "Fon varlıkları, kurucudan bağımsız olarak SPK tarafından yetkilendirilmiş 'Portföy Saklayıcısı' nezdinde saklanır." },
+                    { text: "Hisse senedi şemsiye fonuna bağlı bir fonun unvanında 'hisse senedi' ifadesi geçebilmesi için fon portföyünün devamlı olarak en az yüzde kaçının yerli/yabancı hisse senetlerinden oluşması gerekir?", options: ["%50", "%51", "%75", "%80", "%100"], correct: 3, exp: "Genel kural olarak, bir fonun türünü unvanında taşıyabilmesi için o varlık sınıfına portföyünün devamlı olarak en az %80'ini yatırması gerekir." },
+                    { text: "Yatırımcılara yatırım kararlarını almalarında yardımcı olacak özet bilgileri içeren standart formun adı nedir?", options: ["İçtüzük", "İzahname", "Yatırımcı Bilgi Formu", "Performans Sunum Raporu", "Bağımsız Denetim Raporu"], correct: 2, exp: "Fonlar için yatırımcılara fonun risk profili, getirisi ve masrafları hakkında kısa özet veren döküman 'Yatırımcı Bilgi Formu'dur." }
+                ]
+            },
+            sec4: {
+                title: "4. Türev Araçlar",
+                summary: `<b>Kavram:</b> Değeri başka bir dayanak varlığa (hisse, döviz, faiz, emtia) bağlı olan sözleşmelerdir. Riskten korunma (hedging), spekülasyon veya arbitraj amacıyla kullanılırlar.<br>
+                <b>Forward:</b> Tezgah üstü (organize olmayan), tarafların vade, fiyat ve miktarı serbestçe belirlediği, karşı taraf riski yüksek vadeli işlemlerdir.<br>
+                <b>Futures (VİOP):</b> Organize borsalarda (BİST VİOP gibi) işlem gören, standartlaştırılmış, takas odası (Takasbank) garantisi olan vadeli sözleşmelerdir.<br>
+                <b>Opsiyon:</b> Alıcısına <i>hak</i>, satıcısına ise <i>yükümlülük</i> veren sözleşmelerdir. Alım opsiyonu (Call), Satım opsiyonu (Put).`,
+                hap: [
+                    "🎯 Futures sözleşmeler standarttır ve organize piyasada işlem görür. Forward ise standart dışıdır ve tezgah üstüdür (OTC).",
+                    "🎯 Opsiyonda 'alıcı' primi öder ve hakkı satın alır. 'Satıcı' (yazıcı) primi tahsil eder ve sözleşmeyi yerine getirmekle yükümlüdür.",
+                    "🎯 Arbitraj: Farklı piyasalardaki fiyat dengesizliklerinden risksiz kar elde etme işlemidir.",
+                    "🎯 Türkiye'de türev piyasa Borsa İstanbul çatısı altındaki VİOP'tur (Vadeli İşlem ve Opsiyon Piyasası)."
+                ],
+                karistirma: `
+                    <table>
+                        <tr><th>Özellik</th><th>Forward</th><th>Futures</th></tr>
+                        <tr><td>Piyasa</td><td>Tezgah Üstü (OTC)</td><td>Organize Borsa (VİOP)</td></tr>
+                        <tr><td>Sözleşme Tipi</td><td>Özel / Esnek</td><td>Standart (Vade, Miktar belli)</td></tr>
+                        <tr><td>Karşı Taraf Riski</td><td>Yüksek</td><td>Yok (Takasbank garantör)</td></tr>
+                    </table>
+                `,
+                soruNasil: "<b>Forward - Futures kıyaslaması</b> her sınavda çıkar. Opsiyonlarda <b>kimin hakkı, kimin yükümlülüğü olduğu (Primi kim öder?)</b> mutlaka sorulur. Hedging (riskten korunma) tanımı test edilir.",
+                flashcards: [
+                    { q: "Organize borsalarda işlem gören, standartlaştırılmış vadeli işlem sözleşmelerine ne denir?", a: "Futures (Vadeli İşlem Sözleşmesi)" },
+                    { q: "Belirli bir prim karşılığında alıcısına cayma/kullanma hakkı, satıcısına ise uyma yükümlülüğü veren türev araç nedir?", a: "Opsiyon Sözleşmesi" },
+                    { q: "Fiyat farklılıklarından faydalanarak eş anlı (risksiz) alım satım işlemine ne ad verilir?", a: "Arbitraj" }
+                ],
+                questions: [
+                    { text: "Aşağıdakilerden hangisi organize borsalarda (örneğin VİOP'ta) işlem gören, standartları borsa tarafından belirlenmiş türev araçtır?", options: ["Forward", "Futures", "Swap", "Kredi Temerrüt Takası (CDS)", "Tezgah Üstü Opsiyon"], correct: 1, exp: "Futures sözleşmeler organize piyasalarda işlem görür ve özellikleri borsa tarafından standardize edilmiştir." },
+                    { text: "Türev piyasalarda, gelecekteki fiyat dalgalanmalarından kaynaklanabilecek olası zararlardan 'korunmak' amacıyla yapılan işlemlere ne ad verilir?", options: ["Spekülasyon", "Arbitraj", "Hedging (Riskten Korunma)", "Manipülasyon", "Açığa Satış"], correct: 2, exp: "Mevcut veya gelecekteki bir varlığın fiyat riskini sınırlamak için türev piyasalarda ters pozisyon almaya hedging (riskten korunma) denir." },
+                    { text: "Opsiyon sözleşmelerinde alıcının sahip olduğu hakkı satın almak için satıcıya ödediği bedele ne ad verilir?", options: ["Kullanım Fiyatı", "Başlangıç Teminatı", "Opsiyon Primi", "Sürdürme Teminatı", "Nominal Değer"], correct: 2, exp: "Opsiyon alıcısı (hakkı alan taraf), bu hak karşılığında satıcıya (yazıcıya) 'opsiyon primi' öder." },
+                    { text: "Bir alım (call) opsiyonunda alıcının konumu aşağıdakilerden hangisidir?", options: ["Dayanak varlığı önceden belirlenen fiyattan alma hakkına sahiptir.", "Dayanak varlığı önceden belirlenen fiyattan satma hakkına sahiptir.", "Dayanak varlığı almak zorundadır.", "Dayanak varlığı satmak zorundadır.", "Sadece primi tahsil eder."], correct: 0, exp: "Alım opsiyonu (Call option), alıcısına belirli bir fiyattan dayanak varlığı 'alma' hakkı verir, yükümlülük vermez." },
+                    { text: "Forward ve Futures sözleşmeleri arasındaki en temel fark aşağıdakilerden hangisidir?", options: ["Forward sözleşmeler vadeli, futures sözleşmeler spot işlemlerdir.", "Forward sözleşmeler borsada, futures sözleşmeler tezgah üstünde işlem görür.", "Futures sözleşmelerde takas odası garantisi vardır, forwardlarda karşı taraf riski vardır.", "Forward sözleşmeler sadece döviz için, futures sözleşmeler sadece hisse senedi için yapılır.", "Forward sözleşmeler standartlaştırılmıştır, futures özeldir."], correct: 2, exp: "En temel fark karşı taraf riskidir. Futures'ta Takasbank merkezi karşı taraf olarak (CCP) riski sıfırlar. Forward'ta ise kredi riski bulunur." },
+                    { text: "Türkiye'de vadeli işlem ve opsiyon sözleşmelerinin işlem gördüğü piyasa (VİOP) hangi kurumun bünyesindedir?", options: ["Takasbank", "Sermaye Piyasası Kurulu", "Merkezi Kayıt Kuruluşu", "Borsa İstanbul (BİST)", "TCMB"], correct: 3, exp: "VİOP (Vadeli İşlem ve Opsiyon Piyasası) Borsa İstanbul çatısı altında faaliyet gösterir." },
+                    { text: "Farklı piyasalardaki fiyat farklılıklarından risksiz bir şekilde eş anlı alım-satım yaparak kar elde etme işlemi nedir?", options: ["Spekülasyon", "Arbitraj", "Hedging", "Manipülasyon", "Yatırım"], correct: 1, exp: "Aynı varlığın iki farklı piyasadaki fiyat farkından risksiz kar elde etmeye Arbitraj denir." },
+                    { text: "VİOP'ta pozisyon alabilmek için yatırımcının aracı kuruma yatırması gereken asgari tutara ne ad verilir?", options: ["Opsiyon primi", "Kullanım fiyatı", "Başlangıç teminatı", "Komisyon", "Stopaj"], correct: 2, exp: "Vadeli işlem sözleşmelerinde (Futures) işlem yapabilmek için yatırılması zorunlu tutar 'başlangıç teminatı'dır." },
+                    { text: "Faiz oranları, döviz kurları veya hisse senedi getirilerinin karşılıklı olarak değiştirilmesini içeren tezgah üstü türev sözleşmeye ne ad verilir?", options: ["Swap (Takas) Sözleşmesi", "Futures", "Alım Opsiyonu", "Varant", "Hazine Bonosu"], correct: 0, exp: "Nakit akışlarının veya yükümlülüklerin taraflarca karşılıklı değiştirildiği anlaşmalar Swap sözleşmeleridir." },
+                    { text: "Satım (put) opsiyonu satıcısının (yazıcısının) durumu aşağıdakilerden hangisidir?", options: ["Dayanak varlığı satma hakkı vardır.", "Dayanak varlığı satma yükümlülüğü vardır.", "Dayanak varlığı alma hakkı vardır.", "Dayanak varlığı, alıcı isterse kullanım fiyatından almak zorundadır (yükümlülük).", "Prim ödemek zorundadır."], correct: 3, exp: "Satım opsiyonunu SATAN (yazıcı), primi alır ve alıcı opsiyonu kullanırsa, varlığı belirlenen fiyattan 'almak' zorundadır." }
+                ]
+            },
+            sec5: {
+                title: "5. Kamu Borçlanma Araçları",
+                summary: `<b>Kavram:</b> Devletin (Hazine ve Maliye Bakanlığı) bütçe açıklarını finanse etmek için çıkardığı borçlanma senetleridir (DİBS - Devlet İç Borçlanma Senetleri).<br>
+                <b>Türleri:</b> Hazine Bonosu (vadesi 1 yıldan kısa), Devlet Tahvili (vadesi 1 yıl ve daha uzun).<br>
+                <b>İhraç Yöntemleri:</b> İhale yöntemi, doğrudan satış, halka arz. En çok 'İhale Yöntemi' kullanılır.<br>
+                <b>Özellikler:</b> Risksiz getiri oranı olarak kabul edilirler. TCMB açık piyasa işlemlerinde yoğun olarak kullanılır.`,
+                hap: [
+                    "🎯 Vadesi 364 güne kadar olanlara Hazine Bonosu, 365 gün ve daha uzun olanlara Devlet Tahvili denir.",
+                    "🎯 DİBS'ler T.C. Hazine ve Maliye Bakanlığı tarafından ihraç edilir, Merkez Bankası sadece ihraca aracılık eder (operasyonel işlem).",
+                    "🎯 Hazine bonoları genellikle 'iskontolu' (faizi baştan düşülmüş) ihraç edilir.",
+                    "🎯 Devlet tahvilleri kuponlu (3 ayda, 6 ayda veya yılda bir ödemeli) veya iskontolu olabilir."
+                ],
+                karistirma: `
+                    <table>
+                        <tr><th>Özellik</th><th>Hazine Bonosu</th><th>Devlet Tahvili</th></tr>
+                        <tr><td>Vade</td><td>1 yıldan az</td><td>1 yıl ve üzeri</td></tr>
+                        <tr><td>İhraç Eden</td><td>Hazine</td><td>Hazine</td></tr>
+                        <tr><td>Getiri Yapısı</td><td>İskontolu</td><td>Sabit Kuponlu, TÜFE'ye endeksli veya İskontolu</td></tr>
+                    </table>
+                `,
+                soruNasil: "Sınavda <b>Hazine Bonosu ile Devlet Tahvili vade ayrımı (1 yıl)</b> sorulur. Ayrıca <b>İhraççı kimdir? (Hazine - yanlış cevap genelde Merkez Bankası verilir)</b> sıkça test edilir.",
+                flashcards: [
+                    { q: "T.C. Hazinesi tarafından vadesi 1 yıldan uzun olarak ihraç edilen iç borçlanma senedi nedir?", a: "Devlet Tahvili" },
+                    { q: "T.C. Hazinesi tarafından vadesi 1 yıldan (365 günden) kısa olarak ihraç edilen borçlanma senedi nedir?", a: "Hazine Bonosu" },
+                    { q: "Devlet İç Borçlanma Senetlerinin (DİBS) ihracını kim gerçekleştirir?", a: "T.C. Hazine ve Maliye Bakanlığı (TCMB sadece operasyonel aracılık yapar)" }
+                ],
+                questions: [
+                    { text: "Hazine ve Maliye Bakanlığı tarafından yurt içi piyasada ihraç edilen ve vadesi 1 yıldan kısa olan Devlet İç Borçlanma Senetlerine ne ad verilir?", options: ["Devlet Tahvili", "Hazine Bonosu", "Finansman Bonosu", "Eurobond", "Gelir Ortaklığı Senedi"], correct: 1, exp: "Vadesi 1 yıldan (365 gün) kısa olan kamu iç borçlanma senetleri Hazine Bonosudur." },
+                    { text: "Devlet İç Borçlanma Senetleri (DİBS) genel olarak kim tarafından ihraç edilir?", options: ["Türkiye Cumhuriyet Merkez Bankası (TCMB)", "Hazine ve Maliye Bakanlığı", "Sermaye Piyasası Kurulu (SPK)", "Borsa İstanbul", "Takasbank"], correct: 1, exp: "Kamu borçlanma senetlerini çıkaran ve borçlanan kurum doğrudan Hazine'dir. TCMB sadece Hazine'nin acentesi olarak aracılık yapar." },
+                    { text: "Aşağıdakilerden hangisi bir Kamu Borçlanma Aracı değildir?", options: ["Hazine Bonosu", "Devlet Tahvili", "Finansman Bonosu", "Kira Sertifikası (Hazine Müsteşarlığı Varlık Kiralama Şirketi ihracı)", "Eurobond"], correct: 2, exp: "Finansman Bonosu, anonim şirketler (özel sektör) tarafından ihraç edilen kısa vadeli borçlanma aracıdır. Kamu ihraç etmez." },
+                    { text: "Dış piyasalarda, yabancı para cinsinden ihraç edilen uzun vadeli kamu borçlanma araçlarına genel olarak ne ad verilir?", options: ["Hazine Bonosu", "DİBS", "Eurobond (Uluslararası Tahvil)", "Mevduat Sertifikası", "Swap"], correct: 2, exp: "Hazine'nin yurtdışı piyasalarda, genellikle döviz cinsinden ihraç ettiği tahvillere Eurobond denir." },
+                    { text: "Hazine ihale yönteminde 'Piyasa Yapıcılığı' sisteminin temel amacı nedir?", options: ["Vergi oranlarını düşürmek", "Borçlanma ihalelerine sürekli katılımı ve ikincil piyasada likiditeyi sağlamak", "Borsayı yükseltmek", "Yurtdışından borç bulmak", "Özel sektör tahvillerini desteklemek"], correct: 1, exp: "Piyasa yapıcısı bankalar, Hazine ihalelerinden alım yapmayı ve ikincil piyasada sürekli alım-satım kotasyonu vererek likidite sağlamayı taahhüt ederler." },
+                    { text: "Aşağıdaki kamu borçlanma araçlarından hangisi enflasyona karşı koruma sağlama amacı güder?", options: ["İskontolu Hazine Bonosu", "Sıfır Kuponlu Devlet Tahvili", "TÜFE'ye Endeksli Devlet Tahvili", "Eurobond", "Sabit Faizli Devlet Tahvili"], correct: 2, exp: "TÜFE'ye endeksli tahvillerde, ödenecek kupon faizleri gerçekleşen enflasyon oranına göre ayarlandığı için yatırımcıyı enflasyona karşı korur." },
+                    { text: "Bir Devlet Tahvili üzerinde yazılı olan ve vade sonunda yatırımcıya ödenecek tutara ne ad verilir?", options: ["Piyasa fiyatı", "İhraç fiyatı", "Nominal değer (Anapara)", "Kupon faizi", "İskonto tutarı"], correct: 2, exp: "Menkul kıymetin üzerinde yazılı olan ve vade bittiğinde (itfada) yatırımcının eline geçecek olan asıl bedel Nominal Değer'dir." },
+                    { text: "İskontolu olarak ihraç edilen bir Hazine Bonosunun yatırımcı açısından getirisi nasıl oluşur?", options: ["Her ay ödenen kuponlarla", "Alış fiyatı ile vade sonundaki nominal bedel arasındaki farkla", "Şirketin kar payı dağıtımıyla", "Sadece kur farkıyla", "Yıllık sabit faiz ödemesiyle"], correct: 1, exp: "İskontolu senetlerde faiz (kupon) ödemesi yoktur. Yatırımcı senedi ucuz (nominal değerin altında) alır, vade sonunda nominal değeri (100 TL) tam tahsil eder. Aradaki fark getiridir." },
+                    { text: "DİBS'lerin ikincil piyasa işlemleri (alım satımı) en yoğun nerede gerçekleşir?", options: ["Sadece TCMB gişelerinde", "Borsa İstanbul Borçlanma Araçları Piyasası'nda ve tezgah üstü piyasada", "VİOP'ta", "Sadece Hazine binalarında", "SPK nezdinde"], correct: 1, exp: "DİBS'lerin ikincil el işlemleri (ticareti) hem tezgah üstü bankalararası piyasada hem de Borsa İstanbul Borçlanma Araçları Piyasasında gerçekleşir." },
+                    { text: "Devlet iç borçlanma senetleri risk sınıflandırmasında neden 'risksiz' (veya risksize en yakın) oran olarak kabul edilir?", options: ["Getirisi en yüksek olduğu için", "Devletin vergi toplama ve para basma yetkisi nedeniyle temerrüt (ödeyememe) riskinin pratikte sıfır kabul edilmesi", "Her zaman enflasyonun üzerinde getiri sağladığı için", "Vadeleri çok kısa olduğu için", "Sadece bankalar alabildiği için"], correct: 1, exp: "Devlet, egemenlik hakları (vergi alma, para basma) sayesinde yükümlülüklerini yerine getirmede en güvenilir kurumdur, bu nedenle yerel para cinsi iç borçlanması literatürde 'risksiz oran' (risk-free rate) kabul edilir." }
+                ]
+            }
+        };
+
+        // ================= UYGULAMA DURUMU (LOCALSTORAGE) =================
+        let state = {
+            solved: 0,
+            correct: 0,
+            wrong: 0,
+            wrongByTopic: { sec1: 0, sec2: 0, sec3: 0, sec4: 0, sec5: 0 }
+        };
+
+        const secNames = { sec1: "Paylar", sec2: "Borçlanma Ar.", sec3: "Fonlar", sec4: "Türev Araçlar", sec5: "Kamu Borçlanma" };
+
+        function loadState() {
+            const saved = localStorage.getItem('spl1003_state');
+            if (saved) state = JSON.parse(saved);
+            updateDashboard();
+        }
+
+        function saveState() {
+            localStorage.setItem('spl1003_state', JSON.stringify(state));
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            document.getElementById('stat-solved').innerText = state.solved;
+            let percent = state.solved === 0 ? 0 : Math.round((state.correct / state.solved) * 100);
+            document.getElementById('stat-success').innerText = percent;
+            
+            // En zayıf konuyu bul
+            let maxWrong = -1;
+            let weakTopic = "-";
+            let weakListHTML = "";
+
+            for(let key in state.wrongByTopic) {
+                if(state.wrongByTopic[key] > 0) {
+                    weakListHTML += `<li><b>${secNames[key]}:</b> ${state.wrongByTopic[key]} yanlış</li>`;
+                }
+                if(state.wrongByTopic[key] > maxWrong && state.wrongByTopic[key] > 0) {
+                    maxWrong = state.wrongByTopic[key];
+                    weakTopic = secNames[key];
+                }
+            }
+            
+            document.getElementById('stat-weak').innerText = weakTopic;
+
+            const weakCard = document.getElementById('weak-topics-card');
+            if(weakListHTML !== "") {
+                weakCard.style.display = "block";
+                document.getElementById('weak-topics-list').innerHTML = weakListHTML;
+            } else {
+                weakCard.style.display = "none";
+            }
+        }
+
+        function resetData() {
+            if(confirm("Tüm ilerlemeniz ve istatistikleriniz silinecek. Emin misiniz?")) {
+                localStorage.removeItem('spl1003_state');
+                state = { solved: 0, correct: 0, wrong: 0, wrongByTopic: { sec1: 0, sec2: 0, sec3: 0, sec4: 0, sec5: 0 } };
+                location.reload();
+            }
+        }
+
+        // ================= ARAYÜZ VE NAVİGASYON İŞLEMLERİ =================
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function nav(pageId) {
+            // Mobilde menüyü kapat
+            document.getElementById('sidebar').classList.remove('open');
+            
+            // Tüm sayfaları gizle
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('section-container').innerHTML = '';
+            document.getElementById('section-container').style.display = 'none';
+
+            // Menü aktif durumunu güncelle
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(pageId === 'dashboard' || pageId === 'deneme') {
+                document.getElementById(pageId).classList.add('active');
+                if(pageId === 'deneme') {
+                    document.getElementById('deneme-intro').style.display = 'block';
+                    document.getElementById('deneme-active').style.display = 'none';
+                    document.getElementById('deneme-result').style.display = 'none';
+                }
+            } else {
+                // Dinamik bölüm yükle (sec1, sec2 vb.)
+                document.getElementById('section-container').style.display = 'block';
+                renderSection(pageId);
+            }
+            
+            // Başa dön
+            document.getElementById('content-scroll').scrollTop = 0;
+        }
+
+        function renderSection(secId) {
+            const data = contentData[secId];
+            const container = document.getElementById('section-container');
+            
+            // Hap bilgileri listeye çevir
+            let hapHtml = data.hap.map(h => `<div class="alert-info"><strong>HAP BİLGİ:</strong> ${h.replace('🎯', '').trim()}</div>`).join('');
+            
+            // Mini test HTML'ini oluştur
+            let quizHtml = data.questions.map((q, idx) => `
+                <div class="question-card" id="q-${secId}-${idx}">
+                    <p><b>Soru ${idx + 1}:</b> ${q.text} <span class="diff-badge">Test Modu</span></p>
+                    <div class="options">
+                        ${q.options.map((opt, oIdx) => `<div class="option" onclick="checkAnswer('${secId}', ${idx}, ${oIdx})">${String.fromCharCode(65+oIdx)}) ${opt}</div>`).join('')}
+                    </div>
+                    <div class="explanation" id="exp-${secId}-${idx}">
+                        <b>Açıklama:</b> ${q.exp}
+                    </div>
+                </div>
+            `).join('');
+
+            const html = `
+                <div class="page active" id="page-${secId}">
+                    <h1>${data.title}</h1>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab(this, 'ozet-${secId}')">📖 Konu Özeti</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'hap-${secId}')">🎯 Hap Bilgiler</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'karistirilan-${secId}')">⚖️ Karıştırılanlar</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'soru-${secId}')">❓ Nasıl Sorulur?</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'flashcard-${secId}')">📇 Flashcard</button>
+                        <button class="tab-btn" onclick="switchTab(this, 'test-${secId}')">📝 Mini Test</button>
+                    </div>
+
+                    <div class="tab-content active" id="ozet-${secId}">
+                        <div class="card">${data.summary}</div>
+                    </div>
+
+                    <div class="tab-content" id="hap-${secId}">
+                        <div class="card">${hapHtml}</div>
+                    </div>
+
+                    <div class="tab-content" id="karistirilan-${secId}">
+                        <div class="card">
+                            <h3 style="color:var(--warning)">Sınavda Dikkat - Karşılaştırmalar</h3>
+                            ${data.karistirma}
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="soru-${secId}">
+                        <div class="card alert-warning">
+                            <h3>Sınav Pratiği</h3>
+                            <p>${data.soruNasil}</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="test-${secId}">
+                        <div class="card">
+                            <h3>Bölüm Sonu Değerlendirmesi (10 Soru)</h3>
+                            ${quizHtml}
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="flashcard-${secId}">
+                        <div class="card flashcard-container">
+                            <p style="text-align:center; color:var(--text-light); margin-bottom:10px;">Kavramı görmek için karta tıklayın.</p>
+                            <div class="flashcard" id="fc-${secId}" onclick="this.classList.toggle('flipped')">
+                                <div class="card-face card-front" id="fc-front-${secId}">${data.flashcards[0].q}</div>
+                                <div class="card-face card-back" id="fc-back-${secId}">
+                                    <div><b>Cevap:</b></div>
+                                    <div>${data.flashcards[0].a}</div>
+                                </div>
+                            </div>
+                            <div class="flashcard-controls">
+                                <button class="btn btn-warning" onclick="nextFlashcard('${secId}', false)">Tekrar Etmeliyim</button>
+                                <button class="btn btn-success" onclick="nextFlashcard('${secId}', true)">Biliyorum</button>
+                            </div>
+                            <div style="margin-top:15px; font-size:0.9rem;" id="fc-counter-${secId}">Kart: 1 / ${data.flashcards.length}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+            // O bölüme ait flashcard indeksini sıfırla
+            window[`fcIndex_${secId}`] = 0;
+        }
+
+        function switchTab(btn, targetId) {
+            const tabsContainer = btn.parentElement;
+            tabsContainer.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const sectionDiv = tabsContainer.parentElement;
+            sectionDiv.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+        }
+
+        // ================= QUIZ (MİNİ TEST) MANTIĞI =================
+        function checkAnswer(secId, qIdx, selectedOptIdx) {
+            const qData = contentData[secId].questions[qIdx];
+            const qCard = document.getElementById(`q-${secId}-${qIdx}`);
+            const options = qCard.querySelectorAll('.option');
+            
+            // Daha önce çözülmüş mü kontrol et
+            if(options[0].classList.contains('disabled')) return;
+
+            // Şıkları kilitle
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            state.solved++;
+
+            if(selectedOptIdx === qData.correct) {
+                options[selectedOptIdx].classList.add('correct');
+                state.correct++;
+            } else {
+                options[selectedOptIdx].classList.add('wrong');
+                options[qData.correct].classList.add('correct'); // Doğruyu göster
+                state.wrong++;
+                state.wrongByTopic[secId]++;
+            }
+
+            // Açıklamayı göster
+            document.getElementById(`exp-${secId}-${qIdx}`).style.display = 'block';
+            saveState();
+        }
+
+        // ================= FLASHCARD MANTIĞI =================
+        function nextFlashcard(secId, known) {
+            let idx = window[`fcIndex_${secId}`];
+            const cards = contentData[secId].flashcards;
+            
+            // Kart flip efektini kapat
+            const cardEl = document.getElementById(`fc-${secId}`);
+            cardEl.classList.remove('flipped');
+
+            // Kısa gecikme ile yeni karta geç (animasyon için)
+            setTimeout(() => {
+                idx++;
+                if (idx >= cards.length) {
+                    idx = 0; // Başa dön
+                    alert("Bu bölümdeki tüm kartları tamamladınız!");
+                }
+                window[`fcIndex_${secId}`] = idx;
+                
+                document.getElementById(`fc-front-${secId}`).innerHTML = cards[idx].q;
+                document.getElementById(`fc-back-${secId}`).innerHTML = `<div><b>Cevap:</b></div><div>${cards[idx].a}</div>`;
+                document.getElementById(`fc-counter-${secId}`).innerText = `Kart: ${idx + 1} / ${cards.length}`;
+            }, 200);
+        }
+
+        // ================= DENEME SINAVI MANTIĞI =================
+        let mockQuestions = [];
+        let mockAnswers = {};
+        let mockTimer;
+        let mockTimeLeft = 30 * 60; // 30 dakika
+
+        function startMockExam() {
+            document.getElementById('deneme-intro').style.display = 'none';
+            document.getElementById('deneme-result').style.display = 'none';
+            document.getElementById('deneme-active').style.display = 'block';
+            
+            // Tüm sorulardan rastgele 25 soru seç
+            let allQuestions = [];
+            for (let sec in contentData) {
+                contentData[sec].questions.forEach((q, idx) => {
+                    allQuestions.push({ ...q, secId: sec, origIdx: idx });
+                });
+            }
+            
+            // Karıştır ve 25 tane al
+            allQuestions = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 25);
+            mockQuestions = allQuestions;
+            mockAnswers = {};
+
+            // Soruları Ekrana Bas
+            let html = mockQuestions.map((q, idx) => `
+                <div class="question-card" id="mock-q-${idx}">
+                    <p><b>Soru ${idx + 1}:</b> ${q.text}</p>
+                    <div class="options">
+                        ${q.options.map((opt, oIdx) => `
+                            <div class="option" id="mock-opt-${idx}-${oIdx}" onclick="selectMockAnswer(${idx}, ${oIdx})">
+                                ${String.fromCharCode(65+oIdx)}) ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation" id="mock-exp-${idx}"><b>Doğru Cevap Açıklaması:</b> ${q.exp}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('mock-questions-container').innerHTML = html;
+
+            // Sayacı Başlat
+            mockTimeLeft = 30 * 60;
+            updateTimerDisplay();
+            clearInterval(mockTimer);
+            mockTimer = setInterval(() => {
+                mockTimeLeft--;
+                updateTimerDisplay();
+                if (mockTimeLeft <= 0) {
+                    finishMockExam();
+                }
+            }, 1000);
+            
+            document.getElementById('content-scroll').scrollTop = 0;
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(mockTimeLeft / 60);
+            let s = mockTimeLeft % 60;
+            document.getElementById('timer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function selectMockAnswer(qIdx, optIdx) {
+            // Şıkkı seçili hale getir
+            const qCard = document.getElementById(`mock-q-${qIdx}`);
+            qCard.querySelectorAll('.option').forEach(o => {
+                o.style.borderColor = 'var(--border)';
+                o.style.backgroundColor = 'white';
+            });
+            const selectedOpt = document.getElementById(`mock-opt-${qIdx}-${optIdx}`);
+            selectedOpt.style.borderColor = 'var(--primary)';
+            selectedOpt.style.backgroundColor = '#e2e8f0';
+            
+            mockAnswers[qIdx] = optIdx;
+        }
+
+        function finishMockExam() {
+            clearInterval(mockTimer);
+            document.getElementById('deneme-active').style.display = 'none';
+            document.getElementById('deneme-result').style.display = 'block';
+
+            let correctCount = 0;
+            let wrongTopics = {};
+
+            mockQuestions.forEach((q, idx) => {
+                let userAns = mockAnswers[idx];
+                if (userAns === q.correct) {
+                    correctCount++;
+                    state.correct++;
+                } else {
+                    // Boş veya yanlış
+                    state.wrong++;
+                    state.wrongByTopic[q.secId]++;
+                    if(!wrongTopics[q.secId]) wrongTopics[q.secId] = 0;
+                    wrongTopics[q.secId]++;
+                }
+                state.solved++;
+            });
+
+            saveState();
+
+            let scorePercent = Math.round((correctCount / 25) * 100);
+            const circle = document.getElementById('mock-score-circle');
+            circle.innerText = `%${scorePercent}`;
+            
+            if (scorePercent >= 70) {
+                circle.style.borderColor = 'var(--success)';
+                circle.style.color = 'var(--success)';
+            } else if (scorePercent >= 50) {
+                circle.style.borderColor = 'var(--warning)';
+                circle.style.color = 'var(--warning)';
+            } else {
+                circle.style.borderColor = 'var(--danger)';
+                circle.style.color = 'var(--danger)';
+            }
+
+            document.getElementById('mock-correct').innerText = correctCount;
+            document.getElementById('mock-wrong').innerText = 25 - correctCount;
+
+            // Denemedeki zayıf konuları listele
+            let weakHtml = "";
+            for (let sec in wrongTopics) {
+                weakHtml += `<li>${secNames[sec]}: ${wrongTopics[sec]} Soru Kaçırıldı</li>`;
+            }
+            if(weakHtml === "") weakHtml = "<li>Tebrikler, tüm soruları doğru cevapladınız!</li>";
+            
+            document.getElementById('mock-weak-list').innerHTML = weakHtml;
+            document.getElementById('content-scroll').scrollTop = 0;
+        }
+
+        // ================= BAŞLANGIÇ =================
+        window.onload = loadState;
+
+    </script>
+</body>
+</html>
