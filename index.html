@@ -1,1021 +1,715 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kurgu Terminali 95</title>
-  <style>
-    :root {
-      --bg: #008080;
-      --gray: #c0c0c0;
-      --dark: #808080;
-      --light: #ffffff;
-      --black: #000000;
-      --blue: #000080;
-      --select: #0000a8;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 18px;
-      background: var(--bg);
-      font-family: Tahoma, Arial, sans-serif;
-      font-size: 13px;
-      color: #111;
-    }
-
-    button, input, textarea, select {
-      font-family: Tahoma, Arial, sans-serif;
-      font-size: 13px;
-    }
-
-    .window {
-      max-width: 1040px;
-      min-height: calc(100vh - 36px);
-      margin: 0 auto;
-      background: var(--gray);
-      border-top: 2px solid var(--light);
-      border-left: 2px solid var(--light);
-      border-right: 2px solid var(--black);
-      border-bottom: 2px solid var(--black);
-      box-shadow: 4px 4px 0 rgba(0, 0, 0, .45);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .titlebar {
-      height: 28px;
-      background: var(--blue);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 3px 4px 3px 8px;
-      font-weight: bold;
-    }
-
-    .title-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon {
-      width: 16px;
-      height: 16px;
-      background: var(--gray);
-      border-top: 1px solid var(--light);
-      border-left: 1px solid var(--light);
-      border-right: 1px solid var(--black);
-      border-bottom: 1px solid var(--black);
-      position: relative;
-    }
-
-    .icon:after {
-      content: "";
-      position: absolute;
-      left: 4px;
-      top: 3px;
-      width: 7px;
-      height: 9px;
-      background: white;
-      border: 1px solid black;
-    }
-
-    .win-actions { display: flex; gap: 3px; }
-
-    .win-action {
-      width: 20px;
-      height: 20px;
-      padding: 0;
-      background: var(--gray);
-      border-top: 2px solid var(--light);
-      border-left: 2px solid var(--light);
-      border-right: 2px solid var(--black);
-      border-bottom: 2px solid var(--black);
-      font-weight: bold;
-    }
-
-    .menubar {
-      height: 28px;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      padding: 0 6px;
-      border-bottom: 1px solid var(--dark);
-    }
-
-    .menuitem { padding: 4px 8px; cursor: default; }
-    .menuitem:hover { background: var(--blue); color: white; }
-
-    .toolbar {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      padding: 6px;
-      border-top: 1px solid var(--light);
-      border-bottom: 1px solid var(--dark);
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      min-height: 26px;
-      padding: 4px 10px;
-      background: var(--gray);
-      color: black;
-      border-top: 2px solid var(--light);
-      border-left: 2px solid var(--light);
-      border-right: 2px solid var(--black);
-      border-bottom: 2px solid var(--black);
-      cursor: pointer;
-    }
-
-    .btn:active {
-      border-top: 2px solid var(--black);
-      border-left: 2px solid var(--black);
-      border-right: 2px solid var(--light);
-      border-bottom: 2px solid var(--light);
-    }
-
-    .btn.primary { font-weight: bold; }
-    .btn.danger { color: #800000; }
-
-    .main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 235px 1fr;
-      gap: 8px;
-      padding: 8px;
-    }
-
-    .panel {
-      background: var(--gray);
-      border-top: 2px solid var(--light);
-      border-left: 2px solid var(--light);
-      border-right: 2px solid var(--black);
-      border-bottom: 2px solid var(--black);
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .panel-title {
-      background: var(--blue);
-      color: white;
-      padding: 5px 7px;
-      font-weight: bold;
-      min-height: 25px;
-    }
-
-    .panel-body {
-      padding: 8px;
-      overflow: auto;
-      flex: 1;
-    }
-
-    .inset {
-      background: white;
-      border-top: 2px solid var(--dark);
-      border-left: 2px solid var(--dark);
-      border-right: 2px solid var(--light);
-      border-bottom: 2px solid var(--light);
-    }
-
-    .steps {
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .step {
-      display: grid;
-      grid-template-columns: 24px 1fr;
-      align-items: center;
-      gap: 7px;
-      padding: 5px;
-      cursor: pointer;
-    }
-
-    .step:hover, .step.active {
-      background: var(--select);
-      color: white;
-    }
-
-    .step-no {
-      width: 22px;
-      height: 22px;
-      display: grid;
-      place-items: center;
-      background: var(--gray);
-      color: black;
-      border-top: 2px solid var(--light);
-      border-left: 2px solid var(--light);
-      border-right: 2px solid var(--black);
-      border-bottom: 2px solid var(--black);
-      font-weight: bold;
-    }
-
-    .step.done .step-label:after {
-      content: "  tamam";
-      font-size: 11px;
-      font-weight: normal;
-    }
-
-    .step small {
-      display: block;
-      font-size: 11px;
-      margin-top: 2px;
-    }
-
-    .progress-box {
-      margin-top: 10px;
-      padding: 8px;
-      line-height: 1.4;
-    }
-
-    .progress-bar {
-      height: 18px;
-      background: white;
-      margin-top: 8px;
-      padding: 2px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--blue);
-    }
-
-    .screen-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      margin: 0 0 4px;
-      font-size: 20px;
-    }
-
-    p {
-      margin: 0;
-      line-height: 1.4;
-    }
-
-    .badge {
-      background: white;
-      padding: 5px 8px;
-      white-space: nowrap;
-    }
-
-    .hint {
-      line-height: 1.45;
-      padding: 8px;
-      margin-bottom: 10px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .field { margin-bottom: 10px; }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-
-    .input, .textarea, .select {
-      width: 100%;
-      background: white;
-      color: black;
-      border-top: 2px solid var(--dark);
-      border-left: 2px solid var(--dark);
-      border-right: 2px solid var(--light);
-      border-bottom: 2px solid var(--light);
-      padding: 6px;
-      outline: none;
-    }
-
-    .textarea {
-      min-height: 86px;
-      line-height: 1.45;
-      resize: vertical;
-    }
-
-    .story-editor {
-      min-height: 360px;
-      font-size: 15px;
-    }
-
-    .linear-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid var(--dark);
-      flex-wrap: wrap;
-    }
-
-    .left-actions, .right-actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .cards {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .card {
-      padding: 8px;
-      background: var(--gray);
-      border-top: 2px solid var(--light);
-      border-left: 2px solid var(--light);
-      border-right: 2px solid var(--black);
-      border-bottom: 2px solid var(--black);
-    }
-
-    .card-title { font-weight: bold; margin-bottom: 4px; }
-    .card-text { line-height: 1.4; white-space: pre-wrap; }
-    .card-actions { margin-top: 7px; display: flex; gap: 5px; flex-wrap: wrap; }
-    .tiny { min-height: 22px; padding: 2px 7px; font-size: 12px; }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .summary-box {
-      padding: 8px;
-      line-height: 1.45;
-    }
-
-    .statusbar {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1.2fr;
-      gap: 4px;
-      padding: 4px 6px;
-      border-top: 1px solid var(--light);
-    }
-
-    .status-cell {
-      padding: 3px 6px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      border-top: 1px solid var(--dark);
-      border-left: 1px solid var(--dark);
-      border-right: 1px solid var(--light);
-      border-bottom: 1px solid var(--light);
-    }
-
-    .hidden { display: none !important; }
-
-    @media (max-width: 860px) {
-      body { padding: 8px; }
-      .window { min-height: calc(100vh - 16px); }
-      .main { grid-template-columns: 1fr; }
-      .form-grid, .summary-grid { grid-template-columns: 1fr; }
-      .statusbar { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SPL 1003 - 7 Günlük Sınav Kampı</title>
+<style>
+:root{
+  --bg:#f5f7fb; --panel:#ffffff; --panel2:#eef3fb; --text:#152033; --muted:#60708a;
+  --line:#dbe4f0; --accent:#2563eb; --accent2:#10b981; --danger:#ef4444; --warn:#f59e0b;
+  --shadow:0 18px 40px rgba(15,23,42,.10); --radius:20px;
+}
+[data-theme="dark"]{
+  --bg:#07111f; --panel:#0f1b2e; --panel2:#13233a; --text:#e9f1ff; --muted:#9fb0c9;
+  --line:#263750; --accent:#60a5fa; --accent2:#34d399; --danger:#fb7185; --warn:#fbbf24;
+  --shadow:0 18px 50px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg);
+  color:var(--text); line-height:1.5;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1320px;margin:0 auto;padding:22px}
+.hero{
+  background:linear-gradient(135deg,var(--panel),var(--panel2)); border:1px solid var(--line);
+  border-radius:28px; padding:22px; box-shadow:var(--shadow); position:sticky; top:0; z-index:20;
+}
+.hero-top{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand h1{margin:0;font-size:clamp(24px,4vw,40px);letter-spacing:-.03em}
+.brand p{margin:4px 0 0;color:var(--muted)}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill, .mini-pill{
+  display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);
+  color:var(--text);border-radius:999px;padding:10px 14px;box-shadow:0 8px 18px rgba(0,0,0,.04)
+}
+.mini-pill{padding:6px 10px;font-size:13px;color:var(--muted)}
+.theme-toggle{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px}
+.theme-toggle button{border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:999px}
+.theme-toggle button.active{background:var(--accent);color:white}
+.tabs{display:flex;gap:8px;overflow:auto;margin-top:18px;padding-bottom:2px}
+.tab-btn{
+  border:1px solid var(--line); background:var(--panel); color:var(--muted); padding:10px 14px; border-radius:14px;
+  white-space:nowrap; transition:.2s;
+}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 10px 20px rgba(37,99,235,.18)}
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.section{margin-top:20px}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow);
+}
+.card h2,.card h3,.card h4{margin-top:0;letter-spacing:-.02em}
+.card h2{font-size:26px;margin-bottom:8px}
+.card h3{font-size:19px;margin-bottom:8px}
+.muted{color:var(--muted)}
+.stat-card{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.stat-value{font-size:30px;font-weight:800;letter-spacing:-.04em}
+.progress{height:12px;background:var(--panel2);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%;transition:.25s}
+.badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--line)}
+.badge.green{background:rgba(16,185,129,.12);color:var(--accent2)}
+.badge.blue{background:rgba(37,99,235,.12);color:var(--accent)}
+.badge.red{background:rgba(239,68,68,.12);color:var(--danger)}
+.badge.yellow{background:rgba(245,158,11,.12);color:var(--warn)}
+.btn{
+  border:1px solid var(--line); background:var(--panel2); color:var(--text); padding:10px 14px;
+  border-radius:14px; transition:.15s; display:inline-flex;gap:8px;align-items:center;justify-content:center;
+}
+.btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.good{background:var(--accent2);color:#062016;border-color:var(--accent2)}
+.btn.danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+.btn.warn{background:var(--warn);color:#201300;border-color:var(--warn)}
+.btn.ghost{background:transparent}
+.btn.small{padding:7px 10px;font-size:13px;border-radius:10px}
+.task{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--panel2)}
+.task input{margin-top:5px;transform:scale(1.1)}
+.topic-nav,.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.topic-nav button,.filter-row button{
+  border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 12px;border-radius:999px
+}
+.topic-nav button.active,.filter-row button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+details{border:1px solid var(--line);border-radius:16px;background:var(--panel2);padding:12px;margin:10px 0}
+summary{font-weight:800;cursor:pointer}
+.summary-content{padding-top:10px;color:var(--muted)}
+.list-clean{padding-left:20px;margin:8px 0}
+.question-box{border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:18px}
+.option{
+  width:100%;text-align:left;border:1px solid var(--line);background:var(--panel2);color:var(--text);
+  padding:13px 14px;border-radius:14px;margin:8px 0;display:flex;gap:10px;align-items:flex-start;transition:.15s
+}
+.option:hover{border-color:var(--accent);transform:translateY(-1px)}
+.option.selected{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.option.correct{border-color:var(--accent2);background:rgba(16,185,129,.12)}
+.option.wrong{border-color:var(--danger);background:rgba(239,68,68,.12)}
+.option-letter{font-weight:900;min-width:24px}
+.result{border-radius:16px;padding:14px;margin-top:12px;border:1px solid var(--line)}
+.result.good{background:rgba(16,185,129,.12)}
+.result.bad{background:rgba(239,68,68,.12)}
+.result.blank{background:rgba(245,158,11,.12)}
+.form-row{display:grid;gap:10px;margin-bottom:12px}
+.form-row label{font-weight:700}
+input,select,textarea{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:14px;padding:11px 12px}
+textarea{min-height:90px;resize:vertical}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-size:13px}
+.hide{display:none!important}
+.kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.compare-box{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel2)}
+.source-note{font-size:12px;color:var(--muted);margin-top:10px}
+.footer{margin:26px 0;color:var(--muted);font-size:13px;text-align:center}
+.alert{border-left:5px solid var(--accent);background:var(--panel2);padding:12px 14px;border-radius:12px;margin:10px 0}
+@media(max-width:900px){
+  .grid-2,.grid-3,.grid-4,.kpi-row{grid-template-columns:1fr}
+  .comparison{grid-template-columns:1fr}
+  .hero{position:relative}
+}
+</style>
 </head>
 <body>
-  <main class="window">
-    <header class="titlebar">
-      <div class="title-left"><span class="icon"></span><span>Kurgu Terminali 95</span></div>
-      <div class="win-actions" aria-hidden="true">
-        <button class="win-action">_</button>
-        <button class="win-action">□</button>
-        <button class="win-action">×</button>
+<div class="app">
+  <header class="hero">
+    <div class="hero-top">
+      <div class="brand">
+        <h1>SPL 1003 - 7 Günlük Sınav Kampı</h1>
+        <p>Şıklı test odaklı çalışma paneli · konu özetleri · deneme modu · yanlış analizi</p>
       </div>
-    </header>
-
-    <nav class="menubar">
-      <span class="menuitem">Dosya</span>
-      <span class="menuitem">Düzenle</span>
-      <span class="menuitem">Adımlar</span>
-      <span class="menuitem">Araçlar</span>
-      <span class="menuitem">Yardım</span>
-    </nav>
-
-    <section class="toolbar">
-      <button class="btn primary" id="saveBtn">💾 Kaydet</button>
-      <button class="btn" id="exportBtn">📤 Dışa Aktar</button>
-      <button class="btn" id="stuckBtn">⚠ Tıkandım</button>
-      <button class="btn" id="newBtn">📄 Yeni Proje</button>
-    </section>
-
-    <section class="main">
-      <aside class="panel">
-        <div class="panel-title">Kurgu Akışı</div>
-        <div class="panel-body">
-          <div class="steps inset" id="steps"></div>
-          <div class="progress-box inset">
-            <strong>İlerleme</strong>
-            <div id="progressText">0 / 6 adım tamamlandı</div>
-            <div class="progress-bar inset"><div class="progress-fill" id="progressFill"></div></div>
-          </div>
-          <div class="progress-box inset">
-            <strong>Felsefe</strong>
-            <div>Tek ekranda karmaşa yok. Her adımda sadece o anda gereken kararlar var.</div>
-          </div>
+      <div class="header-actions">
+        <span class="pill"><strong id="globalProgressText">%0</strong> Genel ilerleme</span>
+        <span class="pill"><strong id="questionCountText">0</strong> soru havuzu</span>
+        <div class="theme-toggle" aria-label="Tema seçimi">
+          <button id="lightBtn" onclick="setTheme('light')">☀ Açık</button>
+          <button id="darkBtn" onclick="setTheme('dark')">🌙 Koyu</button>
         </div>
-      </aside>
+        <button class="btn danger small" onclick="resetAll()">Sıfırla</button>
+      </div>
+    </div>
+    <div class="progress" title="Genel ilerleme"><span id="globalProgressBar"></span></div>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
 
-      <section class="panel">
-        <div class="panel-title" id="screenTitleBar">1. Fikir Dosyası</div>
-        <div class="panel-body">
-          <section class="screen" data-screen="0">
-            <div class="screen-header">
-              <div>
-                <h1>1. Fikir Dosyası</h1>
-                <p>Önce öykünün ham çekirdeğini kur. Burada güzel cümle değil, yön arıyoruz.</p>
-              </div>
-              <div class="badge inset">Başlangıç</div>
-            </div>
+  <main id="main" class="section"></main>
+  <div class="footer">Bu araç kişisel çalışma desteği içindir. Mevzuat ve resmi sınav duyuruları için SPL/SPK kaynaklarını ayrıca kontrol et.</div>
+</div>
 
-            <div class="hint inset">Formül: <strong>Sıradan insan + bastırılmış duygu + geri dönülmez olay.</strong></div>
+<script>
+const DATA = {"topics": [{"id": "paylar", "name": "Paylar ve Pay Benzeri Menkul Kıymetler", "priority": "Çok yüksek", "target": 100, "summary": "Paylar; ortaklık sermayesini temsil eden, ortaklık hakkı sağlayan sermaye piyasası araçlarıdır. Bu bölümde pay türleri, pay sahipliği hakları, Pay Tebliği, halka açılma, fiyat istikrarı, sermaye artırımı/azaltımı ve katılma intifa senetleri sınav açısından kritik yerlerdir.", "subs": ["Genel olarak pay", "Sermaye piyasası aracı olarak pay", "Pay türleri", "Pay sahipliği hakları", "Pay benzeri menkul kıymetler", "Pay Tebliği", "Halka açılma", "İlk halka arz ön koşulları", "Halka arz yöntemleri", "Fiyat istikrarı", "Sermaye artırımları", "Sermaye azaltımı", "Halka arzlarda özellikli durumlar", "Katılma intifa senetleri"]}, {"id": "borclanma", "name": "Borçlanma Araçları", "priority": "Yüksek", "target": 75, "summary": "Borçlanma araçları; ihraççının borçlu sıfatıyla ihraç ettiği sermaye piyasası araçlarıdır. Tahvil, finansman bonosu, kıymetli maden bonosu, PDT, DET, ihraç limiti, Kurul başvurusu ve MKK bildirimi bu bölümün ana sınav alanlarıdır.", "subs": ["Kıymetli evrak", "Menkul kıymet ilişkisi", "Borçlanma araçları tanımı", "Genel esaslar", "Yetkili organ kararı", "Kredi derecelendirmesi", "İhraç limiti", "Kurula başvuru ve MKK", "Tahviller", "PDT", "DET", "Finansman bonosu", "Kıymetli maden bonosu", "Yeşil/sürdürülebilir borçlanma"]}, {"id": "fonlar", "name": "Yatırım Fonu Katılma Payları", "priority": "Çok yüksek", "target": 100, "summary": "Yatırım fonları; tasarruf sahiplerinden toplanan varlıkların fon hesabına, riskin dağıtılması ve inançlı mülkiyet esasına göre yönetildiği yapılardır. Şemsiye fon türleri, fon malvarlığı, kurucu, katılma payı, yatırımcı bilgi formu, portföy sınırlamaları ve TEFAS/Platform çok önemlidir.", "subs": ["Kolektif yatırım", "Yatırım fonu tanımı", "Temel ilkeler", "Fon malvarlığı", "Kurucu", "Şemsiye fon", "Şemsiye fon türleri", "Fon unvanı", "Katılma payı ihracı", "Yatırımcı bilgi formu", "Katılma payı alım-satımı", "Portföy sınırlamaları", "Fon türlerine özel esaslar", "Fonun sona ermesi/devri", "Risk yönetimi ve TEFAS"]}, {"id": "turev", "name": "Türev Araçlar", "priority": "Yüksek", "target": 75, "summary": "Türev araçlar; değeri dayanak varlığa bağlı olan sözleşmelerdir. Forward, futures, opsiyon, swap, organize piyasa/tezgah üstü piyasa, VİOP, teminat, uzlaşma fiyatı ve kullanım amaçları bölümün ana iskeletidir.", "subs": ["Türev araç tanımı", "Forward", "Futures", "Opsiyon", "Swap", "Kullanım amaçları", "Türev araçların faydaları", "Organize/tezgah üstü piyasa", "VİOP işleyişi", "Fiyat kavramları"]}, {"id": "kamu", "name": "Kamu Borçlanma Araçları", "priority": "Orta-yüksek", "target": 50, "summary": "Kamu borçlanma araçları; Hazine ve kamu kesimi borçlanmasının araçlarını, DİBS türlerini, iç/dış borçlanma ayrımını, ihale yöntemlerini, getiri eğrisini ve vergilendirmeyi kapsar. Devlet tahvili-Hazine bonosu ayrımı kritik bir ezberdir.", "subs": ["Kamunun borçlanması", "İç/dış borçlanma", "Kısa/uzun vadeli borçlanma", "İsteğe bağlı/zorunlu borçlanma", "Kamu finansmanı", "DİBS", "Devlet tahvili/Hazine bonosu", "Kuponlu/kuponsuz senetler", "Getiri eğrisi", "İhraç yöntemleri", "Vergilendirme"]}], "facts": [{"topic": "paylar", "subtopic": "Genel olarak pay", "key": "Payın temel niteliği", "correct": "Pay, anonim ortaklık sermayesinin belirli bir kısmını temsil eder ve sahibine ortaklık hakkı sağlar.", "wrongs": ["Pay, ihraççının borçlanma taahhüdünü gösterir.", "Pay, vadesi olan ve anapara geri ödemesi içeren araçtır.", "Pay, yalnızca kamu tarafından ihraç edilebilir.", "Pay, fon portföyünün tamamını temsil eden belge türüdür."], "explanation": "Payı tahvil/bonodan ayıran ana nokta ortaklık hakkı sağlamasıdır.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "paylar", "subtopic": "Sermaye piyasası aracı olarak pay", "key": "Pay ve borç ilişkisi", "correct": "Pay sahibi ihraççıya alacaklı değil, ortak konumundadır.", "wrongs": ["Pay sahibi ihraççıdan sabit faiz alacağına sahiptir.", "Pay sahibi her durumda anaparasını geri alır.", "Pay sahibi yalnızca borç veren yatırımcıdır.", "Pay, ödünç verme ilişkisi doğurur."], "explanation": "Sınavda pay-tahvil ayrımı çok gelir: pay ortaklık, tahvil borç ilişkisi kurar.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "paylar", "subtopic": "Pay türleri", "key": "Nama ve hamiline pay", "correct": "Paylar nama veya hamiline yazılı olarak çıkarılabilir.", "wrongs": ["Paylar yalnızca nama yazılı olabilir.", "Paylar yalnızca hamiline yazılı olabilir.", "Paylarda yazılılık türü bulunmaz.", "Paylar sadece elektronik sözleşme olarak düzenlenir."], "explanation": "Nama/hamiline ayrımı pay türlerinin temel sınıflandırmalarındandır.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "paylar", "subtopic": "Pay türleri", "key": "İmtiyazlı pay", "correct": "İmtiyazlı pay, kâr payı, tasfiye payı, oy hakkı veya yönetim kurulunda temsil gibi konularda üstün hak sağlayabilir.", "wrongs": ["İmtiyazlı pay her durumda sabit faiz verir.", "İmtiyazlı pay yalnızca kamu borçlanma aracıdır.", "İmtiyazlı payda hiçbir ortaklık hakkı bulunmaz.", "İmtiyaz yalnızca vade sonunda anapara ödemesidir."], "explanation": "İmtiyaz, pay sahipliği haklarında üstünlük sağlar; borçlanma getirisi değildir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "paylar", "subtopic": "Pay türleri", "key": "Oyda imtiyaz sınırı", "correct": "Oyda imtiyaz, istisnalar saklı kalmak üzere eşit itibari değerdeki bir paya en çok on beş oy hakkı tanınmasıyla kurulabilir.", "wrongs": ["Oyda imtiyazda bir paya sınırsız oy hakkı tanınabilir.", "Oyda imtiyaz yalnızca tahvillerde uygulanır.", "Oyda imtiyaz kâr payı yerine kupon faizi verir.", "Oyda imtiyaz tüm genel kurul kararlarında sınırsız kullanılabilir."], "explanation": "PDF’de oyda imtiyaz için bir paya en çok 15 oy hakkı verilebileceği belirtilir.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "paylar", "subtopic": "Pay türleri", "key": "Bedelsiz pay", "correct": "Bedelsiz pay, iç kaynaklar veya kâr payından yapılan sermaye artırımı sonucunda ihraç edilir ve ortaklığa dışarıdan fon girişi sağlamaz.", "wrongs": ["Bedelsiz pay her zaman nakit sermaye girişi sağlar.", "Bedelsiz pay yalnızca borçlanma aracı sahiplerine verilir.", "Bedelsiz pay vadesi 365 gün olan tahvildir.", "Bedelsiz pay halka arz fiyatının üzerinde alım emridir."], "explanation": "Bedelsiz = iç kaynak; dışarıdan para girişi yok.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "paylar", "subtopic": "Pay türleri", "key": "Bedelli pay", "correct": "Bedelli pay, yeni fon kaynağı sağlamak amacıyla yapılan nakit sermaye artırımı sonucunda ihraç edilir.", "wrongs": ["Bedelli pay yalnızca iç kaynaklardan çıkarılır.", "Bedelli pay ortaklığa fon girişi yaratmaz.", "Bedelli pay vadesiz kamu borçlanma aracıdır.", "Bedelli pay sadece opsiyon sözleşmesidir."], "explanation": "Bedelli sermaye artırımında ortaklığa nakit kaynak girişi hedeflenir.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "paylar", "subtopic": "Pay türleri", "key": "Primli pay", "correct": "Nominal değerinden yüksek bedelle ihraç edilen pay primli paydır.", "wrongs": ["Nominal değerden çıkarılan pay primli paydır.", "Nominal değerinden düşük çıkarılan her pay primsiz paydır.", "Primli pay yalnızca Hazine tarafından ihraç edilir.", "Primli pay sabit kupon ödemeli tahvildir."], "explanation": "Prim = nominal değerin üzerindeki ihraç bedeli.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "paylar", "subtopic": "Pay sahipliği hakları", "key": "Pay sahibinin mali hakları", "correct": "Kâr payı ve tasfiye bakiyesine katılma, pay sahibinin mali hakları arasındadır.", "wrongs": ["Kâr payı yalnızca tahvil sahibine aittir.", "Tasfiye bakiyesi yalnızca aracı kurumlara ödenir.", "Pay sahibinin hiçbir mali hakkı yoktur.", "Pay sahibi yalnızca sabit faiz alma hakkına sahiptir."], "explanation": "Mali haklar; kâr payı, tasfiye bakiyesi, yeni pay alma gibi haklardır.", "difficulty": "Kolay", "tag": "Hak/Yükümlülük"}, {"topic": "paylar", "subtopic": "Pay sahipliği hakları", "key": "Yeni pay alma hakkı", "correct": "Yeni pay alma hakkı, mevcut ortakların sermaye artırımlarında yeni çıkarılan payları öncelikle alma hakkıdır.", "wrongs": ["Yeni pay alma hakkı sadece tahvil sahiplerine tanınır.", "Yeni pay alma hakkı, DİBS ihalesine katılma hakkıdır.", "Yeni pay alma hakkı opsiyon primi ödeme yükümlülüğüdür.", "Yeni pay alma hakkı yalnızca swap sözleşmelerinde bulunur."], "explanation": "Sermaye artırımı sorularında yeni pay alma hakkı sık çeldirici yapılır.", "difficulty": "Orta", "tag": "Hak/Yükümlülük"}, {"topic": "paylar", "subtopic": "Pay sahipliği hakları", "key": "Pay sahibinin yönetsel hakları", "correct": "Genel kurula katılma, oy kullanma, bilgi alma ve inceleme pay sahibinin yönetsel hakları arasındadır.", "wrongs": ["Genel kurul hakkı yalnızca fon kurucusuna aittir.", "Oy kullanma hakkı hiçbir payda bulunmaz.", "Bilgi alma hakkı yalnızca tahvil kuponudur.", "Yönetsel haklar sadece DİBS sahiplerine aittir."], "explanation": "Payı ayırt eden unsurlardan biri de yönetime katılmaya ilişkin haklardır.", "difficulty": "Kolay", "tag": "Hak/Yükümlülük"}, {"topic": "paylar", "subtopic": "Pay sahipliği yükümlülükleri", "key": "Sermaye koyma borcu", "correct": "Pay sahibinin temel yükümlülüklerinden biri sermaye koyma borcudur.", "wrongs": ["Sermaye koyma borcu yalnızca Hazine’ye aittir.", "Pay sahibinin hiçbir yükümlülüğü bulunmaz.", "Sermaye koyma borcu sadece opsiyon satıcısına aittir.", "Sermaye koyma borcu aracı kurumun takas yükümlülüğüdür."], "explanation": "Pay sahipliği hak verir ama yükümlülük de doğurabilir.", "difficulty": "Orta", "tag": "Hak/Yükümlülük"}, {"topic": "paylar", "subtopic": "Pay benzeri menkul kıymetler", "key": "Pay benzeri tanımı", "correct": "Pay benzeri menkul kıymetler, sermayede temsil edilmesi zorunlu olmayan, sabit getiri taahhüdü taşımayan ve pay sahipliği haklarından birini veya bir kısmını veren menkul kıymetlerdir.", "wrongs": ["Pay benzeri menkul kıymetler mutlaka sabit faiz taahhüdü içerir.", "Pay benzeri menkul kıymetler yalnızca DİBS’tir.", "Pay benzeri menkul kıymetler hiçbir pay sahipliği hakkı veremez.", "Pay benzeri menkul kıymetler sadece 30-364 gün vadeli bonolardır."], "explanation": "Sabit getiri yok + pay sahipliği haklarından biri/birkaçı = pay benzeri ana mantığı.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "paylar", "subtopic": "Katılma intifa senetleri", "key": "KİS’in sağladığı haklar", "correct": "Katılma intifa senetleri net kârdan pay alma, tasfiye bakiyesine katılma veya yeni çıkarılacak payları alma hakkı tanıyabilir.", "wrongs": ["KİS her zaman sabit faiz ve anapara garantisi verir.", "KİS yalnızca Hazine bonosu türüdür.", "KİS sadece VİOP’ta işlem gören kontrattır.", "KİS yatırım fonu katılma payının diğer adıdır."], "explanation": "KİS, Pay Tebliği içindeki pay benzeri menkul kıymet örneğidir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "paylar", "subtopic": "Halka açılma", "key": "Halka açılma mantığı", "correct": "Halka açılma, payların halka arz edilmesi veya halka açık ortaklık statüsünün kazanılmasıyla ilgilidir.", "wrongs": ["Halka açılma, yalnızca DİBS ihalesidir.", "Halka açılma, türev sözleşmenin vade sonudur.", "Halka açılma, fon portföyünün saklanmasıdır.", "Halka açılma, sadece tahvil kupon ödemesidir."], "explanation": "Pay Tebliği tarafında halka açılma payların halka arzı ve halka açık ortaklık statüsüyle ilişkilidir.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "paylar", "subtopic": "Halka arz yöntemleri", "key": "Halka arzda izahname", "correct": "Payların halka arzında yatırımcıların bilgilendirilmesi için izahname/ihraç belgesi süreci önemlidir.", "wrongs": ["Halka arzda hiçbir bilgilendirme dokümanı aranmaz.", "İzahname yalnızca swap sözleşmeleri için düzenlenir.", "İzahname DİBS’in kupon oranıdır.", "İzahname sadece yatırım fonu günlük fiyatıdır."], "explanation": "SPL sorularında belge-süreç eşleştirmesi sık çıkar.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "paylar", "subtopic": "Fiyat istikrarı", "key": "Fiyat istikrarı süresi", "correct": "Halka arz sonrası fiyat istikrarını sağlayıcı işlemler, ilgili payların borsada işlem görmeye başladığı tarihten itibaren en çok otuz gün yapılabilir.", "wrongs": ["Fiyat istikrarı işlemleri sınırsız süreyle yapılabilir.", "Fiyat istikrarı işlemleri en çok 365 gün yapılır.", "Fiyat istikrarı yalnızca vade sonunda yapılır.", "Fiyat istikrarı işlemleri 184 gün sürer."], "explanation": "Sınavlık sayı: fiyat istikrarı için en çok 30 gün.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "paylar", "subtopic": "Fiyat istikrarı", "key": "Fiyat istikrarı fiyat kuralı", "correct": "Fiyat istikrarını sağlayıcı işlemlerde halka arz fiyatının üzerinde alım emri verilemez.", "wrongs": ["Halka arz fiyatının üzerinde sınırsız alım emri verilebilir.", "Fiyat istikrarında sadece satış emri zorunludur.", "Fiyat istikrarı işlemlerinde fiyat kuralı yoktur.", "Fiyat istikrarı ancak halka arz fiyatının iki katından yapılır."], "explanation": "Fiyat istikrarında amaç destekleyici alım; halka arz fiyatının üstünden alım emri verilemez.", "difficulty": "Zor", "tag": "Kural"}, {"topic": "paylar", "subtopic": "Fiyat istikrarı", "key": "Fiyat istikrarı fon sınırı", "correct": "Ortaklık hesabına fiyat istikrarı yapılırsa kullanılacak fon, ortaklığın elde edeceği brüt halka arz gelirinin %20’sinden yüksek olamaz.", "wrongs": ["Ortaklık hesabına fiyat istikrarında fon sınırı %80’dir.", "Kullanılacak fon her zaman halka arz gelirinin tamamıdır.", "Ortaklık hesabına fiyat istikrarında hiçbir oran yoktur.", "Fon sınırı daima 45 gündür."], "explanation": "Sınavlık oran: ortaklık hesabına fiyat istikrarında brüt halka arz gelirinin %20 sınırı.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "paylar", "subtopic": "Fiyat istikrarı", "key": "KAP açıklaması", "correct": "Fiyat istikrarı süresi bitince veya erken sona erince takip eden iş günü özel durum açıklamasıyla KAP’ta kamuya açıklama yapılır.", "wrongs": ["Açıklama 365 gün sonra yapılır.", "Açıklama sadece gizli olarak Kurula verilir, KAP yoktur.", "Açıklama yalnızca vade sonunda tahvil sahiplerine yapılır.", "Fiyat istikrarında kamuya açıklama gerekmez."], "explanation": "KAP ve özel durum açıklaması soruları kurum-belge çeldiricisi olabilir.", "difficulty": "Zor", "tag": "Kurum/Belge"}, {"topic": "paylar", "subtopic": "Sermaye artırımları", "key": "Bedelli/bedelsiz ayrımı", "correct": "Bedelli sermaye artırımı nakit kaynak girişi yaratır; bedelsiz sermaye artırımı iç kaynakların sermayeye eklenmesiyle yapılır.", "wrongs": ["Bedelli ve bedelsiz sermaye artırımı aynı şeydir.", "Bedelsiz artırımda mutlaka ortaklardan nakit alınır.", "Bedelli artırımda dış kaynak girişi olmaz.", "Bedelli artırım sadece VİOP teminatıdır."], "explanation": "Bir haftalık çalışmada en kritik karıştırma: bedelli/bedelsiz.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "paylar", "subtopic": "Sermaye artırımları", "key": "Şarta bağlı sermaye artırımı", "correct": "Şarta bağlı sermaye artırımı, özellikle dönüştürme/değiştirme hakkı gibi hakların kullanılmasıyla pay çıkarılmasına hizmet edebilir.", "wrongs": ["Şarta bağlı sermaye artırımı yalnızca Hazine tarafından yapılır.", "Şarta bağlı sermaye artırımı fonun tasfiyesi anlamına gelir.", "Şarta bağlı sermaye artırımı hiçbir koşula bağlı değildir.", "Şarta bağlı sermaye artırımı spot fiyatın diğer adıdır."], "explanation": "PDT gibi dönüştürülebilir araçlar pay artırım mantığıyla ilişkilendirilebilir.", "difficulty": "Zor", "tag": "Süreç"}, {"topic": "paylar", "subtopic": "Sermaye azaltımı", "key": "Sermaye azaltımı", "correct": "Sermaye azaltımı, ortaklık sermayesinin mevzuata uygun şekilde azaltılmasına ilişkin işlemdir; alacaklıların korunması boyutu önemlidir.", "wrongs": ["Sermaye azaltımı her zaman yeni nakit girişi sağlar.", "Sermaye azaltımı yalnızca opsiyon primi ödemesidir.", "Sermaye azaltımı DİBS ihalesinin adıdır.", "Sermaye azaltımı fon portföyünün %80 kuralıdır."], "explanation": "Azaltımda alacaklıların korunması ve usul süreçleri akılda tutulmalı.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "paylar", "subtopic": "Pay teslimi", "key": "Pay senetlerinin teslimi", "correct": "Esas sermaye sisteminde sermaye artırımının tescilinden itibaren hamiline yazılı pay senetleri 30 gün, nama yazılı pay senetleri 90 gün içinde teslim edilir.", "wrongs": ["Hamiline ve nama yazılı payların teslim süresi daima 365 gündür.", "Hamiline yazılı pay 90 gün, nama yazılı pay 30 gün içinde teslim edilir.", "Pay tesliminde hiçbir süre yoktur.", "Teslim süresi her iki pay için 184 gündür."], "explanation": "Sınavlık sayı: hamiline 30 gün, nama 90 gün.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "paylar", "subtopic": "Pay Tebliği", "key": "Pay Tebliği kapsamı", "correct": "Pay Tebliği, payların ve pay benzeri menkul kıymetlerin ihracına ilişkin esasları düzenleyen temel düzenlemelerden biridir.", "wrongs": ["Pay Tebliği yalnızca kamu borçlanma senetlerini düzenler.", "Pay Tebliği sadece swap sözleşmeleri içindir.", "Pay Tebliği yatırım fonlarının tasfiyesini tek başına düzenler.", "Pay Tebliği sadece finansman bonosu vadelerini belirler."], "explanation": "Tebliğ-konu eşleştirmesi sınavda kolay ama puan getirir.", "difficulty": "Kolay", "tag": "Kurum/Belge"}, {"topic": "paylar", "subtopic": "Halka arzlarda özellikli durumlar", "key": "Satılamayan paylar", "correct": "Bedelli sermaye artırımlarında satılamayan paylara ilişkin satın alma taahhüdü verilmişse satış süresinin bitişinden itibaren üç iş günü içinde işlem tamamlanmalıdır.", "wrongs": ["Satılamayan paylar için süre her zaman 45 gündür.", "Satın alma taahhüdünde üç yıl beklenir.", "Satılamayan payların satın alınması yasaktır.", "Satılamayan paylar otomatik olarak DİBS’e dönüşür."], "explanation": "Metinde üç iş günü süresi özellikle geçer; süre sorusu olabilir.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "Kıymetli evrak", "key": "Kıymetli evrak mantığı", "correct": "Kıymetli evrakta hak ile senet arasında sıkı bağ vardır; hak senetten ayrı ileri sürülemez.", "wrongs": ["Kıymetli evrakta hak senetten tamamen bağımsızdır.", "Kıymetli evrak yalnızca fon katılma payıdır.", "Kıymetli evrak her zaman kamu borçlanmasıdır.", "Kıymetli evrakta hiçbir hak bulunmaz."], "explanation": "Kıymetli evrak sorularında hak-senet bağı temel mantıktır.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "borclanma", "subtopic": "Menkul kıymet ilişkisi", "key": "Menkul kıymet", "correct": "Menkul kıymet, sermaye piyasası araçlarının bir alt grubu olarak düşünülebilir.", "wrongs": ["Menkul kıymet sermaye piyasası aracı kavramından tamamen bağımsızdır.", "Menkul kıymet yalnızca gayrimenkul tapusudur.", "Menkul kıymet sadece opsiyon primidir.", "Menkul kıymet sadece banka mevduatıdır."], "explanation": "Kıymetli evrak-menkul kıymet-sermaye piyasası aracı ilişkisi bölümün kavramsal omurgasıdır.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "borclanma", "subtopic": "Borçlanma araçları tanımı", "key": "Borçlanma araçları", "correct": "Borçlanma araçları, ihraççıların borçlu sıfatıyla ihraç ettiği sermaye piyasası araçlarıdır.", "wrongs": ["Borçlanma araçları ortaklık hakkı veren paylardır.", "Borçlanma araçlarında ihraççı alacaklıdır.", "Borçlanma araçları yalnızca türev sözleşmelerdir.", "Borçlanma araçları hiçbir geri ödeme taahhüdü içermez."], "explanation": "Borçlanma aracında ihraççı borçlu, yatırımcı alacaklı mantığındadır.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "borclanma", "subtopic": "Borçlanma araçları tanımı", "key": "Borçlanma aracı türleri", "correct": "Tahvil, paya dönüştürülebilir tahvil, değiştirilebilir tahvil, finansman bonosu ve kıymetli maden bonosu borçlanma araçları arasında sayılır.", "wrongs": ["Aracı kuruluş varantı her durumda Borçlanma Araçları Tebliği’ndeki temel borçlanma aracı türüdür.", "Fon katılma payı borçlanma aracı türüdür.", "DİBS özel sektör borçlanma aracıdır.", "Pay senedi borçlanma aracı olarak sayılır."], "explanation": "PDF’nin örnek sorularında bu ayrım açıkça test edilir.", "difficulty": "Kolay", "tag": "Liste"}, {"topic": "borclanma", "subtopic": "Genel esaslar", "key": "Satış yöntemleri", "correct": "Borçlanma araçları yurt içinde halka arz edilerek, halka arz edilmeksizin veya yurt dışında satılmak üzere ihraç edilebilir.", "wrongs": ["Borçlanma araçları sadece halka arz edilerek ihraç edilebilir.", "Borçlanma araçları yurt dışında satılamaz.", "Borçlanma araçları yalnızca kamu tarafından ihraç edilir.", "Borçlanma araçlarının satış yöntemi yoktur."], "explanation": "Halka arz edilmeyen ihraçlar da Tebliğ kapsamında olabilir.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "borclanma", "subtopic": "Yetkili organ kararı", "key": "Yetkili organ", "correct": "Borçlanma aracı ihracında ihraççı bakımından yetkili organ kararı önemli bir ön koşuldur.", "wrongs": ["Borçlanma aracı ihracında hiçbir karar gerekmez.", "Kararı her zaman yatırımcılar alır.", "Karar sadece VİOP uzlaşma komitesi tarafından alınır.", "Karar yalnızca fon portföy saklayıcısına aittir."], "explanation": "Kurumsal karar/yetki soruları sınavda klasik çeldiricidir.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "borclanma", "subtopic": "Kredi derecelendirmesi", "key": "Kredi derecelendirmesi", "correct": "Kredi derecelendirmesi, ihraççının veya aracın riskinin değerlendirilmesiyle ilişkilidir.", "wrongs": ["Kredi derecelendirmesi opsiyon kullanım fiyatıdır.", "Kredi derecelendirmesi payın nominal değeridir.", "Kredi derecelendirmesi DİBS kupon tarihi demektir.", "Kredi derecelendirmesi fonun tasfiye şeklidir."], "explanation": "Derecelendirme, borçlanma araçlarında risk algısı ve ihraç koşullarıyla bağlantılıdır.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "borclanma", "subtopic": "İhraç limiti", "key": "İhraç limiti", "correct": "İhraç limiti, ihraççının çıkarabileceği borçlanma aracı tutarına ilişkin üst sınır mantığını ifade eder.", "wrongs": ["İhraç limiti yatırımcının oy hakkı sayısıdır.", "İhraç limiti sadece opsiyon primidir.", "İhraç limiti her zaman sıfırdır.", "İhraç limiti fonun günlük ağırlıklı ortalama vadesidir."], "explanation": "Limit kavramını borçlanma aracı ihraç kapasitesi olarak düşün.", "difficulty": "Orta", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "Kurula başvuru ve MKK", "key": "Kurula başvuru", "correct": "Borçlanma aracı ihracında izahname veya ihraç belgesinin onaylanması için Kurula başvuru süreci bulunur.", "wrongs": ["Kurula başvuru sadece DİBS ihalesinde yatırımcı tarafından yapılır.", "Borçlanma aracı ihracında Kurul süreci hiçbir zaman yoktur.", "Kurula başvuru opsiyon alıcısının hakkıdır.", "Kurula başvuru fonun günlük fiyatıdır."], "explanation": "Belge ve kurum eşleştirmesinde SPK/Kurul kritik kavramdır.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "borclanma", "subtopic": "Kurula başvuru ve MKK", "key": "Kayden ihraç ve MKK", "correct": "Borçlanma araçlarının kayden ihracı ve MKK’ya bildirim yükümlülüğü bu bölümde ayrıca düzenlenir.", "wrongs": ["Kayden ihraç yalnızca fiziki teslimin kaldırılmasıdır ve MKK ile ilgisi yoktur.", "MKK yalnızca DİBS ihalesi yapan kurumdur.", "Kayden ihraç sadece swap sözleşmesine uygulanır.", "Borçlanma araçlarında kayıt sistemi hiç kullanılmaz."], "explanation": "MKK bildirimi/kayden ihraç soruları kısa ama puan getirir.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "borclanma", "subtopic": "Tahviller", "key": "Tahvil vadesi", "correct": "Tahvil, nominal değerinin vade tarihinde veya vade tarihine kadar taksitler halinde geri ödenmesi taahhüdünü içeren, vadesi 365 gün veya daha uzun borçlanma aracıdır.", "wrongs": ["Tahvilin vadesi en çok 30 gündür.", "Tahvil, pay sahipliği hakkı veren menkul kıymettir.", "Tahvilin geri ödeme taahhüdü yoktur.", "Tahvil yalnızca fon sepeti fonudur."], "explanation": "Tahvil = 365 gün veya daha uzun vade; borçlanma mantığı.", "difficulty": "Kolay", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "Tahviller", "key": "Tahvil satış şekli", "correct": "Tahviller iskontolu, primli veya kupon ödemeli olarak satılabilir.", "wrongs": ["Tahviller sadece bedelsiz pay olarak satılır.", "Tahviller hiçbir şekilde kupon ödemeli olamaz.", "Tahviller yalnızca opsiyon primiyle satılır.", "Tahviller sadece fon içtüzüğüyle çıkarılır."], "explanation": "Tahvilin ödeme/satış şekilleri çeldirici yapılabilir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "borclanma", "subtopic": "PDT", "key": "PDT tanımı", "correct": "Paya dönüştürülebilir tahvil, ihraççı ortaklığın paylarına dönüştürme hakkı veren borçlanma aracıdır.", "wrongs": ["PDT başka ortaklık payıyla değiştirme hakkı verir.", "PDT sadece Hazine tarafından ihraç edilen DİBS’tir.", "PDT yatırım fonu katılma payıdır.", "PDT sadece tezgah üstü türev araçtır."], "explanation": "PDT = ihraççının kendi payına dönüşüm. DET ile karıştırma.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "borclanma", "subtopic": "PDT", "key": "PDT vadesi", "correct": "PDT’nin vadesi 365 günden az olamaz ve paya dönüştürme en erken vade başlangıcından itibaren 365 gün sonra yapılabilir.", "wrongs": ["PDT’nin vadesi en çok 30 gündür.", "PDT’de dönüştürme aynı gün zorunludur.", "PDT’nin vadesi 184 günle sınırlıdır.", "PDT’de vade kavramı bulunmaz."], "explanation": "Sınavlık sayı: PDT için 365 gün.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "PDT", "key": "PDT itfası", "correct": "PDT’ler vade tarihinde veya vadeden önce paylara dönüştürülmek suretiyle itfa edilebilir.", "wrongs": ["PDT yalnızca nakit dışı kıymetli maden teslimiyle itfa edilir.", "PDT hiçbir zaman paya dönüşmez.", "PDT sadece DİBS ile itfa edilir.", "PDT itfası yatırım fonu tasfiyesidir."], "explanation": "PDT’nin ayırt edici noktası paya dönüşerek itfa edilebilmesidir.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "borclanma", "subtopic": "DET", "key": "DET tanımı", "correct": "Değiştirilebilir tahvil, payları borsalarda işlem gören diğer ortaklıklara ait paylarla değiştirme hakkı veren borçlanma aracıdır.", "wrongs": ["DET ihraççının kendi payına dönüştürülür.", "DET sadece Hazine bonosu adıdır.", "DET bir yatırım fonu türüdür.", "DET yalnızca forward sözleşmesidir."], "explanation": "DET = diğer ortaklık payı; PDT = ihraççının kendi payı.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "borclanma", "subtopic": "DET", "key": "DET vadesi", "correct": "DET’in vadesi 365 günden az olamaz ve paylarla değiştirilmesi en erken vade başlangıcından itibaren 365 gün sonra yapılabilir.", "wrongs": ["DET’in vadesi 30 günden az olamaz, 45 günü aşamaz.", "DET’te vade yoktur.", "DET aynı gün değiştirilebilir ve 365 gün şartı yoktur.", "DET sadece 184 günlük para piyasası aracıdır."], "explanation": "PDT ile paralel sınavlık sayı: DET için de 365 gün.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "Finansman bonosu", "key": "Finansman bonosu vadesi", "correct": "Finansman bonosu, vadesi 30 günden az ve 364 günden fazla olmayan borçlanma aracıdır.", "wrongs": ["Finansman bonosu en az 365 gün vadeli tahvildir.", "Finansman bonosu vadesiz paydır.", "Finansman bonosu yalnızca 184 gün vadeli fon aracıdır.", "Finansman bonosu opsiyon sözleşmesidir."], "explanation": "Tahvil 365+ gün; finansman bonosu 30-364 gün ayrımı çok önemli.", "difficulty": "Kolay", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "Finansman bonosu", "key": "Finansman bonosu satış fiyatı", "correct": "Finansman bonoları, ihraççı tarafından belirlenen vadeye uygun iskonto oranlarıyla bulunan fiyat üzerinden satılır.", "wrongs": ["Finansman bonoları her zaman nominal değerinden primsiz pay gibi satılır.", "Finansman bonoları yalnızca bedelsiz çıkarılır.", "Finansman bonolarında iskonto oranı kullanılmaz.", "Finansman bonoları sadece fon içtüzüğüyle fiyatlanır."], "explanation": "Finansman bonosu kısa vadeli borçlanma aracıdır; iskonto mantığı sorulabilir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "borclanma", "subtopic": "Kıymetli maden bonosu", "key": "Kıymetli maden bonosu", "correct": "Kıymetli maden bonoları, kıymetli maden cinsinden ihraç edilebilen ve 30-364 gün vadeli borçlanma araçlarıdır.", "wrongs": ["Kıymetli maden bonosu pay benzeri menkul kıymettir.", "Kıymetli maden bonosu 365 gün ve üzeri tahvildir.", "Kıymetli maden bonosu fon sepeti fonudur.", "Kıymetli maden bonosu yalnızca VİOP emir tipidir."], "explanation": "Vade bakımından finansman bonosu ile aynı 30-364 gün aralığı akılda tutulmalı.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "borclanma", "subtopic": "Borçlanma aracı sahipleri kurulu", "key": "Borçlanma aracı sahipleri kurulu", "correct": "Borçlanma aracı sahipleri kurulu, ihraç edilmiş borçlanma araçlarının sahiplerinin haklarının topluca ele alınmasıyla ilgilidir.", "wrongs": ["Borçlanma aracı sahipleri kurulu yalnızca pay sahiplerinin genel kuruludur.", "Bu kurul VİOP uzlaşma fiyatını belirler.", "Bu kurul yatırım fonunun portföy saklayıcısıdır.", "Bu kurul DİBS ihraç eden Hazine birimidir."], "explanation": "Başlık olarak ayrı Tebliğ bulunduğu için kavramı tanımak puan getirir.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "borclanma", "subtopic": "Yeşil/sürdürülebilir borçlanma", "key": "Yeşil borçlanma aracı", "correct": "Yeşil borçlanma araçları, belirli çevresel/yeşil projelerin finansmanı ile ilişkilendirilen borçlanma araçlarıdır.", "wrongs": ["Yeşil borçlanma aracı yalnızca oyda imtiyaz sağlayan paydır.", "Yeşil borçlanma aracı bir opsiyon türüdür.", "Yeşil borçlanma aracı yatırım fonu içtüzüğüdür.", "Yeşil borçlanma aracı Hazine bonosu ile eş anlamlıdır."], "explanation": "Yeni başlık olduğu için tanım ve amaç düzeyinde soru gelebilir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "borclanma", "subtopic": "İkinci el piyasa", "key": "İkinci el piyasa işlemleri", "correct": "Borsada işlem gören borçlanma araçlarının borsada ve borsa dışında alım satımı borsa düzenlemeleri çerçevesinde mümkündür.", "wrongs": ["Borsada işlem gören borçlanma araçları asla borsa dışında işlem göremez.", "İkinci el piyasa sadece yatırım fonu tasfiyesidir.", "Borçlanma araçlarında ikinci el piyasa yoktur.", "İkinci el piyasa sadece DİBS kupon ödemesidir."], "explanation": "İhraç sonrası alım satım ve kamuya duyuru hükümleri de sınavda gelebilir.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "fonlar", "subtopic": "Kolektif yatırım", "key": "Kolektif yatırım mantığı", "correct": "Kolektif yatırım, çok sayıda yatırımcının birikimlerinin profesyonel yönetim altında birlikte değerlendirilmesi fikrine dayanır.", "wrongs": ["Kolektif yatırımda yalnızca tek yatırımcı bulunur.", "Kolektif yatırım kamu borçlanma ihalesidir.", "Kolektif yatırım opsiyon kullanım fiyatıdır.", "Kolektif yatırım sadece tahvil kuponudur."], "explanation": "Fon mantığının temelinde toplu yatırım ve profesyonel yönetim vardır.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "fonlar", "subtopic": "Yatırım fonu tanımı", "key": "Yatırım fonu", "correct": "Yatırım fonu, katılma payı sahipleri hesabına, inançlı mülkiyet esasına göre yönetilen malvarlığıdır.", "wrongs": ["Yatırım fonu anonim ortaklığın sermaye payıdır.", "Yatırım fonu ihraççının borç senedidir.", "Yatırım fonu yalnızca opsiyon sözleşmesidir.", "Yatırım fonu Hazine tarafından çıkarılan DİBS’tir."], "explanation": "Fon ayrı malvarlığı mantığıyla çalışır; ortaklık/tahvil değildir.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "fonlar", "subtopic": "Temel ilkeler", "key": "Riskin dağıtılması", "correct": "Yatırım fonlarında riskin dağıtılması temel ilkelerden biridir.", "wrongs": ["Yatırım fonlarının amacı tüm varlığı tek araca koymaktır.", "Riskin dağıtılması yatırım fonlarında yasaktır.", "Riskin dağıtılması sadece DİBS ihalesidir.", "Riskin dağıtılması oyda imtiyazdır."], "explanation": "Fon yapısı portföy çeşitlendirmesi ve risk dağıtımıyla ilişkilidir.", "difficulty": "Kolay", "tag": "İlke"}, {"topic": "fonlar", "subtopic": "Fon malvarlığı", "key": "Fon malvarlığı ayrılığı", "correct": "Fon malvarlığı, kurucunun ve portföy saklayıcısının malvarlığından ayrıdır.", "wrongs": ["Fon malvarlığı kurucunun kişisel borçları için kullanılabilir.", "Fon malvarlığı portföy saklayıcısının kendi malvarlığıdır.", "Fon malvarlığı ortaklık sermayesiyle aynı şeydir.", "Fon malvarlığı ihraççının tahvil borcudur."], "explanation": "Fon malvarlığı ayrılığı en kritik fon sorularından biridir.", "difficulty": "Kolay", "tag": "İlke"}, {"topic": "fonlar", "subtopic": "Fon malvarlığı", "key": "Fon malvarlığının kullanımı", "correct": "Fon malvarlığı, fon hesabına ve katılma payı sahipleri yararına kullanılır.", "wrongs": ["Fon malvarlığı kurucunun ticari borçları için teminat gösterilir.", "Fon malvarlığı aracı kurumun kendi hesabına devredilir.", "Fon malvarlığı sadece Hazine’nin borcudur.", "Fon malvarlığı opsiyon satıcısının primidir."], "explanation": "Fon malvarlığı yatırımcılar adına ayrı tutulur.", "difficulty": "Orta", "tag": "İlke"}, {"topic": "fonlar", "subtopic": "Kurucu", "key": "Kurucunun rolü", "correct": "Fon kurucusu, fonun kurulması ve yönetim organizasyonu bakımından sorumluluk üstlenen taraftır.", "wrongs": ["Kurucu sadece fon yatırımcısının diğer adıdır.", "Kurucu yalnızca Hazine’dir.", "Kurucu VİOP uzlaşma komitesidir.", "Kurucu tahvil kuponunu alan kişidir."], "explanation": "Kurucu-yönetici-portföy saklayıcısı ayrımı sınavda çeldirici yapılır.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "fonlar", "subtopic": "Şemsiye fon", "key": "Şemsiye fon", "correct": "Şemsiye fon, katılma payları tek bir içtüzük kapsamında ihraç edilen fonları kapsayan yapıdır.", "wrongs": ["Şemsiye fon tek bir pay senedinin adıdır.", "Şemsiye fon sadece kamu borçlanma senedidir.", "Şemsiye fon opsiyon sözleşmesidir.", "Şemsiye fon 365 gün vadeli tahvildir."], "explanation": "Fonlar çoğu zaman şemsiye fon çatısı altında düşünülür.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "fonlar", "subtopic": "Şemsiye fon", "key": "Şemsiye fonun faaliyet alanı", "correct": "Şemsiye fon, belirtilen varlıklar ve işlemlerden oluşan portföyleri işletmek amacıyla kurulur ve bunun dışında işle uğraşamaz.", "wrongs": ["Şemsiye fon her türlü ticari faaliyeti serbestçe yapabilir.", "Şemsiye fon bankacılık kredi sözleşmesi düzenler.", "Şemsiye fon sadece arsa alım satımı için kurulur.", "Şemsiye fon ortaklık sermayesini temsil eden paydır."], "explanation": "Fon faaliyet konusu sınırlandırılmıştır; başka işle uğraşamaz mantığını unutma.", "difficulty": "Zor", "tag": "Kural"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "%80 kuralı", "correct": "Borçlanma araçları, hisse senedi, kıymetli madenler ve fon sepeti şemsiye fonlarında fon toplam değerinin en az %80’i ilgili varlıklara yatırılır.", "wrongs": ["Bu fonlarda %80 yerine her zaman %10 sınırı uygulanır.", "%80 kuralı yalnızca fiyat istikrarı fonudur.", "Bu fonlarda portföyün tamamı nakit olmak zorundadır.", "%80 kuralı sadece DİBS vadesini gösterir."], "explanation": "Şemsiye fon türlerinde %80 eşiği çok sorulabilir.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Borçlanma araçları şemsiye fonu", "correct": "Fon toplam değerinin en az %80’i yerli/yabancı kamu veya özel sektör borçlanma araçlarına yatırılan fonları kapsayan yapı borçlanma araçları şemsiye fonudur.", "wrongs": ["Bu yapı hisse senedi şemsiye fonudur.", "Bu yapı para piyasası şemsiye fonudur.", "Bu yapı katılım şemsiye fonudur.", "Bu yapı garantili şemsiye fon olmak zorundadır."], "explanation": "%80 + borçlanma araçları = borçlanma araçları şemsiye fonu.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Hisse senedi şemsiye fonu", "correct": "Fon toplam değerinin en az %80’i yerli veya yabancı ihraççıların paylarına yatırılan fonları kapsayan yapı hisse senedi şemsiye fonudur.", "wrongs": ["Bu yapı borçlanma araçları şemsiye fonudur.", "Bu yapı para piyasası şemsiye fonudur.", "Bu yapı fon sepeti şemsiye fonudur.", "Bu yapı serbest şemsiye fondur."], "explanation": "%80 + paylar = hisse senedi şemsiye fonu.", "difficulty": "Kolay", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Kıymetli madenler şemsiye fonu", "correct": "Fon toplam değerinin en az %80’i borsada işlem gören altın ve diğer kıymetli madenler ile bunlara dayalı araçlara yatırılan fonları kapsar.", "wrongs": ["Bu yapı para piyasası şemsiye fonudur.", "Bu yapı değişken şemsiye fondur.", "Bu yapı katılım şemsiye fonudur.", "Bu yapı DİBS ihraç yöntemidir."], "explanation": "%80 + altın/kıymetli maden = kıymetli madenler şemsiye fonu.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Fon sepeti şemsiye fonu", "correct": "Diğer fonların ve borsa yatırım fonlarının katılma paylarından oluşan fonları kapsayan yapı fon sepeti şemsiye fonudur.", "wrongs": ["Fon sepeti şemsiye fonu yalnızca DİBS alır.", "Fon sepeti şemsiye fonu sadece opsiyon satar.", "Fon sepeti şemsiye fonu sadece pay ihraç eden anonim ortaklıktır.", "Fon sepeti şemsiye fonu tahvilin diğer adıdır."], "explanation": "Fon sepeti = başka fonların katılma payları.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Para piyasası şemsiye fonu", "correct": "Para piyasası şemsiye fonunda portföyün tamamı vadesine en fazla 184 gün kalmış likiditesi yüksek para ve sermaye piyasası araçlarından oluşur; ağırlıklı ortalama vade en fazla 45 gündür.", "wrongs": ["Para piyasası şemsiye fonunda vade en az 365 gündür.", "Para piyasası şemsiye fonunda yalnızca paylar bulunur.", "Para piyasası şemsiye fonunda 30 gün fiyat istikrarı yapılır.", "Para piyasası şemsiye fonunda portföyün %80’i altındır."], "explanation": "Sınavlık sayı ikilisi: 184 gün ve 45 gün.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Katılım şemsiye fonu", "correct": "Katılım şemsiye fonu, portföyünün tamamı devamlı olarak faize dayalı olmayan para ve sermaye piyasası araçlarından oluşan fonları kapsar.", "wrongs": ["Katılım şemsiye fonu yalnızca faizli tahvil fonudur.", "Katılım şemsiye fonu sadece VİOP futures sözleşmesidir.", "Katılım şemsiye fonu DİBS ihale yöntemidir.", "Katılım şemsiye fonu tüm varlığı banka mevduat faizi olan fondur."], "explanation": "Katılım fonlarında faize dayalı olmayan araç mantığı temel ayrımdır.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Değişken şemsiye fon", "correct": "Portföy sınırlamaları itibarıyla diğer belirli şemsiye fon türlerinden hiçbirine girmeyen fonlar değişken şemsiye fon kapsamında değerlendirilir.", "wrongs": ["Değişken şemsiye fon sadece %80 pay fonudur.", "Değişken şemsiye fon sadece DİBS’tir.", "Değişken şemsiye fon sadece opsiyon alıcısıdır.", "Değişken şemsiye fon 30 günlük fiyat istikrarıdır."], "explanation": "Diğer türlere net girmiyorsa değişken şemsiye fon mantığı doğar.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Serbest şemsiye fon", "correct": "Katılma payları sadece nitelikli yatırımcılara satılmak üzere kurulmuş fonları kapsayan yapı serbest şemsiye fondur.", "wrongs": ["Serbest şemsiye fon sadece halka açık herkese satılır ve nitelikli yatırımcı şartı yoktur.", "Serbest şemsiye fon devlet tahvilidir.", "Serbest şemsiye fon pay benzeri menkul kıymettir.", "Serbest şemsiye fon sadece fiyat istikrarı fonudur."], "explanation": "Serbest fonlarda nitelikli yatırımcı vurgusu kritik.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Garantili şemsiye fon", "correct": "Garantili şemsiye fon, yatırımcının belirli getirisi veya anapara kısmı için garantör tarafından verilen garantiye dayanır.", "wrongs": ["Garantili fonda garanti asla bulunmaz.", "Garantili fon yalnızca en iyi gayret esasına dayanır.", "Garantili fon sadece Hazine bonosudur.", "Garantili fon opsiyon satıcısının primidir."], "explanation": "Garantili fon ile koruma amaçlı fonu ayır: garanti varsa garantili fondur.", "difficulty": "Zor", "tag": "Karşılaştırma"}, {"topic": "fonlar", "subtopic": "Şemsiye fon türleri", "key": "Koruma amaçlı şemsiye fon", "correct": "Koruma amaçlı şemsiye fon, garantiye değil uygun yatırım stratejisiyle en iyi gayret esasına dayanır.", "wrongs": ["Koruma amaçlı fonda mutlaka garantör garantisi bulunur.", "Koruma amaçlı fon finansman bonosu vadesidir.", "Koruma amaçlı fon opsiyon kullanım fiyatıdır.", "Koruma amaçlı fon DİBS ihalesidir."], "explanation": "Garanti yok, en iyi gayret var = koruma amaçlı fon.", "difficulty": "Zor", "tag": "Karşılaştırma"}, {"topic": "fonlar", "subtopic": "Fonun unvanı", "key": "Fon unvanı", "correct": "Fonun unvanı, yatırım stratejisi ve fon türüyle yanıltıcı olmayacak biçimde uyumlu olmalıdır.", "wrongs": ["Fon unvanı tamamen rastgele olabilir.", "Fon unvanı hiçbir yatırım stratejisiyle ilgili değildir.", "Fon unvanı sadece tahvilin nominal değeridir.", "Fon unvanı opsiyon primidir."], "explanation": "Unvan konusu küçük ama doğrudan bilgi sorusu olabilir.", "difficulty": "Orta", "tag": "Kural"}, {"topic": "fonlar", "subtopic": "Katılma payı ihracı", "key": "Katılma payı", "correct": "Katılma payı, yatırımcının fon portföyüne katılımını temsil eder.", "wrongs": ["Katılma payı ihraççının borçlanma senedidir.", "Katılma payı pay sahipliği haklarını aynen veren anonim ortaklık payıdır.", "Katılma payı yalnızca DİBS’tir.", "Katılma payı opsiyon kullanım fiyatıdır."], "explanation": "Fon yatırımcısı katılma payı sahibi olur; anonim ortaklık payı ile karıştırma.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "fonlar", "subtopic": "Yatırımcı bilgi formu", "key": "Yatırımcı bilgi formu", "correct": "Yatırımcı bilgi formu, yatırımcıya fonun temel özellikleri, riskleri ve giderleri hakkında özet bilgi veren dokümandır.", "wrongs": ["Yatırımcı bilgi formu DİBS ihale teklifidir.", "Yatırımcı bilgi formu payın hamiline yazılı olup olmadığını gösteren tek belgedir.", "Yatırımcı bilgi formu opsiyon sözleşmesinin kullanım fiyatıdır.", "Yatırımcı bilgi formu tahvilin kuponudur."], "explanation": "Belge-doküman eşleştirmesinde yatırımcı bilgi formunu kaçırma.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "fonlar", "subtopic": "Katılma payı alım-satımı", "key": "Katılma payı değeri", "correct": "Katılma payı alım-satımı, fon birim pay değeri ve fonun fiyat açıklama esaslarıyla ilişkilidir.", "wrongs": ["Katılma payı alım-satımı sadece oy hakkı devridir.", "Katılma payı değeri hiçbir zaman hesaplanmaz.", "Katılma payı alım-satımı sadece DİBS vade sonudur.", "Katılma payı alım-satımı fiyat istikrarı alımıdır."], "explanation": "Fonlarda fiyatlama ve alım-satım esasları ayrı başlık olarak çalışılmalı.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "fonlar", "subtopic": "Portföy sınırlamaları", "key": "Portföy sınırlamaları", "correct": "Portföy sınırlamaları, fon portföyüne alınabilecek varlıklar, ihraççılar ve işlemler bakımından uyulacak sınırlardır.", "wrongs": ["Portföy sınırlamaları sadece anonim ortaklığın oy hakkını gösterir.", "Portföy sınırlamaları fonlarda bulunmaz.", "Portföy sınırlamaları sadece futures sözleşmesinin kaldıraç oranıdır.", "Portföy sınırlamaları DİBS vergi oranıdır."], "explanation": "Sınavda portföy sınırlamaları çoğunlukla doğru/yanlış veya I-II-III biçiminde gelebilir.", "difficulty": "Orta", "tag": "Kural"}, {"topic": "fonlar", "subtopic": "Portföy sınırlamaları", "key": "Borsa dışı sözleşmeler", "correct": "Fon portföyünün borsa dışında taraf olduğu sözleşmeler için ayrıca sınırlamalar bulunur.", "wrongs": ["Borsa dışı sözleşmeler fon portföyünde sınırsız ve kuralsızdır.", "Fon portföyü borsa dışı hiçbir işleme taraf olamaz.", "Borsa dışı sözleşmeler sadece DİBS ihalesidir.", "Borsa dışı sözleşmeler pay teslim süresidir."], "explanation": "Borsa dışı sözleşme başlığı portföy sınırlamalarında ayrı yer alır.", "difficulty": "Zor", "tag": "Kural"}, {"topic": "fonlar", "subtopic": "Fon türlerine özel esaslar", "key": "Serbest fonlar", "correct": "Serbest fonlar, nitelikli yatırımcıya satış ve daha esnek yatırım stratejileriyle diğer fonlardan ayrılır.", "wrongs": ["Serbest fonlar yalnızca küçük yatırımcılara zorunlu olarak satılır.", "Serbest fonlarda nitelikli yatırımcı kavramı yoktur.", "Serbest fonlar sadece devlet tahvilidir.", "Serbest fonlar sadece pay benzeri menkul kıymettir."], "explanation": "Serbest fon-nitelikli yatırımcı bağlantısını unutma.", "difficulty": "Orta", "tag": "Eşleştirme"}, {"topic": "fonlar", "subtopic": "Fonun sona ermesi/devri", "key": "Fonun sona ermesi", "correct": "Fon; öngörülen sürenin bitmesi, kurucunun faaliyeti kaybetmesi, mali durumun zayıflaması veya fonun devamının yatırımcı yararına olmayacağının Kurulca tespit edilmesi gibi nedenlerle sona erebilir.", "wrongs": ["Fon hiçbir koşulda sona eremez.", "Fon sadece opsiyon kullanım fiyatı değişince sona erer.", "Fonun sona ermesi yalnızca DİBS itfasıdır.", "Fon ancak pay teslim süresi dolunca sona erer."], "explanation": "Fon sona erme sebepleri metinde maddeler halinde sayılır; sınavda 'hangisi değildir' gelebilir.", "difficulty": "Zor", "tag": "Liste"}, {"topic": "fonlar", "subtopic": "Fonun sona ermesi/devri", "key": "Fon devri", "correct": "Kurucunun iflası/tasfiyesi gibi hallerde Kurul, fonu uygun göreceği başka bir portföy yönetim şirketine tasfiye amacıyla devredebilir.", "wrongs": ["Kurucu iflas ederse fon malvarlığı kurucunun alacaklılarına dağıtılır.", "Fon devri yalnızca DİBS ihalesiyle yapılır.", "Fon devri yasaktır ve hiçbir durumda mümkün değildir.", "Fon devri opsiyon satıcısına yapılır."], "explanation": "Fon malvarlığı ayrılığı ve Kurulun rolü birlikte düşünülmeli.", "difficulty": "Zor", "tag": "Süreç"}, {"topic": "fonlar", "subtopic": "Risk yönetimi ve TEFAS", "key": "TEFAS/Platform", "correct": "Türkiye Elektronik Fon Alım Satım Platformu, fon katılma paylarının alım satımıyla ilgili platform başlığıdır.", "wrongs": ["TEFAS VİOP uzlaşma fiyatını belirleyen kurulun adıdır.", "TEFAS yalnızca DİBS ihale sistemi adıdır.", "TEFAS payların nominal değerini gösterir.", "TEFAS tahvilin kupon faizidir."], "explanation": "Platform başlıkları doğrudan eşleştirme sorusu olarak gelebilir.", "difficulty": "Orta", "tag": "Kurum/Belge"}, {"topic": "turev", "subtopic": "Türev araç tanımı", "key": "Türev araç", "correct": "Türev araç, değeri dayanak varlığın fiyatına veya değerine bağlı olan finansal sözleşmedir.", "wrongs": ["Türev araç her zaman ortaklık payıdır.", "Türev araç yalnızca Hazine bonosudur.", "Türev araç katılma payının diğer adıdır.", "Türev araç hiçbir dayanak varlığa bağlı değildir."], "explanation": "Türev = dayanak varlığa bağlı sözleşme mantığı.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Türev araç tanımı", "key": "Temel türev türleri", "correct": "Forward, futures, opsiyon ve swap temel türev araç türleri arasında yer alır.", "wrongs": ["Tahvil, finansman bonosu, KİS ve DİBS temel türev türleridir.", "Sadece paylar türev araçtır.", "Yalnızca yatırım fonları türev araçtır.", "Türev araçlarda forward bulunmaz."], "explanation": "PDF’de türev araç türleri bu dört ana başlıkla işlenir.", "difficulty": "Kolay", "tag": "Liste"}, {"topic": "turev", "subtopic": "Forward", "key": "Forward sözleşmesi", "correct": "Forward sözleşmesinde taraflar dayanak varlığı gelecekteki tarihte bugünden belirlenen koşullarla alma/satma konusunda anlaşır.", "wrongs": ["Forward sözleşmesi sadece geçmişte yapılmış spot alımdır.", "Forward sözleşmesi hiçbir vade içermez.", "Forward sözleşmesi yalnızca pay sahibinin oy hakkıdır.", "Forward sözleşmesi DİBS ihalesidir."], "explanation": "Forward vadeli anlaşmadır; teslim/ödeme gelecekte, koşullar bugünden belirlenir.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Forward", "key": "Forward standartlığı", "correct": "Forward sözleşmelerinde esaslı unsurlar taraflar arasında serbestçe belirlenir; sözleşme standart değildir.", "wrongs": ["Forward sözleşmelerinde bütün koşullar borsa tarafından standartlaştırılır.", "Forward sözleşmesi sadece merkezi takasla kurulur.", "Forward sözleşmesi her zaman VİOP’ta standart kontrattır.", "Forward sözleşmesinde karşı taraf riski yoktur."], "explanation": "Forward = tezgah üstü/standart değil/karşı taraf riski.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "Forward", "key": "Forward piyasası", "correct": "Forward işleminde genellikle borsa ve takas merkezi bulunmadığından karşı taraf riski önemlidir.", "wrongs": ["Forward işleminde borsa ve takas merkezi zorunludur.", "Forward işleminde karşı taraf riski hiç yoktur.", "Forward sadece DİBS ihalelerinde yapılır.", "Forward yatırım fonu içtüzüğüdür."], "explanation": "Forward-futures farkının kilidi: organize piyasa ve standartlık.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "Forward", "key": "Döviz forward", "correct": "Döviz forward sözleşmesi, gelecekte belirli bir tarihte belirli döviz tutarını önceden belirlenen kurdan alma/satma yükümlülüğü doğurur.", "wrongs": ["Döviz forward sadece oy hakkı verir.", "Döviz forwardda kur vade sonunda ilk kez belirlenir.", "Döviz forward yatırım fonu katılma payıdır.", "Döviz forward Hazine bonosudur."], "explanation": "Döviz forwardda kur sözleşme tarihinde belirlenir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Futures", "key": "Futures sözleşmesi", "correct": "Futures sözleşmeleri standartlaştırılmış, organize piyasalarda işlem gören vadeli işlem sözleşmeleridir.", "wrongs": ["Futures sözleşmeleri tamamen standart dışıdır ve sadece iki tarafın pazarlığına bağlıdır.", "Futures sözleşmeleri pay sahipliği hakkıdır.", "Futures sözleşmeleri Hazine tarafından çıkarılan DİBS’tir.", "Futures sözleşmelerinde dayanak varlık yoktur."], "explanation": "Futures = standart + organize piyasa.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "Futures", "key": "Futures ve teminat", "correct": "Futures işlemlerinde teminat ve günlük uzlaşma mantığı öne çıkar.", "wrongs": ["Futures işlemlerinde teminat hiç kullanılmaz.", "Futures işlemleri sadece genel kurulda yapılır.", "Futures işlemlerinde günlük uzlaşma kavramı yoktur.", "Futures işlemleri fonun sona erme sebebidir."], "explanation": "VİOP mantığında teminat ve uzlaşma kavramlarını bilmek gerekir.", "difficulty": "Orta", "tag": "Kural"}, {"topic": "turev", "subtopic": "Futures", "key": "Uzlaşma fiyatı", "correct": "Uzlaşma fiyatı, vadeli işlem ve opsiyon piyasalarında gün sonunda teminatların güncellenmesi ve geçici kâr/zararın hesaplanmasında baz alınan değerleme fiyatıdır.", "wrongs": ["Uzlaşma fiyatı sadece payın itibari değeridir.", "Uzlaşma fiyatı yatırım fonu içtüzüğüdür.", "Uzlaşma fiyatı DİBS’in kupon ödeme tarihidir.", "Uzlaşma fiyatı oyda imtiyaz sınırıdır."], "explanation": "Uzlaşma fiyatı VİOP fiyat kavramlarında kritik tanımdır.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Opsiyon", "key": "Opsiyon sözleşmesi", "correct": "Opsiyon alıcısı, belirli bir prim ödeyerek dayanak varlığı alma veya satma hakkı elde eder; yükümlülük satıcıdadır.", "wrongs": ["Opsiyon alıcısı prim alır ve yükümlülük üstlenir.", "Opsiyon alıcısı hiçbir hak kazanmaz.", "Opsiyon satıcısı daima sadece hak sahibidir, yükümlülüğü yoktur.", "Opsiyon sadece Hazine bonosudur."], "explanation": "Opsiyonda alıcı hak sahibi, satıcı yükümlüdür; prim alıcı tarafından ödenir.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "Opsiyon", "key": "Alım opsiyonu", "correct": "Alım opsiyonu, dayanak varlığı belirli fiyattan alma hakkı verir.", "wrongs": ["Alım opsiyonu dayanak varlığı satma hakkı verir.", "Alım opsiyonu sadece borçlanma aracıdır.", "Alım opsiyonu fon sepeti fonudur.", "Alım opsiyonu hamiline yazılı paydır."], "explanation": "Call = alma hakkı.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Opsiyon", "key": "Satım opsiyonu", "correct": "Satım opsiyonu, dayanak varlığı belirli fiyattan satma hakkı verir.", "wrongs": ["Satım opsiyonu dayanak varlığı alma hakkı verir.", "Satım opsiyonu DİBS ihale yöntemidir.", "Satım opsiyonu pay sahibinin yeni pay alma hakkıdır.", "Satım opsiyonu fon malvarlığıdır."], "explanation": "Put = satma hakkı.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Opsiyon", "key": "Kullanım fiyatı", "correct": "Kullanım fiyatı, opsiyon sözleşmesinde alım veya satımın yapılabileceği önceden belirlenen fiyattır.", "wrongs": ["Kullanım fiyatı sadece fonun tasfiye bakiyesidir.", "Kullanım fiyatı DİBS’in ihraç tarihi demektir.", "Kullanım fiyatı payın teslim süresidir.", "Kullanım fiyatı portföy saklayıcısının ücretidir."], "explanation": "VİOP fiyat kavramlarında kullanım fiyatı opsiyonla ilişkilidir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Opsiyon", "key": "Opsiyon primi", "correct": "Opsiyon primi, opsiyon alıcısının hakka sahip olmak için ödediği bedeldir.", "wrongs": ["Opsiyon primi satıcının alıcıya ödediği teminattır.", "Opsiyon primi payın nominal değeridir.", "Opsiyon primi DİBS kuponudur.", "Opsiyon primi fonun kurucu değişikliğidir."], "explanation": "Prim alıcı tarafından ödenir, satıcı prim alır.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "Swap", "key": "Swap sözleşmesi", "correct": "Swap, tarafların belirli nakit akımlarını veya yükümlülükleri belirli esaslara göre değiştirdikleri sözleşmedir.", "wrongs": ["Swap, anonim ortaklığın pay senedidir.", "Swap sadece Hazine bonosudur.", "Swap fon katılma payıdır.", "Swap yalnızca oy hakkı imtiyazıdır."], "explanation": "Swap = nakit akımı/değişim sözleşmesi mantığı.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Swap", "key": "Faiz swapı", "correct": "Faiz swapında taraflar sabit/değişken faiz gibi faiz nakit akımlarını değiştirebilir.", "wrongs": ["Faiz swapında pay sahipliği hakkı devredilir.", "Faiz swapı sadece altın teslimidir.", "Faiz swapı DİBS ihalesidir.", "Faiz swapında hiçbir nakit akımı yoktur."], "explanation": "Swap türleri arasında faiz ve döviz swapı sınavlık temel örnektir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "turev", "subtopic": "Kullanım amaçları", "key": "Hedging", "correct": "Türev araçlar riskten korunma amacıyla kullanılabilir.", "wrongs": ["Türev araçlar riskten korunma amacıyla asla kullanılamaz.", "Türev araçların tek amacı genel kurulda oy vermektir.", "Türev araçlar sadece fon tasfiyesi içindir.", "Türev araçlar yalnızca DİBS vergisidir."], "explanation": "Türevlerin kullanım amaçları: korunma, spekülasyon, arbitraj.", "difficulty": "Kolay", "tag": "Amaç"}, {"topic": "turev", "subtopic": "Kullanım amaçları", "key": "Spekülasyon", "correct": "Türev araçlar fiyat beklentileri üzerinden kazanç elde etme amacıyla spekülasyon için kullanılabilir.", "wrongs": ["Spekülasyon, fon malvarlığının ayrılığı demektir.", "Spekülasyon sadece DİBS kuponudur.", "Spekülasyon sadece pay teslim süresidir.", "Spekülasyon riskten tamamen bağımsız garantidir."], "explanation": "Türev araçların kullanım alanları ayrı liste olarak sorulabilir.", "difficulty": "Kolay", "tag": "Amaç"}, {"topic": "turev", "subtopic": "Kullanım amaçları", "key": "Arbitraj", "correct": "Arbitraj, fiyat farklılıklarından risksiz veya düşük riskli kazanç elde etmeye yönelik işlem mantığıdır.", "wrongs": ["Arbitraj fonun sona erme nedenidir.", "Arbitraj yalnızca pay benzeri menkul kıymettir.", "Arbitraj DİBS’in vade türüdür.", "Arbitraj hiçbir fiyat farkı aramaz."], "explanation": "Korunma/spekülasyon/arbitraj üçlüsünü karıştırma.", "difficulty": "Orta", "tag": "Amaç"}, {"topic": "turev", "subtopic": "Organize/tezgah üstü piyasa", "key": "Tezgah üstü piyasa", "correct": "Tezgah üstü işlemlerde sözleşme şartları taraflarca belirlenir ve karşı taraf riski daha belirgindir.", "wrongs": ["Tezgah üstü işlemlerde bütün sözleşmeler borsa tarafından standartlaştırılır.", "Tezgah üstü piyasa sadece genel kurul salonudur.", "Tezgah üstü piyasa DİBS vergi beyanıdır.", "Tezgah üstü işlemlerde taraflar yoktur."], "explanation": "Forward ve swap genellikle tezgah üstü mantıkla anlatılır.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "Organize/tezgah üstü piyasa", "key": "Organize piyasa", "correct": "Organize piyasalarda standart sözleşmeler, işlem kuralları ve takas/teminat mekanizmaları öne çıkar.", "wrongs": ["Organize piyasalarda hiçbir kural ve takas yoktur.", "Organize piyasa sadece fonun içtüzüğüdür.", "Organize piyasa pay teslim süresinin adıdır.", "Organize piyasa yalnızca Hazine’nin bütçesidir."], "explanation": "Futures/VİOP tarafı için organize piyasa mantığını bil.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "turev", "subtopic": "VİOP işleyişi", "key": "VİOP takası", "correct": "VİOP’ta işlemlerin takası T günü seans sonu ile birlikte başlar.", "wrongs": ["VİOP’ta takas 365 gün sonra başlar.", "VİOP’ta takas hiç yoktur.", "VİOP takası yatırım fonu tasfiyesidir.", "VİOP takası yalnızca DİBS ihalesidir."], "explanation": "PDF’de VİOP takasının T günü seans sonu ile başladığı belirtilir.", "difficulty": "Zor", "tag": "Süre/Oran/Limit"}, {"topic": "turev", "subtopic": "Fiyat kavramları", "key": "Spot ve vadeli fiyat", "correct": "Spot fiyat anlık piyasa fiyatıdır; vadeli fiyat ise teslim/tesellümün gelecekte yapılacağı sözleşmede bugünden belirlenen fiyattır.", "wrongs": ["Spot fiyat her zaman gelecekteki teslim fiyatıdır.", "Vadeli fiyat o anki peşin piyasa fiyatıdır.", "Spot ve vadeli fiyat aynı tanıma sahiptir.", "Spot fiyat fonun içtüzüğüdür."], "explanation": "VİOP fiyat kavramları doğrudan tanım sorusu olarak gelir.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "Kamunun borçlanması", "key": "Kamu borçlanması", "correct": "Kamu borçlanması, kamu finansman ihtiyacının borçlanma yoluyla karşılanmasıyla ilgilidir.", "wrongs": ["Kamu borçlanması yalnızca özel sektör tahvilidir.", "Kamu borçlanması opsiyon primi demektir.", "Kamu borçlanması yatırım fonu katılma payıdır.", "Kamu borçlanması payda oy imtiyazıdır."], "explanation": "Kamu borçlanma araçları özel sektör borçlanma araçlarından ayrı düşünülür.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "kamu", "subtopic": "İç/dış borçlanma", "key": "İç borçlanma", "correct": "İç borçlanma, ülke içindeki kaynaklardan yapılan kamu borçlanmasını ifade eder.", "wrongs": ["İç borçlanma yalnızca yabancı piyasalardan yapılır.", "İç borçlanma opsiyon sözleşmesidir.", "İç borçlanma yatırım fonu unvanıdır.", "İç borçlanma pay teslim süresidir."], "explanation": "İç/dış borçlanma ayrımı kavramsal bir sınav alanıdır.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "İç/dış borçlanma", "key": "Dış borçlanma", "correct": "Dış borçlanma, ülke dışındaki kaynaklardan yapılan kamu borçlanmasını ifade eder.", "wrongs": ["Dış borçlanma sadece yerli yatırımcıya TL cinsinden satış anlamına gelir.", "Dış borçlanma pay benzeri menkul kıymettir.", "Dış borçlanma fon malvarlığıdır.", "Dış borçlanma futures teminatıdır."], "explanation": "Kamu borçlanma ayrımlarını kısa tanım düzeyinde bilmek yeterli olabilir.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "Kısa/uzun vadeli borçlanma", "key": "Kısa vadeli borçlanma", "correct": "Kısa vadeli kamu borçlanması genellikle bir yıldan kısa vadeli borçlanmayı ifade eder.", "wrongs": ["Kısa vadeli borçlanma daima 10 yıl üzeridir.", "Kısa vadeli borçlanma ortaklık payı verir.", "Kısa vadeli borçlanma opsiyon primi ödeme hakkıdır.", "Kısa vadeli borçlanma fonun sona ermesidir."], "explanation": "Bir yıl sınırı Hazine bonosu/devlet tahvili ayrımında da kilittir.", "difficulty": "Kolay", "tag": "Süre/Oran/Limit"}, {"topic": "kamu", "subtopic": "Kısa/uzun vadeli borçlanma", "key": "Uzun vadeli borçlanma", "correct": "Uzun vadeli kamu borçlanması genellikle bir yıl ve daha uzun vadeli borçlanmayı ifade eder.", "wrongs": ["Uzun vadeli borçlanma 30 günden az vadeli araçtır.", "Uzun vadeli borçlanma sadece payın nominal değeridir.", "Uzun vadeli borçlanma fon sepeti fonudur.", "Uzun vadeli borçlanma opsiyon kullanım fiyatıdır."], "explanation": "Devlet tahvili = 1 yıl ve daha uzun; hazine bonosu = 1 yıldan kısa.", "difficulty": "Kolay", "tag": "Süre/Oran/Limit"}, {"topic": "kamu", "subtopic": "İsteğe bağlı/zorunlu borçlanma", "key": "İsteğe bağlı borçlanma", "correct": "İsteğe bağlı borçlanmada yatırımcı borç verme kararını kendi tercihiyle alır.", "wrongs": ["İsteğe bağlı borçlanmada yatırımcı zorla borç verir.", "İsteğe bağlı borçlanma sadece fon içtüzüğüdür.", "İsteğe bağlı borçlanma payda oy imtiyazıdır.", "İsteğe bağlı borçlanma futures uzlaşmasıdır."], "explanation": "Kamu borçlanma bölümünde isteğe bağlı/zorunlu ayrımı doğrudan sorulabilir.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "İsteğe bağlı/zorunlu borçlanma", "key": "Zorunlu borçlanma", "correct": "Zorunlu borçlanmada borç verme iradesi yatırımcının serbest tercihinden ziyade düzenleme veya zorunlulukla ilişkilidir.", "wrongs": ["Zorunlu borçlanma tamamen isteğe bağlı piyasa işlemidir.", "Zorunlu borçlanma hisse senedi alım hakkıdır.", "Zorunlu borçlanma yatırım fonu portföy sınırlamasıdır.", "Zorunlu borçlanma swap nakit akımıdır."], "explanation": "Kavram ayrımı kolay puan getirir.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "DİBS", "key": "DİBS tanımı", "correct": "DİBS, Hazine tarafından yurt içinde ihraç edilen Devlet İç Borçlanma Senetlerinin ortak adıdır.", "wrongs": ["DİBS özel sektör şirketleri tarafından ihraç edilen paydır.", "DİBS yatırım fonu katılma payıdır.", "DİBS opsiyon sözleşmesidir.", "DİBS aracı kuruluş varantıdır."], "explanation": "DİBS = Hazine + yurt içi kamu borçlanma senedi.", "difficulty": "Kolay", "tag": "Tanım"}, {"topic": "kamu", "subtopic": "Devlet tahvili/Hazine bonosu", "key": "DİBS türleri", "correct": "Devlet tahvili ve Hazine bonosu DİBS’in iki temel türü olarak düşünülür.", "wrongs": ["Devlet tahvili ve Hazine bonosu yatırım fonu türüdür.", "Devlet tahvili ve Hazine bonosu opsiyon türüdür.", "Devlet tahvili ve Hazine bonosu pay benzeri menkul kıymettir.", "Devlet tahvili ve Hazine bonosu sadece VİOP emridir."], "explanation": "DİBS başlığı altında devlet tahvili/hazine bonosu ayrımı kesin bilinmeli.", "difficulty": "Kolay", "tag": "Liste"}, {"topic": "kamu", "subtopic": "Devlet tahvili/Hazine bonosu", "key": "Devlet tahvili vadesi", "correct": "Devlet tahvili, bir yıl ve daha uzun vadeli DİBS’tir.", "wrongs": ["Devlet tahvili bir yıldan kısa vadeli DİBS’tir.", "Devlet tahvili 30 günden az vadeli finansman bonosudur.", "Devlet tahvili pay senedi türüdür.", "Devlet tahvili fon katılma payıdır."], "explanation": "1 yıl ve üzeri = devlet tahvili.", "difficulty": "Kolay", "tag": "Süre/Oran/Limit"}, {"topic": "kamu", "subtopic": "Devlet tahvili/Hazine bonosu", "key": "Hazine bonosu vadesi", "correct": "Hazine bonosu, bir yıldan kısa vadeli DİBS’tir.", "wrongs": ["Hazine bonosu bir yıl ve daha uzun vadeli DİBS’tir.", "Hazine bonosu ortaklık payıdır.", "Hazine bonosu opsiyon kullanım fiyatıdır.", "Hazine bonosu yatırım fonu içtüzüğüdür."], "explanation": "1 yıldan kısa = Hazine bonosu.", "difficulty": "Kolay", "tag": "Süre/Oran/Limit"}, {"topic": "kamu", "subtopic": "Kuponlu/kuponsuz senetler", "key": "Kuponlu senet", "correct": "Kuponlu senetlerde belirli dönemlerde kupon/faiz ödemesi yapılabilir.", "wrongs": ["Kuponlu senette hiçbir ara ödeme olmaz.", "Kuponlu senet sadece pay sahipliği hakkıdır.", "Kuponlu senet yatırım fonu unvanıdır.", "Kuponlu senet VİOP fiyat tanımıdır."], "explanation": "Kuponlu/kuponsuz ayrımı DİBS içinde sorulabilir.", "difficulty": "Kolay", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "Kuponlu/kuponsuz senetler", "key": "Kuponsuz/iskontolu senet", "correct": "Kuponsuz senetlerde getiri, genellikle iskontolu satış fiyatı ile vade sonunda ödenen nominal değer arasındaki farktan oluşur.", "wrongs": ["Kuponsuz senette her ay kupon ödenmesi zorunludur.", "Kuponsuz senet sadece payın oy hakkıdır.", "Kuponsuz senet fon sepeti fonudur.", "Kuponsuz senette nominal değer yoktur."], "explanation": "İskonto mantığı Hazine bonosu ve kuponsuz senetlerde klasik bilgi alanıdır.", "difficulty": "Orta", "tag": "Karşılaştırma"}, {"topic": "kamu", "subtopic": "Getiri eğrisi", "key": "Getiri eğrisi", "correct": "Getiri eğrisi, farklı vadelerdeki borçlanma araçlarının getirileri arasındaki ilişkiyi gösterir.", "wrongs": ["Getiri eğrisi pay teslim süresidir.", "Getiri eğrisi opsiyon kullanım fiyatıdır.", "Getiri eğrisi fon içtüzüğü maddesidir.", "Getiri eğrisi sadece genel kurul oy sayısıdır."], "explanation": "Getiri eğrisi kavramı doğrudan tanım sorusu olarak gelebilir.", "difficulty": "Orta", "tag": "Tanım"}, {"topic": "kamu", "subtopic": "Getiri eğrisi", "key": "Fiyat-getiri ilişkisi", "correct": "Sabit getirili menkul kıymetlerde fiyat ile piyasa getirisi genellikle ters yönde hareket eder.", "wrongs": ["Fiyat ve getiri her zaman aynı yönde ve birebir artar.", "Fiyat artarsa getiri mutlaka aynı oranda artar.", "Fiyat-getiri ilişkisi yatırım fonlarında yasaktır.", "Fiyat-getiri ilişkisi opsiyon primini tamamen kaldırır."], "explanation": "Tahvil/DİBS mantığında fiyat-getiri ters ilişkisi temel bilgidir.", "difficulty": "Orta", "tag": "Kavram"}, {"topic": "kamu", "subtopic": "İhraç yöntemleri", "key": "İhale yöntemi", "correct": "DİBS ihraçlarında ihale yöntemi kamu borçlanmasında kullanılan temel yöntemlerdendir.", "wrongs": ["DİBS hiçbir zaman ihale ile ihraç edilmez.", "İhale yöntemi sadece yatırım fonu tasfiyesidir.", "İhale yöntemi sadece payda oy imtiyazıdır.", "İhale yöntemi opsiyon alıcısının primidir."], "explanation": "Kamu borçlanma araçlarında ihraç yöntemleri ayrı alt başlıktır.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "kamu", "subtopic": "İhraç yöntemleri", "key": "Doğrudan satış", "correct": "Doğrudan satış, DİBS ihraç yöntemleri arasında yer alabilen bir satış biçimidir.", "wrongs": ["Doğrudan satış yalnızca opsiyon kullanım fiyatıdır.", "Doğrudan satış hiçbir kamu borçlanma aracında olmaz.", "Doğrudan satış fonun sona ermesi sebebidir.", "Doğrudan satış pay benzeri menkul kıymetin tanımıdır."], "explanation": "İhale/doğrudan satış ayrımı kısa ama sınavlık bir eşleştirmedir.", "difficulty": "Orta", "tag": "Süreç"}, {"topic": "kamu", "subtopic": "Vergilendirme", "key": "Vergilendirme", "correct": "Kamu borçlanma araçlarının getirileri bakımından vergilendirme esasları ayrıca dikkate alınır.", "wrongs": ["Kamu borçlanma araçlarında vergilendirme hiçbir zaman konu olmaz.", "Vergilendirme sadece opsiyon kullanım hakkıdır.", "Vergilendirme pay teslim süresidir.", "Vergilendirme fonun içtüzüğü demektir."], "explanation": "Vergilendirme bölümü kısa ama doğrudan bilgi sorusu gelebilir.", "difficulty": "Orta", "tag": "Kural"}, {"topic": "kamu", "subtopic": "Piyasa yapıcılığı", "key": "Piyasa yapıcılığı", "correct": "DİBS piyasasında piyasa yapıcılığı sistemi, likidite ve düzenli piyasa işleyişiyle ilişkilidir.", "wrongs": ["Piyasa yapıcılığı yalnızca yatırım fonu tasfiyesi demektir.", "Piyasa yapıcılığı pay sahibinin sır saklama borcudur.", "Piyasa yapıcılığı opsiyon satıcısının primidir.", "Piyasa yapıcılığı hiçbir şekilde DİBS ile ilişkili değildir."], "explanation": "Piyasa yapıcılığı kavramını DİBS piyasası bağlamında tanıman yeterli olabilir.", "difficulty": "Zor", "tag": "Kurum/Belge"}], "plan": [{"day": 1, "title": "Paylar", "focus": "Pay türleri, haklar, halka açılma, fiyat istikrarı, sermaye artırımı/azaltımı", "tasks": ["Paylar konu özetini oku", "Pay türleri ve hakları tabloyla tekrar et", "Fiyat istikrarı 30 gün ve %20 kuralını ezberle", "Paylar testinden en az 60 soru çöz", "Yanlışları deftere ekle", "Kritik karıştırmalardan bedelli/bedelsiz bölümüne bak"]}, {"day": 2, "title": "Borçlanma Araçları", "focus": "Tahvil, finansman bonosu, PDT, DET, ihraç limiti, Kurul/MKK süreçleri", "tasks": ["Borçlanma özetini oku", "Tahvil-finansman bonosu-PDT-DET tablosunu tekrar et", "Süreleri ezberle: 365, 30-364", "Borçlanma testinden en az 50 soru çöz", "Yanlışları deftere ekle", "Kritik karıştırmalardan PDT/DET bölümüne bak"]}, {"day": 3, "title": "Yatırım Fonları", "focus": "Fon malvarlığı, kurucu, şemsiye fon türleri, portföy sınırlamaları", "tasks": ["Fonlar özetini oku", "Şemsiye fon türlerini ayrı ayrı tekrar et", "184 gün / 45 gün ve %80 kurallarını ezberle", "Fonlar testinden en az 60 soru çöz", "Yanlışları deftere ekle", "Son tekrar listesindeki fon maddelerine bak"]}, {"day": 4, "title": "Türev + Kamu", "focus": "Forward/futures/opsiyon/swap + DİBS, Hazine bonosu, devlet tahvili", "tasks": ["Türev özetini oku", "Forward/futures ve opsiyon alıcı/satıcı tablosunu tekrar et", "Kamu borçlanma özetini oku", "Türev testinden 45 soru çöz", "Kamu testinden 30 soru çöz", "Yanlışları deftere ekle"]}, {"day": 5, "title": "Büyük Tekrar", "focus": "Tüm konu özetleri + karıştırma tabloları", "tasks": ["Tüm konu özetlerini hızlı oku", "Kritik karıştırmalar sekmesini baştan sona bitir", "Paylar ve Fonlar testlerinden yanlışlarını tekrar çöz", "En az 50 karışık soru çöz", "Kritik yanlışları işaretle", "Eksik konuları son tekrar listesine ekle"]}, {"day": 6, "title": "Deneme Günü", "focus": "Sınav simülasyonu, karışık denemeler, zayıf alan analizi", "tasks": ["25 soruluk mini deneme çöz", "50 soruluk büyük deneme çöz", "Sonuç ekranında zayıf konuları incele", "Yanlış defterini temizle/tekrar edildi işaretle", "Zayıf konudan 30 ek soru çöz", "Akşam sadece karıştırma tablolarını tekrar et"]}, {"day": 7, "title": "Son Gün", "focus": "Yeni konu yok; son tekrar, kritik sayılar ve yanlış defteri", "tasks": ["Son Gün Tekrarı sekmesini oku", "Kritik yanlışları tekrar et", "Kritik sayılar: 30 gün, %20, 365 gün, 30-364, 184/45", "20-30 hafif soru çöz", "Uyumadan önce karıştırma listesini oku", "Yeni konu açma"]}], "comparisons": [{"title": "Bedelli / Bedelsiz Sermaye Artırımı", "left": "Bedelli: Nakit sermaye artırımıdır, dışarıdan fon girişi sağlar.", "right": "Bedelsiz: İç kaynaklar/kâr payı sermayeye eklenir, dışarıdan fon girişi yoktur."}, {"title": "Pay / Tahvil", "left": "Pay: Ortaklık hakkı verir, sabit anapara geri ödeme taahhüdü yoktur.", "right": "Tahvil: Borçlanma aracıdır, nominal değerin geri ödenmesi taahhüdü vardır."}, {"title": "PDT / DET", "left": "PDT: İhraççı ortaklığın kendi paylarına dönüştürme hakkı verir.", "right": "DET: Payları borsada işlem gören diğer ortaklıklara ait paylarla değiştirme hakkı verir."}, {"title": "Tahvil / Finansman Bonosu", "left": "Tahvil: 365 gün veya daha uzun vadeli borçlanma aracı.", "right": "Finansman bonosu: 30 günden az, 364 günden fazla olmayan vadeli borçlanma aracı."}, {"title": "Forward / Futures", "left": "Forward: Standart değildir, taraflarca belirlenir, genelde tezgah üstüdür.", "right": "Futures: Standarttır, organize piyasada işlem görür, teminat/günlük uzlaşma vardır."}, {"title": "Opsiyon Alıcısı / Opsiyon Satıcısı", "left": "Alıcı: Prim öder, hak sahibidir.", "right": "Satıcı: Prim alır, yükümlülük üstlenir."}, {"title": "Alım Opsiyonu / Satım Opsiyonu", "left": "Alım opsiyonu: Dayanak varlığı alma hakkı verir.", "right": "Satım opsiyonu: Dayanak varlığı satma hakkı verir."}, {"title": "Garantili Fon / Koruma Amaçlı Fon", "left": "Garantili fon: Garantörün verdiği garantiye dayanır.", "right": "Koruma amaçlı fon: En iyi gayret esasına dayanır, garanti değildir."}, {"title": "Devlet Tahvili / Hazine Bonosu", "left": "Devlet tahvili: 1 yıl ve daha uzun vadeli DİBS.", "right": "Hazine bonosu: 1 yıldan kısa vadeli DİBS."}, {"title": "Para Piyasası Şemsiye Fonu", "left": "Vadesine en fazla 184 gün kalmış likit araçlar.", "right": "Günlük ağırlıklı ortalama vade en fazla 45 gün."}, {"title": "Hisse Senedi / Borçlanma Araçları Şemsiye Fonu", "left": "Hisse senedi: Fon toplam değerinin en az %80’i paylarda.", "right": "Borçlanma araçları: Fon toplam değerinin en az %80’i borçlanma araçlarında."}, {"title": "Spot Fiyat / Vadeli Fiyat", "left": "Spot fiyat: O anki piyasa fiyatı.", "right": "Vadeli fiyat: Gelecekte teslim/tesellüm için bugünden belirlenen fiyat."}], "finalNotes": {"paylar": ["Pay ortaklık hakkı verir; tahvil borç ilişkisi kurar.", "Bedelsiz payda ortaklığa dışarıdan fon girişi yoktur.", "Bedelli pay nakit sermaye artırımıyla yeni fon kaynağı sağlar.", "Oyda imtiyazda istisnalar saklı kalmak üzere bir paya en çok 15 oy hakkı tanınabilir.", "Pay benzeri menkul kıymetler sabit getiri taahhüdü içermez.", "KİS; net kârdan pay, tasfiye bakiyesi veya yeni pay alma hakkı tanıyabilir.", "Fiyat istikrarı en çok 30 gün yapılabilir.", "Fiyat istikrarında halka arz fiyatının üzerinde alım emri verilemez.", "Ortaklık hesabına fiyat istikrarında fon sınırı brüt halka arz gelirinin %20’sidir.", "Hamiline yazılı pay teslimi 30 gün, nama yazılı pay teslimi 90 gün olarak akılda kalmalı."], "borclanma": ["Borçlanma araçlarında ihraççı borçlu, yatırımcı alacaklıdır.", "Tahvil vadesi 365 gün veya daha uzundur.", "Finansman bonosu vadesi 30 günden az, 364 günden fazla olmayan araçtır.", "PDT ihraççının kendi payına dönüşür.", "DET başka ortaklık paylarıyla değiştirilebilir.", "PDT ve DET için 365 gün kuralı çok kritiktir.", "Kıymetli maden bonoları da 30-364 gün vade aralığına sahiptir.", "Borçlanma araçları yurt içinde halka arz, halka arz edilmeksizin veya yurt dışında satışla ihraç edilebilir.", "Kurula başvuru, ihraç belgesi/izahname ve MKK kaydı süreçlerini karıştırma.", "Yeşil/sürdürülebilir borçlanma araçları proje/tema finansmanı mantığıyla düşünülmeli."], "fonlar": ["Fon malvarlığı kurucu ve portföy saklayıcısı malvarlığından ayrıdır.", "Katılma payı, fon portföyüne katılımı temsil eder; anonim ortaklık payı değildir.", "Şemsiye fon tek içtüzük altında bağlı fonları kapsar.", "Hisse senedi, borçlanma araçları, kıymetli madenler ve fon sepeti fonlarında %80 eşiği önemlidir.", "Para piyasası fonunda 184 gün ve 45 gün ikilisi çok kritiktir.", "Katılım şemsiye fonu faize dayalı olmayan araçlardan oluşur.", "Serbest şemsiye fon nitelikli yatırımcı bağlantısıyla hatırlanmalı.", "Garantili fon garantöre; koruma amaçlı fon en iyi gayret esasına dayanır.", "Yatırımcı bilgi formu fonun temel özelliklerini ve risklerini özetler.", "Fonun sona ermesi/devri Kurul rolü ve yatırımcı yararı ekseninde düşünülmeli."], "turev": ["Türev araç değeri dayanak varlığa bağlı sözleşmedir.", "Forward standart değildir, taraflar arasında belirlenir, karşı taraf riski taşır.", "Futures standarttır ve organize piyasada işlem görür.", "Opsiyon alıcısı prim öder ve hak sahibidir.", "Opsiyon satıcısı prim alır ve yükümlülük üstlenir.", "Alım opsiyonu alma hakkı, satım opsiyonu satma hakkı verir.", "Swap nakit akımlarının/değişim yükümlülüklerinin takasıdır.", "Türev araçlar korunma, spekülasyon ve arbitraj amacıyla kullanılabilir.", "Uzlaşma fiyatı gün sonunda teminat/kâr-zarar hesaplamasında kullanılır.", "Spot fiyat anlık, vadeli fiyat gelecekte teslim için bugünden belirlenen fiyattır."], "kamu": ["DİBS, Hazine tarafından yurt içinde ihraç edilen devlet iç borçlanma senetlerinin ortak adıdır.", "Devlet tahvili 1 yıl ve daha uzun vadeli DİBS’tir.", "Hazine bonosu 1 yıldan kısa vadeli DİBS’tir.", "İç borçlanma ülke içi kaynaklardan, dış borçlanma ülke dışı kaynaklardan yapılır.", "Kuponsuz senette getiri iskonto ile nominal değer farkından oluşur.", "Kuponlu senetlerde dönemsel kupon/faiz ödemesi olabilir.", "Getiri eğrisi vadeler ve getiriler arasındaki ilişkiyi gösterir.", "Sabit getirili araçlarda fiyat-getiri ilişkisi genelde ters yönlüdür.", "DİBS ihraçlarında ihale ve doğrudan satış gibi yöntemleri ayır.", "Kamu borçlanma araçlarında vergilendirme başlığını boş bırakma."]}};
+const LS_KEY = "spl1003_kamp_v1";
+const letters = ["A","B","C","D","E"];
+const tabList = [
+  ["today","Bugün"],
+  ["topics","Konu Özetleri"],
+  ["tests","Şıklı Testler"],
+  ["exam","Deneme Modu"],
+  ["wrongs","Yanlış Defteri"],
+  ["compare","Kritik Karıştırmalar"],
+  ["final","Son Gün Tekrarı"],
+  ["progress","İlerleme"]
+];
 
-            <div class="field">
-              <label for="title">Öykü Başlığı</label>
-              <input id="title" class="input" placeholder="Örn: Annemin Telefonu">
-            </div>
+let state = loadState();
+let activeTab = "today";
+let currentTopic = "paylar";
+let testSession = null;
+let examSession = null;
 
-            <div class="form-grid">
-              <div class="field">
-                <label for="ordinaryPerson">Sıradan İnsan</label>
-                <input id="ordinaryPerson" class="input" placeholder="Örn: Emekli bir öğretmen">
-              </div>
-              <div class="field">
-                <label for="hiddenEmotion">Bastırılmış Duygu</label>
-                <select id="hiddenEmotion" class="select">
-                  <option value="">Seç...</option>
-                  <option>Suçluluk</option>
-                  <option>Özlem</option>
-                  <option>Utanç</option>
-                  <option>Kıskançlık</option>
-                  <option>Korku</option>
-                  <option>Pişmanlık</option>
-                  <option>Yalnızlık</option>
-                  <option>Merak</option>
-                </select>
-              </div>
-            </div>
+function loadState(){
+  const base = {theme:"dark", currentDay:1, tasks:{}, answers:{}, wrongs:[], manualStats:{correct:0,wrong:0,blank:0}, reviewDone:{}};
+  try { return {...base, ...(JSON.parse(localStorage.getItem(LS_KEY))||{})}; } catch(e){ return base; }
+}
+function saveState(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); refreshHeader(); }
+function setTheme(theme){
+  state.theme = theme; document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("lightBtn")?.classList.toggle("active", theme==="light");
+  document.getElementById("darkBtn")?.classList.toggle("active", theme==="dark");
+  saveState();
+}
+function resetAll(){
+  if(confirm("Tüm işaretler, test sonuçları ve yanlış defteri silinsin mi?")){
+    localStorage.removeItem(LS_KEY); state = loadState(); testSession=null; examSession=null; init();
+  }
+}
+function hashCode(str){
+  let h=0; for(let i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i); h|=0;} return Math.abs(h);
+}
+function shuffleSeed(arr, seedStr){
+  const out = [...arr]; let seed = hashCode(seedStr)+1;
+  function rnd(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  for(let i=out.length-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); [out[i],out[j]]=[out[j],out[i]]; }
+  return out;
+}
+function makeQuestions(){
+  const templates = [
+    f => `${f.key} konusunda aşağıdakilerden hangisi doğrudur?`,
+    f => `${f.subtopic} başlığında sınavda doğru kabul edilecek ifade hangisidir?`,
+    f => `${topicName(f.topic)} / ${f.subtopic} için en güvenli cevap hangisidir?`,
+    f => `Aşağıdakilerden hangisi "${f.key}" için ayırt edici bilgidir?`
+  ];
+  const all = [];
+  DATA.facts.forEach((f, idx)=>{
+    templates.forEach((tpl, v)=>{
+      const optsRaw = [f.correct, ...f.wrongs.slice(0,4)];
+      const opts = shuffleSeed(optsRaw, `${idx}-${v}-${f.key}`);
+      all.push({
+        id:`q_${idx}_${v}`,
+        factIndex:idx, variant:v, topic:f.topic, subtopic:f.subtopic, key:f.key,
+        difficulty:f.difficulty, tag:f.tag, q:tpl(f), options:opts, answer:f.correct,
+        explanation:f.explanation
+      });
+    });
+  });
+  return all;
+}
+const QUESTIONS = makeQuestions();
 
-            <div class="field">
-              <label for="irreversibleEvent">Geri Dönülmez Olay</label>
-              <textarea id="irreversibleEvent" class="textarea" placeholder="Örn: Yıllar önce öldüğünü sandığı öğrencisinden bir mektup gelir."></textarea>
-            </div>
-
-            <div class="field">
-              <label for="coreIdea">Tek Cümlelik Öykü Fikri</label>
-              <textarea id="coreIdea" class="textarea" placeholder="Bir cümleyle öykünün kalbini yaz."></textarea>
-            </div>
-          </section>
-
-          <section class="screen hidden" data-screen="1">
-            <div class="screen-header">
-              <div>
-                <h1>2. Karakter Kartı</h1>
-                <p>Öyküyü olay değil, karakterin isteği taşır. Burada tek ana karaktere odaklan.</p>
-              </div>
-              <div class="badge inset">Kim?</div>
-            </div>
-
-            <div class="form-grid">
-              <div class="field">
-                <label for="characterName">Karakter Adı</label>
-                <input id="characterName" class="input" placeholder="Örn: Nermin">
-              </div>
-              <div class="field">
-                <label for="characterMask">Dışarıdan Nasıl Görünüyor?</label>
-                <input id="characterMask" class="input" placeholder="Sakin, kontrollü, komik, sert...">
-              </div>
-            </div>
-
-            <div class="form-grid">
-              <div class="field">
-                <label for="characterWant">En Çok Ne İstiyor?</label>
-                <textarea id="characterWant" class="textarea" placeholder="Affedilmek, kaçmak, saklamak, kanıtlamak..."></textarea>
-              </div>
-              <div class="field">
-                <label for="characterFear">En Çok Neden Korkuyor?</label>
-                <textarea id="characterFear" class="textarea" placeholder="Birinin gerçeği öğrenmesinden, yalnız kalmaktan..."></textarea>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="characterSecret">Sırrı / Yalanı</label>
-              <textarea id="characterSecret" class="textarea" placeholder="Kimseye söylemediği ya da kendine bile itiraf edemediği şey."></textarea>
-            </div>
-          </section>
-
-          <section class="screen hidden" data-screen="2">
-            <div class="screen-header">
-              <div>
-                <h1>3. Çatışma Motoru</h1>
-                <p>Şimdi karakterin isteğini zorlaştır. Engel yoksa öykü durur.</p>
-              </div>
-              <div class="badge inset">Neden zor?</div>
-            </div>
-
-            <div class="field">
-              <label for="mainConflict">Ana Çatışma</label>
-              <textarea id="mainConflict" class="textarea" placeholder="Karakter istediği şeyi neden kolayca alamıyor?"></textarea>
-            </div>
-
-            <div class="form-grid">
-              <div class="field">
-                <label for="pressure">Zaman / Baskı Unsuru</label>
-                <input id="pressure" class="input" placeholder="Gece bitmeden, cenazeden önce, tren kalkmadan...">
-              </div>
-              <div class="field">
-                <label for="objectSymbol">Önemli Nesne / Sembol</label>
-                <input id="objectSymbol" class="input" placeholder="Anahtar, mektup, telefon, kırık bardak...">
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="turningPoint">Kırılma Anı</label>
-              <textarea id="turningPoint" class="textarea" placeholder="Öykünün ortasında artık geri dönüşü olmayan ne olur?"></textarea>
-            </div>
-          </section>
-
-          <section class="screen hidden" data-screen="3">
-            <div class="screen-header">
-              <div>
-                <h1>4. Sahne Sırası</h1>
-                <p>Öyküyü küçük bloklara ayır. Her sahne bir şeyi değiştirmeli.</p>
-              </div>
-              <div class="badge inset">Plan</div>
-            </div>
-
-            <div class="form-grid">
-              <div class="field">
-                <label for="sceneTitle">Yeni Sahne Başlığı</label>
-                <input id="sceneTitle" class="input" placeholder="Örn: Eski eve dönüş">
-              </div>
-              <div class="field">
-                <label for="sceneChange">Bu Sahnede Ne Değişiyor?</label>
-                <input id="sceneChange" class="input" placeholder="Karakter ne öğreniyor, ne kaybediyor?">
-              </div>
-            </div>
-
-            <button class="btn primary" id="addSceneBtn">🎬 Sahneyi Listeye Ekle</button>
-            <div class="cards" id="sceneCards"></div>
-          </section>
-
-          <section class="screen hidden" data-screen="4">
-            <div class="screen-header">
-              <div>
-                <h1>5. Taslak Yazımı</h1>
-                <p>Artık yazı alanı. Hedef mükemmel metin değil, bitmiş ham taslak.</p>
-              </div>
-              <div class="badge inset" id="wordBadge">0 kelime</div>
-            </div>
-
-            <div class="hint inset" id="draftHint">Açılışta karakteri bir kararın, bekleyişin veya küçük bir tuhaflığın içine koy.</div>
-
-            <div class="field">
-              <label for="storyText">Taslak</label>
-              <textarea id="storyText" class="textarea story-editor" placeholder="Öyküyü buraya yaz..."></textarea>
-            </div>
-          </section>
-
-          <section class="screen hidden" data-screen="5">
-            <div class="screen-header">
-              <div>
-                <h1>6. Final & Paketleme</h1>
-                <p>Son adımda final hissini seç, kısa kontrol yap ve dışa aktar.</p>
-              </div>
-              <div class="badge inset">Bitiş</div>
-            </div>
-
-            <div class="form-grid">
-              <div class="field">
-                <label for="endingType">Final Tipi</label>
-                <select id="endingType" class="select">
-                  <option>Sessiz final</option>
-                  <option>Açık final</option>
-                  <option>Ters köşe final</option>
-                  <option>Döngüsel final</option>
-                  <option>Karanlık final</option>
-                  <option>Duygusal final</option>
-                  <option>Absürt final</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="finalFeeling">Okurda Kalacak His</label>
-                <input id="finalFeeling" class="input" placeholder="Hüzün, rahatsızlık, boşluk, merak...">
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="lastLine">Olası Son Cümle</label>
-              <textarea id="lastLine" class="textarea" placeholder="Final cümleni ya da final görüntünü dene."></textarea>
-            </div>
-
-            <div class="summary-grid">
-              <div class="summary-box inset">
-                <strong>Öykü Özeti</strong>
-                <div id="summaryBox">Henüz özet yok.</div>
-              </div>
-              <div class="summary-box inset">
-                <strong>Kontrol</strong>
-                <div id="checkBox">Eksikler burada görünecek.</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="linear-actions">
-            <div class="left-actions">
-              <button class="btn" id="prevBtn">◀ Geri</button>
-              <button class="btn" id="nextBtn">İleri ▶</button>
-            </div>
-            <div class="right-actions">
-              <button class="btn primary" id="completeBtn">✓ Bu Adımı Tamamla</button>
-              <button class="btn" id="helpBtn">💡 Mini Yardım</button>
-            </div>
-          </section>
+function topicName(id){ return DATA.topics.find(t=>t.id===id)?.name || id; }
+function byId(id){ return document.getElementById(id); }
+function pct(num, den){ return den ? Math.round((num/den)*100) : 0; }
+function answeredStats(){
+  const vals = Object.values(state.answers || {});
+  return {
+    total: vals.length,
+    correct: vals.filter(a=>a.status==="correct").length,
+    wrong: vals.filter(a=>a.status==="wrong").length,
+    blank: vals.filter(a=>a.status==="blank").length
+  };
+}
+function taskStats(){
+  const total = DATA.plan.reduce((s,d)=>s+d.tasks.length,0);
+  let done = 0;
+  DATA.plan.forEach(d=>d.tasks.forEach((_,i)=>{ if(state.tasks[`d${d.day}_${i}`]) done++; }));
+  return {done,total};
+}
+function refreshHeader(){
+  document.documentElement.setAttribute("data-theme", state.theme || "dark");
+  byId("lightBtn")?.classList.toggle("active", state.theme==="light");
+  byId("darkBtn")?.classList.toggle("active", state.theme==="dark");
+  byId("questionCountText").textContent = QUESTIONS.length;
+  const ts = taskStats(); const as = answeredStats();
+  const totalUnits = ts.total + QUESTIONS.length;
+  const doneUnits = ts.done + as.total;
+  const p = pct(doneUnits,totalUnits);
+  byId("globalProgressText").textContent = `%${p}`;
+  byId("globalProgressBar").style.width = `${p}%`;
+}
+function initTabs(){
+  const nav = byId("tabs"); nav.innerHTML = "";
+  tabList.forEach(([id,label])=>{
+    const btn = document.createElement("button");
+    btn.className = `tab-btn ${activeTab===id?"active":""}`;
+    btn.textContent = label;
+    btn.onclick = ()=>{ activeTab=id; render(); };
+    nav.appendChild(btn);
+  });
+}
+function render(){
+  initTabs(); refreshHeader();
+  const main = byId("main");
+  if(activeTab==="today") main.innerHTML = renderToday();
+  if(activeTab==="topics") main.innerHTML = renderTopics();
+  if(activeTab==="tests") main.innerHTML = renderTests();
+  if(activeTab==="exam") main.innerHTML = renderExam();
+  if(activeTab==="wrongs") main.innerHTML = renderWrongs();
+  if(activeTab==="compare") main.innerHTML = renderCompare();
+  if(activeTab==="final") main.innerHTML = renderFinal();
+  if(activeTab==="progress") main.innerHTML = renderProgress();
+  bindAfterRender();
+}
+function renderKpis(){
+  const as = answeredStats(); const ts = taskStats();
+  const accuracy = pct(as.correct, as.correct+as.wrong);
+  return `<div class="kpi-row">
+    <div class="card stat-card"><div><div class="muted">Görev</div><div class="stat-value">${ts.done}/${ts.total}</div></div><span class="badge blue">%${pct(ts.done,ts.total)}</span></div>
+    <div class="card stat-card"><div><div class="muted">Çözülen</div><div class="stat-value">${as.total}</div></div><span class="badge green">${QUESTIONS.length} havuz</span></div>
+    <div class="card stat-card"><div><div class="muted">Doğru</div><div class="stat-value">${as.correct}</div></div><span class="badge green">%${accuracy}</span></div>
+    <div class="card stat-card"><div><div class="muted">Yanlış</div><div class="stat-value">${as.wrong}</div></div><span class="badge red">${state.wrongs.length} kayıt</span></div>
+  </div>`;
+}
+function renderToday(){
+  const d = DATA.plan.find(x=>x.day===Number(state.currentDay)) || DATA.plan[0];
+  const topic = DATA.topics.find(t=>d.title.toLowerCase().includes(t.id) || d.focus.toLowerCase().includes(t.name.toLowerCase().split(" ")[0]));
+  const done = d.tasks.filter((_,i)=>state.tasks[`d${d.day}_${i}`]).length;
+  const recommended = d.day<=4 ? "En az 75 soru" : d.day===5 ? "En az 50 karışık soru" : d.day===6 ? "2 deneme" : "20-30 hafif soru";
+  return `
+  ${renderKpis()}
+  <div class="grid grid-3 section">
+    <div class="card" style="grid-column:span 2">
+      <span class="badge blue">Gün ${d.day}/7</span>
+      <h2>${d.title}</h2>
+      <p class="muted">${d.focus}</p>
+      <div class="progress"><span style="width:${pct(done,d.tasks.length)}%"></span></div>
+      <p><strong>${done}/${d.tasks.length}</strong> görev tamamlandı · Bugünkü hedef: <strong>${recommended}</strong></p>
+      <div class="grid grid-2">
+        ${d.tasks.map((t,i)=>`<label class="task"><input type="checkbox" data-task="d${d.day}_${i}" ${state.tasks[`d${d.day}_${i}`]?"checked":""}/> <span>${t}</span></label>`).join("")}
+      </div>
+    </div>
+    <div class="card">
+      <h3>Gün Seç</h3>
+      <div class="topic-nav">
+        ${DATA.plan.map(x=>`<button onclick="state.currentDay=${x.day};saveState();render();" class="${x.day===d.day?'active':''}">${x.day}. Gün</button>`).join("")}
+      </div>
+      <div class="alert"><strong>Bugünün kuralı:</strong> Yeni konuyu okuduktan sonra hemen şıklı teste geç. Yanlış yapmadığın konu öğrenilmiş sayılmaz.</div>
+      <button class="btn primary" onclick="activeTab='tests';render()">Şıklı Testlere Git</button>
+    </div>
+  </div>
+  <div class="grid grid-2 section">
+    <div class="card">
+      <h3>Bugün Öncelik</h3>
+      <ul class="list-clean">
+        <li>Önce konu özetini oku.</li>
+        <li>Sonra en az 30-40 şıklı soru çöz.</li>
+        <li>Yanlışları tek tek deftere ekle.</li>
+        <li>Günün sonunda kritik karıştırmalara dön.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Zayıf Alan Sinyali</h3>
+      ${renderWeakAreas()}
+    </div>
+  </div>`;
+}
+function renderWeakAreas(){
+  const wrongs = state.wrongs || [];
+  if(!wrongs.length) return `<p class="muted">Henüz yanlış kaydı yok. Test çözdükçe burada zayıf konular çıkacak.</p>`;
+  const count = {};
+  wrongs.forEach(w=>{ const k = `${topicName(w.topic)} / ${w.subtopic}`; count[k]=(count[k]||0)+1; });
+  return `<ol class="list-clean">${Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`<li><strong>${k}</strong> · ${v} yanlış</li>`).join("")}</ol>`;
+}
+function renderTopics(){
+  const t = DATA.topics.find(x=>x.id===currentTopic) || DATA.topics[0];
+  const qCount = QUESTIONS.filter(q=>q.topic===t.id).length;
+  return `
+  <div class="card">
+    <h2>Konu Özetleri</h2>
+    <p class="muted">Konular PDF’nin ana akışına göre bölümlendi. Her kartı aç, özeti oku, sonra aynı konunun testine geç.</p>
+    <div class="topic-nav">${DATA.topics.map(x=>`<button onclick="currentTopic='${x.id}';render();" class="${x.id===t.id?'active':''}">${x.name.split(" ")[0]}</button>`).join("")}</div>
+  </div>
+  <div class="card section">
+    <span class="badge ${t.priority.includes('Çok')?'red':'blue'}">${t.priority}</span>
+    <h2>${t.name}</h2>
+    <p>${t.summary}</p>
+    <div class="grid grid-3">
+      <div class="alert"><strong>Alt konu:</strong> ${t.subs.length}</div>
+      <div class="alert"><strong>Şıklı soru:</strong> ${qCount}</div>
+      <div class="alert"><strong>Hedef:</strong> ${t.target}+ soru çöz</div>
+    </div>
+  </div>
+  <div class="grid grid-2 section">
+    ${t.subs.map((s,i)=>{
+      const facts = DATA.facts.filter(f=>f.topic===t.id && f.subtopic===s);
+      const preview = facts[0]?.correct || "Bu başlık sınav akışında ayrıca takip edilecek.";
+      return `<details ${i<2?"open":""}>
+        <summary>${i+1}. ${s}</summary>
+        <div class="summary-content">
+          <p><strong>Kısa sınav notu:</strong> ${preview}</p>
+          ${facts.length?`<ul class="list-clean">${facts.slice(0,4).map(f=>`<li><strong>${f.key}:</strong> ${f.explanation}</li>`).join("")}</ul>`:""}
+          <button class="btn small primary" onclick="startTest('${t.id}','${s.replaceAll("'","\\'")}')">Bu alt konudan soru çöz</button>
         </div>
-      </section>
-    </section>
-
-    <footer class="statusbar">
-      <div class="status-cell" id="statusStep">Adım: 1 / 6</div>
-      <div class="status-cell" id="statusWords">Kelime: 0</div>
-      <div class="status-cell" id="statusSaved">Son kayıt: -</div>
-      <div class="status-cell" id="statusMessage">Hazır</div>
-    </footer>
-  </main>
-
-  <script>
-    const STORAGE_KEY = "kurgu-terminali-95-linear-v1";
-
-    const stepNames = [
-      { title: "Fikir Dosyası", sub: "Öykünün çekirdeği" },
-      { title: "Karakter Kartı", sub: "İstek, korku, sır" },
-      { title: "Çatışma Motoru", sub: "Engel ve kırılma" },
-      { title: "Sahne Sırası", sub: "Planı bloklara ayır" },
-      { title: "Taslak Yazımı", sub: "Ham metni çıkar" },
-      { title: "Final & Paketleme", sub: "Son his ve dışa aktar" }
-    ];
-
-    const defaultData = {
-      currentStep: 0,
-      completed: [],
-      title: "",
-      ordinaryPerson: "",
-      hiddenEmotion: "",
-      irreversibleEvent: "",
-      coreIdea: "",
-      characterName: "",
-      characterMask: "",
-      characterWant: "",
-      characterFear: "",
-      characterSecret: "",
-      mainConflict: "",
-      pressure: "",
-      objectSymbol: "",
-      turningPoint: "",
-      scenes: [],
-      storyText: "",
-      endingType: "Sessiz final",
-      finalFeeling: "",
-      lastLine: "",
-      lastSaved: null
-    };
-
-    let data = loadData();
-    let saveTimer = null;
-
-    const nl = String.fromCharCode(10);
-    const $ = selector => document.querySelector(selector);
-    const $$ = selector => Array.from(document.querySelectorAll(selector));
-
-    const fieldIds = [
-      "title", "ordinaryPerson", "hiddenEmotion", "irreversibleEvent", "coreIdea",
-      "characterName", "characterMask", "characterWant", "characterFear", "characterSecret",
-      "mainConflict", "pressure", "objectSymbol", "turningPoint", "storyText",
-      "endingType", "finalFeeling", "lastLine"
-    ];
-
-    const stuckPrompts = [
-      "Karakterin sakladığı küçük yalanı büyüt.",
-      "Sahneye gelmemesi gereken birini sok.",
-      "Bir nesne kaybolsun; herkes onu ararken asıl mesele ortaya çıksın.",
-      "Şimdi sadece diyalog yaz. Anlatıcıyı sustur.",
-      "Karaktere istediği şeyi ver, sonra bedelini göster.",
-      "Aynı sahneyi daha dar bir mekanda dene: mutfak, asansör, otobüs, koridor.",
-      "Final görüntüsünü önce yaz, sonra geriye doğru ilerle."
-    ];
-
-    const miniHelp = [
-      ["Fikir için: Birisi bir şeyi saklıyor ama bugün saklayamayacak.", "Fikir için: gündelik bir mekan seç ve oraya olmaması gereken bir nesne koy."],
-      ["Karakter için: dışarıdan güçlü görünen ama içeride utanan biri düşün.", "Karakter için: isteğiyle korkusunu birbirine zıt yap."],
-      ["Çatışma için: karakterin istediği şeyin bedelini ağırlaştır.", "Çatışma için: zaman baskısı ekle; gece bitmeden, biri gelmeden, tren kalkmadan."],
-      ["Sahne için: her kartta ne değişti sorusuna cevap ver.", "Sahne için: açılış, bozulan düzen, yüzleşme, karar, final şeklinde sırala."],
-      ["Taslak için: ilk paragrafta açıklama değil, hareket kullan.", "Taslak için: kötü yazmaya izin ver; revizyon sonraki iş."],
-      ["Final için: büyük açıklama yerine küçük bir jest seç.", "Final için: ilk görüntüyü sona döndür ama anlamını değiştir."]
-    ];
-
-    function loadData() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (!saved) return structuredClone(defaultData);
-        return Object.assign(structuredClone(defaultData), JSON.parse(saved));
-      } catch (error) {
-        return structuredClone(defaultData);
-      }
-    }
-
-    function save(manual) {
-      data.lastSaved = new Date().toISOString();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      renderStatus(manual ? "Kaydedildi" : "Otomatik kayıt");
-    }
-
-    function scheduleSave() {
-      renderStatus("Yazılıyor...");
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => save(false), 400);
-    }
-
-    function hydrate() {
-      fieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = data[id] || "";
-      });
-    }
-
-    function bindFields() {
-      fieldIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const eventName = el.tagName === "SELECT" ? "change" : "input";
-        el.addEventListener(eventName, () => {
-          data[id] = el.value;
-          updateWordCount();
-          updateSummary();
-          scheduleSave();
-        });
-      });
-    }
-
-    function renderSteps() {
-      const html = stepNames.map((step, index) => {
-        const active = index === data.currentStep ? "active" : "";
-        const done = data.completed.includes(index) ? "done" : "";
-        return `<div class="step ${active} ${done}" data-step="${index}"><div class="step-no">${index + 1}</div><div class="step-label"><strong>${step.title}</strong><small>${step.sub}</small></div></div>`;
-      }).join("");
-
-      $("#steps").innerHTML = html;
-      $$(".step").forEach(step => {
-        step.addEventListener("click", () => goToStep(Number(step.dataset.step)));
-      });
-    }
-
-    function renderScreen() {
-      $$(".screen").forEach(screen => {
-        screen.classList.toggle("hidden", Number(screen.dataset.screen) !== data.currentStep);
-      });
-      $("#screenTitleBar").textContent = `${data.currentStep + 1}. ${stepNames[data.currentStep].title}`;
-      $("#prevBtn").disabled = data.currentStep === 0;
-      $("#nextBtn").disabled = data.currentStep === stepNames.length - 1;
-      renderSteps();
-      updateProgress();
-      updateWordCount();
-      updateSummary();
-      renderStatus("Hazır");
-    }
-
-    function goToStep(index) {
-      data.currentStep = Math.max(0, Math.min(stepNames.length - 1, index));
-      save(false);
-      renderScreen();
-    }
-
-    function completeStep() {
-      if (!data.completed.includes(data.currentStep)) data.completed.push(data.currentStep);
-      if (data.currentStep < stepNames.length - 1) data.currentStep += 1;
-      save(true);
-      renderScreen();
-    }
-
-    function updateProgress() {
-      const done = data.completed.length;
-      const total = stepNames.length;
-      $("#progressText").textContent = `${done} / ${total} adım tamamlandı`;
-      $("#progressFill").style.width = `${Math.round((done / total) * 100)}%`;
-    }
-
-    function wordCount(text) {
-      const trimmed = String(text || "").trim();
-      if (!trimmed) return 0;
-      return trimmed.split(" ").filter(Boolean).length;
-    }
-
-    function updateWordCount() {
-      const count = wordCount(data.storyText);
-      $("#wordBadge").textContent = `${count} kelime`;
-      $("#statusWords").textContent = `Kelime: ${count}`;
-    }
-
-    function formatTime(iso) {
-      if (!iso) return "-";
-      return new Date(iso).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
-    }
-
-    function renderStatus(message) {
-      $("#statusStep").textContent = `Adım: ${data.currentStep + 1} / ${stepNames.length}`;
-      $("#statusSaved").textContent = `Son kayıt: ${formatTime(data.lastSaved)}`;
-      $("#statusMessage").textContent = message || "Hazır";
-      updateWordCount();
-    }
-
-    function addScene() {
-      const title = $("#sceneTitle").value.trim();
-      const change = $("#sceneChange").value.trim();
-      if (!title && !change) return;
-      data.scenes.push({ title: title || `Sahne ${data.scenes.length + 1}`, change });
-      $("#sceneTitle").value = "";
-      $("#sceneChange").value = "";
-      save(true);
-      renderScenes();
-      updateSummary();
-    }
-
-    function renderScenes() {
-      const root = $("#sceneCards");
-      if (!data.scenes.length) {
-        root.innerHTML = `<div class="hint inset">Henüz sahne yok. Önce açılış sahnesini ekle.</div>`;
-        return;
-      }
-
-      root.innerHTML = data.scenes.map((scene, index) => {
-        return `<div class="card"><div class="card-title">${index + 1}. ${escapeHTML(scene.title)}</div><div class="card-text">${escapeHTML(scene.change || "Bu sahnede ne değiştiği henüz yazılmadı.")}</div><div class="card-actions"><button class="btn tiny" data-scene-action="insert" data-index="${index}">Taslağa Ekle</button><button class="btn tiny danger" data-scene-action="delete" data-index="${index}">Sil</button></div></div>`;
-      }).join("");
-    }
-
-    function escapeHTML(value) {
-      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-    }
-
-    function handleSceneActions(event) {
-      const button = event.target.closest("button[data-scene-action]");
-      if (!button) return;
-      const index = Number(button.dataset.index);
-      const action = button.dataset.sceneAction;
-      const scene = data.scenes[index];
-
-      if (action === "insert") {
-        const block = nl + nl + `[${scene.title}]` + nl + (scene.change || "") + nl;
-        data.storyText = (data.storyText || "") + block;
-        $("#storyText").value = data.storyText;
-      }
-
-      if (action === "delete") {
-        data.scenes.splice(index, 1);
-      }
-
-      save(true);
-      renderScenes();
-      updateWordCount();
-      updateSummary();
-    }
-
-    function randomFrom(items) {
-      return items[Math.floor(Math.random() * items.length)];
-    }
-
-    function stuck() {
-      const text = randomFrom(stuckPrompts);
-      $("#draftHint").textContent = text;
-      renderStatus("Tıkanıklık önerisi verildi");
-    }
-
-    function miniHelpForStep() {
-      alert(randomFrom(miniHelp[data.currentStep]));
-    }
-
-    function updateSummary() {
-      if (!$("#summaryBox")) return;
-      const summary = [
-        `<strong>Başlık:</strong> ${escapeHTML(data.title || "-")}`,
-        `<strong>Fikir:</strong> ${escapeHTML(data.coreIdea || "-")}`,
-        `<strong>Karakter:</strong> ${escapeHTML(data.characterName || "-")}`,
-        `<strong>İstek:</strong> ${escapeHTML(data.characterWant || "-")}`,
-        `<strong>Çatışma:</strong> ${escapeHTML(data.mainConflict || "-")}`,
-        `<strong>Sahne:</strong> ${data.scenes.length}`,
-        `<strong>Final:</strong> ${escapeHTML(data.endingType || "-")} / ${escapeHTML(data.finalFeeling || "-")}`
-      ].join("<br>");
-      $("#summaryBox").innerHTML = summary;
-
-      const missing = [];
-      if (!data.coreIdea.trim()) missing.push("Çekirdek fikir eksik.");
-      if (!data.characterName.trim()) missing.push("Ana karakter eksik.");
-      if (!data.characterWant.trim()) missing.push("Karakter isteği eksik.");
-      if (!data.mainConflict.trim()) missing.push("Ana çatışma eksik.");
-      if (!data.scenes.length) missing.push("En az bir sahne ekle.");
-      if (wordCount(data.storyText) < 250) missing.push("Taslak henüz kısa; 250+ kelime hedefle.");
-      if (!data.finalFeeling.trim()) missing.push("Okurda kalacak his eksik.");
-
-      $("#checkBox").innerHTML = missing.length ? missing.map(item => `• ${escapeHTML(item)}`).join("<br>") : "Temel parçalar tamam görünüyor.";
-    }
-
-    function exportMarkdown() {
-      const lines = [
-        `# ${data.title || "Adsız Öykü"}`,
-        "",
-        "## 1. Fikir Dosyası",
-        `Sıradan insan: ${data.ordinaryPerson || "-"}`,
-        `Duygu: ${data.hiddenEmotion || "-"}`,
-        `Geri dönülmez olay: ${data.irreversibleEvent || "-"}`,
-        `Çekirdek fikir: ${data.coreIdea || "-"}`,
-        "",
-        "## 2. Karakter Kartı",
-        `Ad: ${data.characterName || "-"}`,
-        `Maske: ${data.characterMask || "-"}`,
-        `İstek: ${data.characterWant || "-"}`,
-        `Korku: ${data.characterFear || "-"}`,
-        `Sır/Yalan: ${data.characterSecret || "-"}`,
-        "",
-        "## 3. Çatışma Motoru",
-        `Ana çatışma: ${data.mainConflict || "-"}`,
-        `Baskı: ${data.pressure || "-"}`,
-        `Nesne/Sembol: ${data.objectSymbol || "-"}`,
-        `Kırılma anı: ${data.turningPoint || "-"}`,
-        "",
-        "## 4. Sahne Sırası"
-      ];
-
-      if (data.scenes.length) {
-        data.scenes.forEach((s, i) => lines.push(`${i + 1}. ${s.title}: ${s.change || "-"}`));
-      } else {
-        lines.push("-");
-      }
-
-      lines.push("", "## 5. Taslak", data.storyText || "-", "", "## 6. Final", `Final tipi: ${data.endingType || "-"}`, `Okurda kalacak his: ${data.finalFeeling || "-"}`, `Olası son cümle: ${data.lastLine || "-"}`);
-
-      const blob = new Blob([lines.join(nl)], { type: "text/markdown;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = (data.title || "kurgu-terminali-95") + ".md";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function newProject() {
-      if (!confirm("Yeni proje açılırsa mevcut yerel kayıt silinecek. Devam edilsin mi?")) return;
-      data = structuredClone(defaultData);
-      hydrate();
-      save(true);
-      renderScenes();
-      renderScreen();
-    }
-
-    function bindButtons() {
-      $("#prevBtn").addEventListener("click", () => goToStep(data.currentStep - 1));
-      $("#nextBtn").addEventListener("click", () => goToStep(data.currentStep + 1));
-      $("#completeBtn").addEventListener("click", completeStep);
-      $("#saveBtn").addEventListener("click", () => save(true));
-      $("#exportBtn").addEventListener("click", exportMarkdown);
-      $("#stuckBtn").addEventListener("click", stuck);
-      $("#helpBtn").addEventListener("click", miniHelpForStep);
-      $("#addSceneBtn").addEventListener("click", addScene);
-      $("#newBtn").addEventListener("click", newProject);
-      document.body.addEventListener("click", handleSceneActions);
-    }
-
-    function boot() {
-      hydrate();
-      bindFields();
-      bindButtons();
-      renderScenes();
-      renderScreen();
-      renderStatus("Hazır");
-    }
-
-    boot();
-  </script>
+      </details>`;
+    }).join("")}
+  </div>`;
+}
+function renderTests(){
+  if(testSession) return renderTestSession();
+  return `
+  <div class="card">
+    <h2>Şıklı Testler</h2>
+    <p class="muted">Ana özellik burası: A-B-C-D-E şıklı soru, anında kontrol, açıklama ve yanlış defterine ekleme.</p>
+  </div>
+  <div class="grid grid-3 section">
+    ${DATA.topics.map(t=>{
+      const count = QUESTIONS.filter(q=>q.topic===t.id).length;
+      const st = topicStats(t.id);
+      return `<div class="card">
+        <span class="badge blue">${count} soru</span>
+        <h3>${t.name}</h3>
+        <p class="muted">${t.summary.slice(0,145)}...</p>
+        <div class="progress"><span style="width:${pct(st.solved,count)}%"></span></div>
+        <p class="muted">Çözülen: ${st.solved}/${count} · Başarı: %${pct(st.correct, st.correct+st.wrong)}</p>
+        <div class="filter-row">
+          <button onclick="startTest('${t.id}')">Tüm sorular</button>
+          <button onclick="startTest('${t.id}',null,'Kolay')">Kolay</button>
+          <button onclick="startTest('${t.id}',null,'Orta')">Orta</button>
+          <button onclick="startTest('${t.id}',null,'Zor')">Zor</button>
+        </div>
+      </div>`;
+    }).join("")}
+    <div class="card">
+      <span class="badge yellow">${QUESTIONS.length} soru</span>
+      <h3>Karışık Test</h3>
+      <p class="muted">Tüm konulardan karışık çalış. Özellikle 5. günden itibaren bunu kullan.</p>
+      <button class="btn primary" onclick="startTest('all')">Karışık Başlat</button>
+    </div>
+    <div class="card">
+      <span class="badge red">${state.wrongs.length} kayıt</span>
+      <h3>Yanlışlardan Test</h3>
+      <p class="muted">Sadece yanlış yaptığın soruları yeniden sorar.</p>
+      <button class="btn danger" onclick="startWrongTest()">Yanlışları Çöz</button>
+    </div>
+  </div>`;
+}
+function topicStats(topicId){
+  const qs = QUESTIONS.filter(q=>q.topic===topicId).map(q=>q.id);
+  const ans = Object.entries(state.answers).filter(([id])=>qs.includes(id)).map(x=>x[1]);
+  return {solved:ans.length, correct:ans.filter(a=>a.status==="correct").length, wrong:ans.filter(a=>a.status==="wrong").length, blank:ans.filter(a=>a.status==="blank").length};
+}
+function startTest(topicId, subtopic=null, difficulty=null){
+  let pool = QUESTIONS;
+  if(topicId && topicId!=="all") pool = pool.filter(q=>q.topic===topicId);
+  if(subtopic) pool = pool.filter(q=>q.subtopic===subtopic);
+  if(difficulty) pool = pool.filter(q=>q.difficulty===difficulty);
+  pool = shuffleSeed(pool, `${topicId}-${subtopic||''}-${difficulty||''}-${Date.now()}`).slice(0, Math.min(pool.length, 80));
+  testSession = {pool, index:0, selected:null, checked:false};
+  activeTab = "tests"; render();
+}
+function startWrongTest(){
+  const ids = new Set((state.wrongs||[]).map(w=>w.qid));
+  let pool = QUESTIONS.filter(q=>ids.has(q.id));
+  if(!pool.length){ alert("Henüz yanlış soru yok."); return; }
+  pool = shuffleSeed(pool, `wrong-${Date.now()}`);
+  testSession = {pool, index:0, selected:null, checked:false};
+  activeTab = "tests"; render();
+}
+function renderTestSession(){
+  const s = testSession; const q = s.pool[s.index];
+  if(!q) { testSession=null; return renderTests(); }
+  const answered = state.answers[q.id];
+  const selected = s.selected ?? answered?.selected ?? null;
+  const checked = s.checked || !!answered;
+  return `
+  <div class="card">
+    <button class="btn small" onclick="testSession=null;render()">← Testlerden çık</button>
+    <span class="mini-pill">${topicName(q.topic)}</span>
+    <span class="mini-pill">${q.subtopic}</span>
+    <span class="mini-pill">${q.difficulty}</span>
+    <h2>Soru ${s.index+1} / ${s.pool.length}</h2>
+    <div class="progress"><span style="width:${pct(s.index,s.pool.length)}%"></span></div>
+  </div>
+  <div class="question-box section">
+    <h3>${escapeHtml(q.q)}</h3>
+    <div id="options">
+      ${q.options.map((o,i)=>{
+        let cls = "option";
+        if(selected===o) cls += " selected";
+        if(checked && o===q.answer) cls += " correct";
+        if(checked && selected===o && o!==q.answer) cls += " wrong";
+        return `<button class="${cls}" onclick="selectOption('${encodeURIComponent(o)}')" ${checked?"disabled":""}><span class="option-letter">${letters[i]})</span><span>${escapeHtml(o)}</span></button>`;
+      }).join("")}
+    </div>
+    <div class="filter-row">
+      ${!checked?`<button class="btn primary" onclick="checkAnswer()">Kontrol Et</button><button class="btn warn" onclick="markBlank()">Boş Bıraktım</button>`:""}
+      ${checked?`<button class="btn primary" onclick="nextQuestion()">Sonraki Soru</button><button class="btn danger" onclick="addWrongFromQuestion('${q.id}', true)">Yanlış Defterine Ekle</button>`:""}
+    </div>
+    ${checked ? renderQuestionResult(q, selected) : ""}
+  </div>`;
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[s]));
+}
+function selectOption(enc){
+  if(!testSession || testSession.checked) return;
+  testSession.selected = decodeURIComponent(enc); render();
+}
+function checkAnswer(){
+  const s = testSession; if(!s) return;
+  const q = s.pool[s.index];
+  if(!s.selected){ alert("Önce bir şık seç kankam."); return; }
+  const status = s.selected===q.answer ? "correct" : "wrong";
+  state.answers[q.id] = {status, selected:s.selected, at:Date.now(), topic:q.topic, subtopic:q.subtopic};
+  if(status==="wrong") addWrongFromQuestion(q.id, false);
+  s.checked = true; saveState(); render();
+}
+function markBlank(){
+  const s = testSession; if(!s) return;
+  const q = s.pool[s.index];
+  state.answers[q.id] = {status:"blank", selected:null, at:Date.now(), topic:q.topic, subtopic:q.subtopic};
+  addWrongFromQuestion(q.id, false, "Boş bırakıldı");
+  s.checked = true; saveState(); render();
+}
+function renderQuestionResult(q, selected){
+  const status = !selected ? "blank" : selected===q.answer ? "good" : "bad";
+  const title = status==="good" ? "Doğru bildin ✅" : status==="bad" ? "Yanlış ❌" : "Boş bırakıldı ⚠️";
+  return `<div class="result ${status}">
+    <strong>${title}</strong>
+    <p><strong>Doğru cevap:</strong> ${escapeHtml(q.answer)}</p>
+    <p><strong>Açıklama:</strong> ${escapeHtml(q.explanation)}</p>
+  </div>`;
+}
+function nextQuestion(){
+  if(!testSession) return;
+  testSession.index++;
+  testSession.selected=null; testSession.checked=false;
+  if(testSession.index>=testSession.pool.length){
+    alert("Test bitti. İlerleme sekmesinden sonucuna bakabilirsin.");
+    testSession=null;
+  }
+  render();
+}
+function addWrongFromQuestion(qid, notify=false, note=""){
+  const q = QUESTIONS.find(x=>x.id===qid); if(!q) return;
+  if(!(state.wrongs||[]).some(w=>w.qid===qid)){
+    state.wrongs.push({id:`w_${Date.now()}_${Math.random().toString(16).slice(2)}`, qid, topic:q.topic, subtopic:q.subtopic, key:q.key, question:q.q, answer:q.answer, explanation:q.explanation, note, critical:q.difficulty==="Zor", reviewed:false, at:Date.now()});
+    saveState();
+  }
+  if(notify) alert("Yanlış defterine eklendi.");
+}
+function renderExam(){
+  if(examSession) return renderExamSession();
+  return `
+  <div class="card">
+    <h2>Deneme Modu</h2>
+    <p class="muted">Konu testlerinde cevap hemen gösterilir. Deneme modunda cevapları en sonda görürsün.</p>
+  </div>
+  <div class="grid grid-3 section">
+    <div class="card"><h3>Mini Deneme</h3><p>25 karışık soru.</p><button class="btn primary" onclick="startExam(25)">25 Soru Başlat</button></div>
+    <div class="card"><h3>Büyük Deneme</h3><p>50 karışık soru.</p><button class="btn primary" onclick="startExam(50)">50 Soru Başlat</button></div>
+    <div class="card"><h3>Zayıf Konu Denemesi</h3><p>Yanlış defterindeki konulardan üretir.</p><button class="btn danger" onclick="startExamWeak()">Zayıf Deneme</button></div>
+  </div>`;
+}
+function startExam(n){
+  const pool = shuffleSeed(QUESTIONS, `exam-${Date.now()}`).slice(0,n);
+  examSession = {pool,index:0,answers:{},finished:false}; render();
+}
+function startExamWeak(){
+  if(!state.wrongs.length){ alert("Zayıf deneme için önce yanlış kaydı oluşmalı."); return; }
+  const keys = new Set(state.wrongs.map(w=>`${w.topic}|${w.subtopic}`));
+  let pool = QUESTIONS.filter(q=>keys.has(`${q.topic}|${q.subtopic}`));
+  pool = shuffleSeed(pool, `weak-${Date.now()}`).slice(0, Math.min(40,pool.length));
+  examSession = {pool,index:0,answers:{},finished:false}; render();
+}
+function renderExamSession(){
+  const s = examSession;
+  if(s.finished) return renderExamResult();
+  const q = s.pool[s.index]; const selected = s.answers[q.id] || null;
+  return `<div class="card">
+    <button class="btn small" onclick="examSession=null;render()">← Denemeden çık</button>
+    <h2>Deneme Soru ${s.index+1} / ${s.pool.length}</h2>
+    <div class="progress"><span style="width:${pct(s.index,s.pool.length)}%"></span></div>
+  </div>
+  <div class="question-box section">
+    <span class="mini-pill">${topicName(q.topic)} / ${q.subtopic}</span>
+    <h3>${escapeHtml(q.q)}</h3>
+    ${q.options.map((o,i)=>`<button class="option ${selected===o?'selected':''}" onclick="examSelect('${q.id}','${encodeURIComponent(o)}')"><span class="option-letter">${letters[i]})</span><span>${escapeHtml(o)}</span></button>`).join("")}
+    <div class="filter-row">
+      <button class="btn" onclick="examPrev()">Önceki</button>
+      <button class="btn primary" onclick="examNext()">${s.index===s.pool.length-1?'Bitir':'Sonraki'}</button>
+      <button class="btn warn" onclick="examBlank('${q.id}')">Boş</button>
+    </div>
+  </div>`;
+}
+function examSelect(qid, enc){ examSession.answers[qid]=decodeURIComponent(enc); render(); }
+function examBlank(qid){ examSession.answers[qid]=null; render(); }
+function examPrev(){ if(examSession.index>0) examSession.index--; render(); }
+function examNext(){
+  if(examSession.index < examSession.pool.length-1) examSession.index++;
+  else {
+    examSession.finished=true;
+    examSession.pool.forEach(q=>{
+      const sel = examSession.answers.hasOwnProperty(q.id)?examSession.answers[q.id]:null;
+      const status = sel===null ? "blank" : sel===q.answer ? "correct" : "wrong";
+      state.answers[q.id] = {status, selected:sel, at:Date.now(), topic:q.topic, subtopic:q.subtopic};
+      if(status!=="correct") addWrongFromQuestion(q.id,false,status==="blank"?"Denemede boş":"Denemede yanlış");
+    });
+    saveState();
+  }
+  render();
+}
+function renderExamResult(){
+  const s = examSession;
+  let correct=0, wrong=0, blank=0;
+  s.pool.forEach(q=>{ const sel = s.answers.hasOwnProperty(q.id)?s.answers[q.id]:null; if(sel===q.answer) correct++; else if(sel===null) blank++; else wrong++; });
+  return `<div class="card">
+    <h2>Deneme Sonucu</h2>
+    <div class="kpi-row">
+      <div class="card"><div class="muted">Doğru</div><div class="stat-value">${correct}</div></div>
+      <div class="card"><div class="muted">Yanlış</div><div class="stat-value">${wrong}</div></div>
+      <div class="card"><div class="muted">Boş</div><div class="stat-value">${blank}</div></div>
+      <div class="card"><div class="muted">Başarı</div><div class="stat-value">%${pct(correct,correct+wrong+blank)}</div></div>
+    </div>
+    <div class="filter-row"><button class="btn primary" onclick="examSession=null;render()">Yeni Deneme</button><button class="btn" onclick="activeTab='wrongs';render()">Yanlış Defterine Git</button></div>
+  </div>
+  <div class="section grid">
+    ${s.pool.map((q,i)=>{
+      const sel = s.answers.hasOwnProperty(q.id)?s.answers[q.id]:null; const ok = sel===q.answer;
+      return `<details>
+        <summary>${i+1}. ${ok?'✅':'❌'} ${q.subtopic} - ${escapeHtml(q.key)}</summary>
+        <p><strong>Soru:</strong> ${escapeHtml(q.q)}</p>
+        <p><strong>Senin cevap:</strong> ${sel?escapeHtml(sel):"Boş"}</p>
+        <p><strong>Doğru cevap:</strong> ${escapeHtml(q.answer)}</p>
+        <p class="muted">${escapeHtml(q.explanation)}</p>
+      </details>`;
+    }).join("")}
+  </div>`;
+}
+function renderWrongs(){
+  const rows = (state.wrongs||[]).slice().sort((a,b)=>b.at-a.at);
+  return `<div class="card">
+    <h2>Yanlış Defteri</h2>
+    <p class="muted">Yanlış yaptığın ve boş bıraktığın sorular otomatik gelir. İstersen manuel not da ekleyebilirsin.</p>
+  </div>
+  <div class="grid grid-2 section">
+    <div class="card">
+      <h3>Manuel Yanlış Ekle</h3>
+      <div class="form-row"><label>Konu</label><select id="manualTopic">${DATA.topics.map(t=>`<option value="${t.id}">${t.name}</option>`).join("")}</select></div>
+      <div class="form-row"><label>Alt başlık</label><input id="manualSub" placeholder="Örn: PDT / DET"></div>
+      <div class="form-row"><label>Yanlış yaptığım nokta</label><textarea id="manualNote" placeholder="Neyi karıştırdın?"></textarea></div>
+      <div class="form-row"><label>Doğru mantık</label><textarea id="manualExp" placeholder="Kendi cümlenle doğru mantığı yaz."></textarea></div>
+      <button class="btn primary" onclick="addManualWrong()">Kaydet</button>
+    </div>
+    <div class="card">
+      <h3>Zayıf Alanlar</h3>
+      ${renderWeakAreas()}
+      <button class="btn danger" onclick="startWrongTest();activeTab='tests';render()">Yanlışlardan Test Çöz</button>
+    </div>
+  </div>
+  <div class="section grid">
+    ${rows.length?rows.map(w=>`<div class="card">
+      <div class="filter-row">
+        <span class="badge ${w.critical?'red':'yellow'}">${w.critical?'KRİTİK':'TEKRAR'}</span>
+        <span class="mini-pill">${topicName(w.topic)} / ${w.subtopic}</span>
+        <span class="mini-pill">${new Date(w.at).toLocaleDateString('tr-TR')}</span>
+      </div>
+      <h3>${escapeHtml(w.key || "Manuel kayıt")}</h3>
+      ${w.question?`<p><strong>Soru:</strong> ${escapeHtml(w.question)}</p>`:""}
+      ${w.note?`<p><strong>Not:</strong> ${escapeHtml(w.note)}</p>`:""}
+      <p><strong>Doğru:</strong> ${escapeHtml(w.answer || "")}</p>
+      <p class="muted">${escapeHtml(w.explanation || "")}</p>
+      <div class="filter-row">
+        <button class="btn good small" onclick="toggleReviewed('${w.id}')">${w.reviewed?'Tekrar edildi ✅':'Tekrar edildi işaretle'}</button>
+        <button class="btn danger small" onclick="deleteWrong('${w.id}')">Sil</button>
+      </div>
+    </div>`).join(""):`<div class="card"><p class="muted">Henüz yanlış kaydı yok.</p></div>`}
+  </div>`;
+}
+function addManualWrong(){
+  const topic=byId("manualTopic").value, sub=byId("manualSub").value||"Genel", note=byId("manualNote").value, exp=byId("manualExp").value;
+  state.wrongs.push({id:`m_${Date.now()}`, qid:null, topic, subtopic:sub, key:"Manuel yanlış", question:"", answer:exp, explanation:exp, note, critical:true, reviewed:false, at:Date.now()});
+  saveState(); render();
+}
+function toggleReviewed(id){ const w=state.wrongs.find(x=>x.id===id); if(w){ w.reviewed=!w.reviewed; saveState(); render(); } }
+function deleteWrong(id){ state.wrongs = state.wrongs.filter(w=>w.id!==id); saveState(); render(); }
+function renderCompare(){
+  return `<div class="card">
+    <h2>Kritik Karıştırmalar</h2>
+    <p class="muted">Sınavda yanlış yaptıran temel ayrımlar. Her gün en az bir kez hızlı bak.</p>
+  </div>
+  <div class="grid grid-2 section">
+    ${DATA.comparisons.map(c=>`<div class="card">
+      <h3>${c.title}</h3>
+      <div class="comparison">
+        <div class="compare-box">${escapeHtml(c.left)}</div>
+        <div class="compare-box">${escapeHtml(c.right)}</div>
+      </div>
+    </div>`).join("")}
+  </div>`;
+}
+function renderFinal(){
+  return `<div class="card">
+    <h2>Son Gün Tekrarı</h2>
+    <p class="muted">Sınav sabahı ve önceki gece buraya bak. Yeni konu açmadan kritik sayıları ve ayrımları tazele.</p>
+  </div>
+  <div class="grid grid-2 section">
+    ${DATA.topics.map(t=>`<div class="card">
+      <h3>${t.name}</h3>
+      <ol class="list-clean">${(DATA.finalNotes[t.id]||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ol>
+      <button class="btn small primary" onclick="startTest('${t.id}')">Bu konudan son test</button>
+    </div>`).join("")}
+  </div>`;
+}
+function renderProgress(){
+  const as = answeredStats();
+  return `${renderKpis()}
+  <div class="grid grid-2 section">
+    <div class="card">
+      <h2>Konu Bazlı Başarı</h2>
+      ${DATA.topics.map(t=>{
+        const st = topicStats(t.id); const total = QUESTIONS.filter(q=>q.topic===t.id).length; const acc = pct(st.correct, st.correct+st.wrong);
+        return `<div style="margin:14px 0">
+          <div style="display:flex;justify-content:space-between;gap:10px"><strong>${t.name}</strong><span class="muted">${st.solved}/${total} · %${acc}</span></div>
+          <div class="progress"><span style="width:${pct(st.solved,total)}%"></span></div>
+        </div>`;
+      }).join("")}
+    </div>
+    <div class="card">
+      <h2>Zayıf Alan Analizi</h2>
+      ${renderWeakAreas()}
+      <div class="alert"><strong>Çalışma taktiği:</strong> Yanlış sayısı yüksek olan alt konudan önce 10 dakika özet oku, sonra 20 soru çöz.</div>
+    </div>
+  </div>
+  <div class="card section">
+    <h2>Etiket Bazlı Dağılım</h2>
+    ${renderTagStats()}
+  </div>`;
+}
+function renderTagStats(){
+  const tags = {};
+  QUESTIONS.forEach(q=>{ tags[q.tag] = tags[q.tag] || {total:0,solved:0,correct:0,wrong:0}; tags[q.tag].total++; const a=state.answers[q.id]; if(a){tags[q.tag].solved++; if(a.status==="correct")tags[q.tag].correct++; if(a.status==="wrong")tags[q.tag].wrong++;}});
+  return `<table><thead><tr><th>Etiket</th><th>Çözülen</th><th>Başarı</th></tr></thead><tbody>${Object.entries(tags).map(([k,v])=>`<tr><td>${k}</td><td>${v.solved}/${v.total}</td><td>%${pct(v.correct, v.correct+v.wrong)}</td></tr>`).join("")}</tbody></table>`;
+}
+function bindAfterRender(){
+  document.querySelectorAll("[data-task]").forEach(cb=>{
+    cb.onchange = e=>{ state.tasks[e.target.dataset.task] = e.target.checked; saveState(); refreshHeader(); };
+  });
+}
+function init(){ setTheme(state.theme || "dark"); render(); }
+init();
+</script>
 </body>
 </html>
