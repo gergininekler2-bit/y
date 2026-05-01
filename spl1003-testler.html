@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPL 1003 – Sermaye Piyasası Araçları 1 | Test &amp; Sorular</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #0d1f3c;
+    --gold: #c9a84c;
+    --gold2: #e8c96d;
+    --cream: #f5f0e8;
+    --text: #e8e4dc;
+    --text2: #a8a09a;
+    --card: #111e35;
+    --card2: #162440;
+    --accent1: #3a7bd5;
+    --accent2: #00c9a7;
+    --accent3: #f7971e;
+    --accent4: #e74c3c;
+    --accent5: #8e44ad;
+    --green: #27ae60;
+    --red: #e74c3c;
+    --border: rgba(201,168,76,0.25);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse 700px 500px at 75% 10%, rgba(247,151,30,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 700px at 25% 90%, rgba(142,68,173,0.05) 0%, transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  header {
+    position: relative;
+    padding: 60px 40px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+    z-index:1;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 6px 18px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 50px);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  header h1 span { color: var(--gold); }
+  header p { color: var(--text2); font-size: 15px; }
+
+  .file-switch {
+    display: inline-flex;
+    margin-top: 28px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .file-switch a {
+    padding: 10px 24px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .file-switch a.active { background: var(--gold); color: var(--navy); }
+  .file-switch a:not(.active) { color: var(--text2); background: var(--card); }
+  .file-switch a:not(.active):hover { background: var(--card2); color: var(--text); }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Score dashboard */
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .dash-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .dash-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .dash-label {
+    font-size: 12px;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+  }
+
+  /* Filter tabs */
+  .filter-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    align-items: center;
+  }
+
+  .filter-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text2);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .filter-btn:hover { background: var(--card2); color: var(--text); }
+  .filter-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+
+  .reset-btn {
+    margin-left: auto;
+    padding: 8px 20px;
+    background: rgba(231,76,60,0.15);
+    border: 1px solid rgba(231,76,60,0.35);
+    color: var(--red);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { background: rgba(231,76,60,0.25); }
+
+  /* Question card */
+  .question-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .question-card.answered-correct { border-color: rgba(39,174,96,0.4); }
+  .question-card.answered-wrong { border-color: rgba(231,76,60,0.4); }
+
+  .q-top {
+    padding: 20px 22px 16px;
+  }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 1px;
+  }
+
+  .q-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  .q-tag.s1 { background: rgba(58,123,213,0.2); color: #6fa8e8; }
+  .q-tag.s2 { background: rgba(247,151,30,0.2); color: #f7b85e; }
+  .q-tag.s3 { background: rgba(0,201,167,0.2); color: #4dd9c0; }
+  .q-tag.s4 { background: rgba(142,68,173,0.2); color: #b87fd6; }
+  .q-tag.s5 { background: rgba(231,76,60,0.2); color: #ee8070; }
+
+  .q-diff {
+    font-size: 11px;
+    margin-left: auto;
+    color: var(--text2);
+  }
+
+  .q-text {
+    font-size: 15px;
+    color: var(--cream);
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  /* Options */
+  .options {
+    padding: 0 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--navy2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 5px;
+    color: var(--text2);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .option-btn:not(.locked):hover {
+    background: var(--card2);
+    color: var(--text);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .option-letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    min-width: 20px;
+    padding-top: 1px;
+  }
+
+  .option-btn.correct {
+    background: rgba(39,174,96,0.15);
+    border-color: rgba(39,174,96,0.5);
+    color: #6ec98a;
+  }
+
+  .option-btn.wrong {
+    background: rgba(231,76,60,0.12);
+    border-color: rgba(231,76,60,0.4);
+    color: #e87870;
+  }
+
+  .option-btn.show-correct {
+    background: rgba(39,174,96,0.1);
+    border-color: rgba(39,174,96,0.3);
+    color: #5db87a;
+  }
+
+  .option-btn.locked { cursor: default; }
+
+  /* Explanation */
+  .explanation {
+    display: none;
+    padding: 14px 22px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .explanation.visible { display: block; }
+
+  .expl-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .expl-text {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+
+  .expl-text strong { color: var(--cream); }
+
+  /* Result badge */
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .result-badge.correct { background: rgba(39,174,96,0.2); color: #6ec98a; }
+  .result-badge.wrong { background: rgba(231,76,60,0.15); color: #e87870; }
+
+  /* Progress bar */
+  .prog-container {
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    height: 6px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+
+  /* Hidden question */
+  .question-card.hidden { display: none; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 28px; }
+    .container { padding: 24px 14px 60px; }
+    .dashboard { grid-template-columns: repeat(2, 1fr); }
+    .q-text { font-size: 14px; }
+    .option-btn { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">SPL · Ders Kodu 1003 · TEST</div>
+  <h1>Sermaye Piyasası <span>Araçları 1</span></h1>
+  <p>Bölüm bölüm sınav soruları — cevabına tıkla, açıklamayı gör</p>
+  <div class="file-switch">
+    <a href="spl1003-konular.html">📚 Konu Özetleri</a>
+    <a href="#" class="active">📝 Test &amp; Sorular</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <div class="dash-card">
+      <div class="dash-val" id="stat-total">40</div>
+      <div class="dash-label">Toplam Soru</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-val" id="stat-answered" style="color:var(--accent2)">0</div>
+      <div class="dash-label">Cevaplanan</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-val" id="stat-correct" style="color:#6ec98a">0</div>
+      <div class="dash-label">Doğru</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-val" id="stat-pct" style="color:var(--gold)">—</div>
+      <div class="dash-label">Başarı %</div>
+    </div>
+  </div>
+
+  <div class="prog-container">
+    <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterSection('all', this)">Tümü</button>
+    <button class="filter-btn" onclick="filterSection('s1', this)">① Paylar</button>
+    <button class="filter-btn" onclick="filterSection('s2', this)">② Borçlanma</button>
+    <button class="filter-btn" onclick="filterSection('s3', this)">③ Yatırım Fonu</button>
+    <button class="filter-btn" onclick="filterSection('s4', this)">④ Türev Araçlar</button>
+    <button class="filter-btn" onclick="filterSection('s5', this)">⑤ Kamu DİBS</button>
+    <button class="reset-btn" onclick="resetAll()">↺ Sıfırla</button>
+  </div>
+
+  <!-- Questions will be rendered here -->
+  <div id="questions-container"></div>
+
+</div>
+
+<script>
+const questions = [
+  // ===== BÖLÜM 1: PAYLAR =====
+  {
+    id: 1, section: 's1', sectionName: 'Paylar',
+    text: "Türk Ticaret Kanunu'na göre bir payın itibari (nominal) değeri en az kaç olabilir?",
+    options: ["1 TL", "1 Kuruş (Kr)", "10 Kuruş", "50 Kuruş"],
+    correct: 1,
+    explanation: "TTK Madde 476 uyarınca bir payın nominal değeri <strong>1 Kuruş'tan az olamaz</strong>. Borsada işlem gören şirketlerde genellikle 1 TL uygulanmaktadır, ancak yasal alt sınır 1 Kr'dır."
+  },
+  {
+    id: 2, section: 's1', sectionName: 'Paylar',
+    text: "Bir payın birden fazla sahibi olması durumunda, bu kişiler ortaklığa karşı haklarını nasıl kullanır?",
+    options: ["Her biri ayrı ayrı kullanır", "Ortak bir temsilci aracılığıyla kullanır", "En büyük paya sahip olan kullanır", "Ortaklıktan izin alarak kullanır"],
+    correct: 1,
+    explanation: "Pay ortaklığa karşı bölünmez. Birden fazla sahibi olması halinde, bu kişiler haklarını <strong>ortak bir temsilci aracılığıyla</strong> kullanabilirler. Temsilci atanmazsa, pay sahiplerinden birine yapılan tebligat diğerlerine de yapılmış sayılır."
+  },
+  {
+    id: 3, section: 's1', sectionName: 'Paylar',
+    text: "Pay sahiplerinin getiri unsurları aşağıdakilerden hangisini içermez?",
+    options: ["Kâr payı (temettü)", "Değer artış kazancı", "Tasfiye sonucuna katılım", "Sabit faiz geliri"],
+    correct: 3,
+    explanation: "Payın getirisi; <strong>kâr payı, tasfiye sonucuna katılım ve değer artış kazancı</strong>ndan oluşur. Sabit faiz geliri borçlanma araçlarına (tahvil, bono) özgüdür — payın vadesi ve sabit getirisi yoktur."
+  },
+  {
+    id: 4, section: 's1', sectionName: 'Paylar',
+    text: "Ortaklığın iflası ya da tasfiyesi durumunda ödeme sıralamasında pay sahipleri hangi konumdadır?",
+    options: ["En önde — alacaklılardan önce alır", "Tahvil sahiplerinden önce alır", "Tüm borçlar kapandıktan sonra en sonda alır", "Tahvil sahipleriyle eşit sırada alır"],
+    correct: 2,
+    explanation: "Pay sahipleri, iflas veya tasfiye durumunda <strong>tüm borçlar (borçlanma araçları dahil) kapandıktan sonra kalan artık üzerinden</strong> haklarını alır. Bu 'artık talep hakkı' onları en yüksek riskli konuma koyar."
+  },
+  {
+    id: 5, section: 's1', sectionName: 'Paylar',
+    text: "Halka arzdan sonra fiyat istikrarı sağlayıcı işlemler en fazla kaç gün sürebilir?",
+    options: ["15 gün", "30 gün", "60 gün", "90 gün"],
+    correct: 1,
+    explanation: "Fiyat istikrarı sağlayıcı işlemler, halka arzdan itibaren en fazla <strong>30 gün</strong> sürebilir. Bu işlemler yalnızca izahnameye eklenmiş plan çerçevesinde yetkili kuruluşlar tarafından yapılabilir."
+  },
+  {
+    id: 6, section: 's1', sectionName: 'Paylar',
+    text: "Bedelli sermaye artırımında artırım tutarının en az yüzde kaçı tescilden önce ödenmelidir?",
+    options: ["%25", "%50", "%75", "%100"],
+    correct: 2,
+    explanation: "Bedelli sermaye artırımında artırım tutarının <strong>en az %75'i</strong> tescilden önce ödenmelidir. Kalan %25 ise tescilden itibaren 24 ay içinde ödenir."
+  },
+  {
+    id: 7, section: 's1', sectionName: 'Paylar',
+    text: "Bedelsiz sermaye artırımının kaynakları arasında aşağıdakilerden hangisi yer almaz?",
+    options: ["Olağanüstü yedek akçeler", "Geçmiş yıl kârları", "Yeni pay bedelleri (nakdi katkı)", "Emisyon primleri"],
+    correct: 2,
+    explanation: "Bedelsiz sermaye artırımı <strong>iç kaynaklardan</strong> yapılır; yeni pay bedeli ödenmez. Kaynaklar: olağanüstü yedekler, geçmiş yıl kârları, emisyon primleri, enflasyon düzeltmesi farkları, gayrimenkul/iştirak satış kazançları. 'Nakdi katkı' bedelli artırıma aittir."
+  },
+  {
+    id: 8, section: 's1', sectionName: 'Paylar',
+    text: "Şarta bağlı sermaye artırımında artırım miktarı mevcut sermayenin en fazla kaçında olabilir?",
+    options: ["%25", "%50", "%75", "%100"],
+    correct: 1,
+    explanation: "Şarta bağlı sermaye artırımı miktarı <strong>mevcut sermayenin %50'sini</strong> aşamaz. Bu artırım; tahvil sahiplerine pay dönüştürme hakkı verilmesi, çalışan opsiyonları gibi belirli koşullara bağlıdır."
+  },
+  {
+    id: 9, section: 's1', sectionName: 'Paylar',
+    text: "Katılma İntifa Senetleri (KİS) hakkında aşağıdakilerden hangisi yanlıştır?",
+    options: ["Kar payı hakkı verir", "Tasfiye artığına katılım hakkı verir", "Ortaklık (oy) hakkı verir", "Halka açık anonim ortaklıklar tarafından çıkarılabilir"],
+    correct: 2,
+    explanation: "Katılma İntifa Senetleri (KİS); <strong>ortaklık (oy) hakkı vermez</strong>. KİS sahipleri kâr payı ve tasfiye artığına katılım hakkı kazanır ancak genel kurulda oy kullanamazlar. Bu en temel KİS özelliğidir."
+  },
+  {
+    id: 10, section: 's1', sectionName: 'Paylar',
+    text: "Oy imtiyazlı paylar için oy hakkı en fazla kaç kata kadar olabilir?",
+    options: ["5 kat", "10 kat", "15 kat", "20 kat"],
+    correct: 2,
+    explanation: "Oy imtiyazı en fazla <strong>15 kata</strong> kadar tanınabilir. Yani bir imtiyazlı pay, adi paya kıyasla oy sayısı bakımından en fazla 15 oy hakkı sağlayabilir."
+  },
+
+  // ===== BÖLÜM 2: BORÇLANMA ARAÇLARI =====
+  {
+    id: 11, section: 's2', sectionName: 'Borçlanma',
+    text: "Aşağıdakilerden hangisi menkul kıymet sayılmaz?",
+    options: ["Tahvil", "Hisse senedi", "Poliçe", "Finansman bonosu"],
+    correct: 2,
+    explanation: "SPK tanımına göre; <strong>para, çek, poliçe ve bono</strong> menkul kıymet kapsamı dışındadır. Bunlar kıymetli evrak olmakla birlikte standart hâlde seri ihraç edilen menkul kıymet niteliği taşımaz."
+  },
+  {
+    id: 12, section: 's2', sectionName: 'Borçlanma',
+    text: "Derecelendirme notu bulunmayan şirketler için borçlanma aracı ihraç limiti nasıl belirlenir?",
+    options: ["Özkaynak × 1", "Özkaynak × 2", "Özkaynak × 3", "Özkaynak × 5"],
+    correct: 2,
+    explanation: "Kredi derecelendirme notu bulunmayan ihraçcılar (bankalar hariç) için borçlanma aracı ihraç limiti <strong>özkaynağın 3 katı</strong>dır. Derecelendirme notu varlığında bu limit artırılabilir."
+  },
+  {
+    id: 13, section: 's2', sectionName: 'Borçlanma',
+    text: "Paya Dönüştürülebilir Tahvil (PDT) ile Değiştirilebilir Tahvil (DET) arasındaki temel fark nedir?",
+    options: [
+      "PDT vadesiz, DET vadeli borçlanma aracıdır",
+      "PDT ihraçcı şirketin payına dönüşür, DET başka bir ortaklığın payına dönüşür",
+      "PDT faiz öder, DET ödemez",
+      "PDT yalnızca borsada işlem görür, DET görmez"
+    ],
+    correct: 1,
+    explanation: "PDT; ihraçcı şirketin kendi payına dönüştürülür. DET ise <strong>ihraçcının elindeki başka bir ortaklığın payına</strong> dönüştürülür. İkisi de hisse dönüşümü içerir ancak hedef şirket farklıdır."
+  },
+  {
+    id: 14, section: 's2', sectionName: 'Borçlanma',
+    text: "Finansman bonolarının en temel özelliği aşağıdakilerden hangisidir?",
+    options: ["Vadesi 5 yıldan uzundur", "Kupon faizi ödenir", "Kısa vadeli ve iskontolu ihraç edilir", "Yalnızca devlet çıkarabilir"],
+    correct: 2,
+    explanation: "Finansman bonoları; vadeleri <strong>1 yıl veya daha kısa</strong> olan ve <strong>iskontolu</strong> olarak ihraç edilen kısa vadeli borçlanma araçlarıdır. Dönemsel faiz (kupon) ödemesi yapılmaz; getiri, alış ile itfa değeri arasındaki farktır."
+  },
+  {
+    id: 15, section: 's2', sectionName: 'Borçlanma',
+    text: "Borçlanma Aracı Sahipleri Kurulu hangi tebliğ kapsamında düzenlenmektedir?",
+    options: ["VII-128.1", "VII-128.8", "II-31/A.1", "III-52.1"],
+    correct: 2,
+    explanation: "Borçlanma Aracı Sahipleri Kurulu <strong>II-31/A.1 sayılı Tebliğ</strong> kapsamında düzenlenmektedir. Bu tebliğ; tahvil sahiplerinin kolektif karar alma mekanizmasını, temsilci kuruluş atanmasını ve olağanüstü durumlarda toplanma esaslarını belirler."
+  },
+  {
+    id: 16, section: 's2', sectionName: 'Borçlanma',
+    text: "Aşağıdaki yeşil tahvil türlerinden hangisinde, belirlenen sürdürülebilirlik hedeflerine ulaşılıp ulaşılmamasına göre faiz oranı değişir?",
+    options: ["Yeşil tahvil", "Sosyal tahvil", "Sürdürülebilirlik tahvili", "Sürdürülebilirliğe bağlı tahvil"],
+    correct: 3,
+    explanation: "<strong>Sürdürülebilirliğe bağlı tahvillerde</strong> (Sustainability-Linked Bond), faiz oranı önceden belirlenmiş KPI (anahtar performans göstergesi) hedeflerine ulaşılıp ulaşılmamasına bağlıdır. Diğer türlerde kullanım amacı yeşil/sosyal olsa da faiz sabittir."
+  },
+  {
+    id: 17, section: 's2', sectionName: 'Borçlanma',
+    text: "Hiyerarşik sıralamada 'Sermaye Piyasası Aracı' kavramı aşağıdakilerin hangisini kapsar?",
+    options: [
+      "Yalnızca menkul kıymetleri",
+      "Menkul kıymetler ve türev araçları",
+      "Menkul kıymetler, türev araçlar ve diğer sermaye piyasası araçlarını",
+      "Kıymetli evrak kapsamındaki tüm belgeleri"
+    ],
+    correct: 2,
+    explanation: "6362 sayılı SPKn'a göre 'sermaye piyasası aracı' üst kavramı; <strong>menkul kıymetler + türev araçlar + diğer sermaye piyasası araçları</strong>nı kapsar. Kıymetli evrak ise daha geniş bir kavram olup sermaye piyasası aracını da içine alır."
+  },
+  {
+    id: 18, section: 's2', sectionName: 'Borçlanma',
+    text: "Erken itfa edilebilir tahvillerdeki 'put' opsiyonu kime aittir?",
+    options: ["Yalnızca ihraçcıya", "Yalnızca yatırımcıya (tahvil sahibine)", "Her iki tarafa eşit", "Takasbank'a"],
+    correct: 1,
+    explanation: "'Put' opsiyonu; <strong>tahvil sahibinin (yatırımcının)</strong> belirli bir tarihte tahvili ihraçcıya iade edip anapara almasına imkân tanır. 'Call' opsiyonu ise ihraçcının erken geri çağırma hakkıdır."
+  },
+
+  // ===== BÖLÜM 3: YATIRIM FONU =====
+  {
+    id: 19, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Yatırım fonlarında saklayıcı kuruluş olarak görev yapan kurum hangisidir?",
+    options: ["SPK (Sermaye Piyasası Kurulu)", "Takasbank", "MKK (Merkezi Kayıt Kuruluşu)", "TCMB"],
+    correct: 1,
+    explanation: "<strong>Takasbank (İstanbul Takas ve Saklama Bankası A.Ş.)</strong>, yatırım fonlarında saklayıcı kuruluş olarak fon varlıklarını saklar. MKK ise kaydi menkul kıymetlerin kaydını tutar; SPK düzenleyici ve denetleyici otoritedir."
+  },
+  {
+    id: 20, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Para piyasası fonlarında ağırlıklı ortalama portföy vadesi en fazla kaç gün olabilir?",
+    options: ["30 gün", "60 gün", "90 gün", "180 gün"],
+    correct: 2,
+    explanation: "Para piyasası fonlarında ağırlıklı ortalama vade <strong>90 gün</strong>ü aşamaz. Bu kısıt; fonun kısa vadeli, düşük riskli ve likit yapısını korumasını sağlar."
+  },
+  {
+    id: 21, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Net Aktif Değer (NAD) nasıl hesaplanır?",
+    options: [
+      "Fon portföy değeri × Pay sayısı",
+      "Portföy toplam değeri ÷ Dolaşımdaki pay sayısı",
+      "Portföy toplam değeri − Borçlar",
+      "Kurucu sermayesi ÷ Pay sayısı"
+    ],
+    correct: 1,
+    explanation: "NAD (Birim Pay Değeri) = <strong>Portföy Toplam Değeri ÷ Dolaşımdaki Pay Sayısı</strong>. Portföy değeri günlük olarak hesaplanır ve katılma paylarının alım-satımı bu fiyat üzerinden gerçekleşir."
+  },
+  {
+    id: 22, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Serbest fonlara yalnızca kimler yatırım yapabilir?",
+    options: ["Tüm gerçek ve tüzel kişiler", "Yalnızca kurumsal yatırımcılar", "Nitelikli yatırımcılar", "Yalnızca bankalar"],
+    correct: 2,
+    explanation: "Serbest fonlar yalnızca <strong>nitelikli yatırımcılara</strong> satılabilir. Nitelikli yatırımcı; belirli bir portföy büyüklüğü veya finansal bilgi düzeyine sahip kişi/kuruluşlardır. Bu fonlar portföy sınırlamalarından geniş ölçüde muaftır."
+  },
+  {
+    id: 23, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Fon Sepeti Fonu'nun portföyünün en az yüzde kaçı başka fonların katılma paylarından oluşmalıdır?",
+    options: ["%51", "%67", "%75", "%80"],
+    correct: 3,
+    explanation: "Fon Sepeti Fonları portföyünün <strong>en az %80</strong>'i, diğer yatırım fonu katılma paylarından oluşmak zorundadır. Bu yapı, fonların fonuna yatırım yapan çeşitlendirilmiş bir model sunar."
+  },
+  {
+    id: 24, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "TEFAS'ın (Türkiye Elektronik Fon Alım Satım Platformu) temel işlevi nedir?",
+    options: [
+      "Yalnızca devlet tahvillerinin alım-satımı",
+      "Farklı kuruculara ait fonların tek platformdan alım-satımı",
+      "Türev araç işlemlerinin gerçekleştirilmesi",
+      "Fon denetiminin yapılması"
+    ],
+    correct: 1,
+    explanation: "TEFAS; yatırımcıların <strong>farklı portföy yönetim şirketlerine (kuruculara) ait fonları tek bir platform üzerinden alıp satabilmesini</strong> sağlar. Rekabeti artırır ve yatırımcıya kolaylık sunar."
+  },
+  {
+    id: 25, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Yatırım fonunda tek bir ihraçcının menkul kıymetleri portföyün en fazla yüzde kaçını oluşturabilir?",
+    options: ["%5", "%10", "%20", "%25"],
+    correct: 1,
+    explanation: "Genel kural olarak, bir ihraçcının menkul kıymetleri fon portföyünün <strong>en fazla %10</strong>'unu oluşturabilir. Bu sınır, portföy çeşitlendirmesini zorunlu kılar. DİBS gibi devlet borçlanma araçları bu sınırın dışında tutulabilir."
+  },
+  {
+    id: 26, section: 's3', sectionName: 'Yatırım Fonu',
+    text: "Garantili fon ile Koruma Amaçlı fon arasındaki temel fark nedir?",
+    options: [
+      "Garantili fonda vade yoktur, koruma amaçlıda vardır",
+      "Garantili fonda anapara geri ödemesi kesindir; koruma amaçlıda belirli senaryolarda kısmi koruma sağlanır",
+      "Koruma amaçlı fon yalnızca hisse senedine yatırım yapar",
+      "İkisi arasında fark yoktur"
+    ],
+    correct: 1,
+    explanation: "<strong>Garantili fonlarda</strong> başlangıç yatırımının tamamı (anapara) belirli bir kuruluş garantisi altındadır. <strong>Koruma amaçlı fonlarda</strong> ise belirli piyasa koşullarında kısmi koruma hedeflenir; ancak kesin garanti verilmez."
+  },
+
+  // ===== BÖLÜM 4: TÜREV ARAÇLAR =====
+  {
+    id: 27, section: 's4', sectionName: 'Türev Araçlar',
+    text: "Forward ve Futures sözleşmeleri arasındaki temel fark nedir?",
+    options: [
+      "Forward alım, Futures satım sözleşmesidir",
+      "Forward tezgah üstü (OTC) ve özelleştirilmiş; Futures organize borsada ve standarttır",
+      "Forward kısa vadeli, Futures uzun vadelidir",
+      "Forward'da teminat zorunludur, Futures'da yoktur"
+    ],
+    correct: 1,
+    explanation: "<strong>Forward</strong>: OTC piyasada, tarafların ihtiyacına göre özelleştirilmiş, teminat zorunluluğu olmayan sözleşmelerdir. <strong>Futures</strong>: organize borsada (VİOP gibi) işlem gören, standart, teminat zorunluluğu olan sözleşmelerdir."
+  },
+  {
+    id: 28, section: 's4', sectionName: 'Türev Araçlar',
+    text: "Amerikan tipi opsiyon ile Avrupa tipi opsiyon arasındaki fark nedir?",
+    options: [
+      "Amerikan tipte alım (call), Avrupa tipte satım (put) yapılır",
+      "Amerikan tipi vade boyunca her an kullanılabilir; Avrupa tipi yalnızca vade sonunda",
+      "Avrupa tipi daha fazla prim gerektirir",
+      "Amerikan tipi sadece hisse senetleri için geçerlidir"
+    ],
+    correct: 1,
+    explanation: "<strong>Amerikan tipi</strong> opsiyon vade boyunca herhangi bir anda kullanılabilir. <strong>Avrupa tipi</strong> opsiyon ise yalnızca vade tarihinde kullanılabilir. Bu esneklik nedeniyle Amerikan tipi opsiyonlar genellikle daha yüksek prim içerir."
+  },
+  {
+    id: 29, section: 's4', sectionName: 'Türev Araçlar',
+    text: "VİOP'ta işlem gören sözleşmeler arasında aşağıdakilerden hangisi yer almaz?",
+    options: ["BİST 30 Endeks Vadeli İşlem", "Döviz Vadeli İşlem (USD/TL)", "Konut Fiyat Endeksi Vadeli İşlem", "Altın Vadeli İşlem"],
+    correct: 2,
+    explanation: "VİOP'ta BİST 30 endeksi, döviz (USD/TL, EUR/TL), kıymetli maden (altın, gümüş), enerji ve pay vadeli/opsiyon sözleşmeleri işlem görür. <strong>Konut fiyat endeksine dayalı vadeli işlem sözleşmesi</strong> VİOP'ta bulunmamaktadır."
+  },
+  {
+    id: 30, section: 's4', sectionName: 'Türev Araçlar',
+    text: "Bir yatırımcı elinde tuttuğu hisse senedi portföyünü düşüş riskine karşı korumak istiyor. Hangi stratejiyi uygulamalıdır?",
+    options: [
+      "BİST 30 futures alım (long) pozisyonu açmalı",
+      "BİST 30 futures satım (short) pozisyonu açmalı",
+      "Call opsiyon satmalı",
+      "Swap sözleşmesi yapmalı"],
+    correct: 1,
+    explanation: "Hisse portföyü düşüş riskine karşı koruma (hedging) için <strong>futures'da short (satım) pozisyon</strong> açılır. Portföy değer kaybederse, short futures pozisyonundan kazanç elde edilerek kayıp telafi edilir."
+  },
+  {
+    id: 31, section: 's4', sectionName: 'Türev Araçlar',
+    text: "Teminat tamamlama çağrısı (Margin Call) ne zaman yapılır?",
+    options: [
+      "Başlangıç teminatı yatırıldığında",
+      "Teminat, sürdürme teminatı seviyesinin altına düştüğünde",
+      "Sözleşme vadesi dolduğunda",
+      "Kâr edildiğinde"
+    ],
+    correct: 1,
+    explanation: "Margin Call (teminat tamamlama çağrısı); hesaptaki teminat değerinin <strong>sürdürme teminatı seviyesinin altına düşmesi</strong> durumunda yapılır. Yatırımcı teminatını başlangıç seviyesine tamamlamak zorundadır, aksi hâlde pozisyon kapatılır."
+  },
+  {
+    id: 32, section: 's4', sectionName: 'Türev Araçlar',
+    text: "Faiz swapının temel işleyiş mekanizması nedir?",
+    options: [
+      "İki taraf anapara tutarlarını değiştirir",
+      "Bir taraf sabit faiz öderken, diğer taraf değişken faiz öder",
+      "Her iki taraf da sabit faiz öder",
+      "Yalnızca döviz cinsinden nakit akışı değişimi yapılır"
+    ],
+    correct: 1,
+    explanation: "En yaygın swap türü olan faiz swapında; <strong>bir taraf sabit faiz ödeyip değişken faiz alırken, diğer taraf değişken faiz ödeyip sabit faiz alır</strong>. Genellikle anapara değişimi yapılmaz, yalnızca net faiz farkı ödenir."
+  },
+
+  // ===== BÖLÜM 5: KAMU BORÇLANMA ARAÇLARI =====
+  {
+    id: 33, section: 's5', sectionName: 'Kamu DİBS',
+    text: "Hazine Bonosu ile Devlet Tahvili arasındaki temel vade farkı nedir?",
+    options: [
+      "Hazine Bonosu > 1 yıl; Devlet Tahvili ≤ 1 yıl",
+      "Hazine Bonosu ≤ 1 yıl; Devlet Tahvili > 1 yıl",
+      "İkisi de aynı vadeye sahiptir",
+      "Hazine Bonosu 2 yıl; Devlet Tahvili 5 yıl"
+    ],
+    correct: 1,
+    explanation: "<strong>Hazine Bonosu</strong>: vadesi 1 yıl veya daha kısa olan devlet iç borçlanma senedidir (iskontolu ihraç). <strong>Devlet Tahvili</strong>: vadesi 1 yıldan uzun olan DİBS'tir (kuponlu veya iskontolu olabilir)."
+  },
+  {
+    id: 34, section: 's5', sectionName: 'Kamu DİBS',
+    text: "Getiri eğrisinin ters (negatif eğimli) olması ekonomik açıdan ne anlama gelir?",
+    options: [
+      "Ekonomi güçlü büyüme dönemine girmektedir",
+      "Resesyon (ekonomik daralma) beklentisi sinyali verebilir",
+      "Enflasyon beklentisi sıfırdır",
+      "Kısa vadeli faizler daha düşük, uzun vadeli faizler daha yüksektir"
+    ],
+    correct: 1,
+    explanation: "Ters getiri eğrisi; kısa vadeli faizlerin uzun vadeli faizlerden yüksek olduğunu gösterir ve genellikle <strong>yakın vadede resesyon beklentisinin sinyali</strong> olarak değerlendirilir. Merkez bankası politika faizinin yüksekliği buna yol açabilir."
+  },
+  {
+    id: 35, section: 's5', sectionName: 'Kamu DİBS',
+    text: "Piyasa yapıcılık sisteminde piyasa yapıcı bankaların temel yükümlülüğü nedir?",
+    options: [
+      "Yalnızca ikincil piyasada işlem yapmak",
+      "Birincil piyasada DİBS alım garantisi ve ikincil piyasada kotasyon vermek",
+      "Sadece yabancı yatırımcılara DİBS satmak",
+      "Faiz oranlarını belirlemek"
+    ],
+    correct: 1,
+    explanation: "Piyasa yapıcılar; <strong>birincil piyasada (ihale) belirli miktarda DİBS almayı taahhüt eder</strong>, bunun yanında <strong>ikincil piyasada sürekli alım-satım kotasyonu</strong> yayımlamak zorundadırlar. Karşılığında özel ihale haklarından yararlanırlar."
+  },
+  {
+    id: 36, section: 's5', sectionName: 'Kamu DİBS',
+    text: "TÜFE'ye endeksli devlet tahvilinin diğer tahvillerden farkı nedir?",
+    options: [
+      "Yabancı para cinsinden ihraç edilir",
+      "Anapara ve/veya faizi enflasyona (TÜFE) göre artırılır",
+      "Vade sonunda paya dönüştürülebilir",
+      "Yalnızca kurum yatırımcılar satın alabilir"
+    ],
+    correct: 1,
+    explanation: "TÜFE'ye endeksli tahvillerde <strong>anapara tutarı (ve buna bağlı faiz) TÜFE artışına göre güncellenir</strong>. Bu yapı, enflasyon riskine karşı reel getiri garantisi sunar ve özellikle yüksek enflasyon dönemlerinde tercih edilir."
+  },
+  {
+    id: 37, section: 's5', sectionName: 'Kamu DİBS',
+    text: "DİBS'lerin aracı kurumlar tarafından alım-satımı için ne gereklidir?",
+    options: [
+      "Herhangi bir lisans gerekmez",
+      "Yalnızca bankacılık lisansı yeterlidir",
+      "SPK tarafından verilmiş yatırım hizmetleri lisansı gerekir",
+      "DİBS'ler bireyler tarafından doğrudan alınabilir, aracıya gerek yoktur"
+    ],
+    correct: 2,
+    explanation: "DİBS'lerin ihracı SPK kaydına tabi olmamakla birlikte, aracı kurumların DİBS alım-satım faaliyeti yürütebilmesi için <strong>SPK'dan yatırım hizmetleri lisansı alması zorunludur</strong>."
+  },
+  {
+    id: 38, section: 's5', sectionName: 'Kamu DİBS',
+    text: "Gerçek kişilerin DİBS'ten elde ettiği faiz geliri vergi açısından nasıl değerlendirilir?",
+    options: [
+      "Vergiden muaftır",
+      "Stopaj (tevkifat) yoluyla vergilendirilir",
+      "Yalnızca kurumlar vergisine tabidir",
+      "KDV'ye tabidir"
+    ],
+    correct: 1,
+    explanation: "Gerçek kişilerin DİBS'ten elde ettiği faiz geliri <strong>stopaj (tevkifat) yöntemiyle vergilendirilir</strong>. Belirli beyanname eşiklerinin aşılması durumunda ek beyanname yükümlülüğü doğabilir."
+  },
+  {
+    id: 39, section: 's5', sectionName: 'Kamu DİBS',
+    text: "Kira Sertifikasının (sukuk) diğer devlet borçlanma araçlarından farkı nedir?",
+    options: [
+      "Döviz cinsinden ihraç edilir",
+      "Faizsiz (İslami finans prensipleri çerçevesinde) yapılandırılmıştır",
+      "Yalnızca yabancı yatırımcılara satılır",
+      "5 yıldan kısa vadeli olamaz"
+    ],
+    correct: 1,
+    explanation: "Kira Sertifikası (Sukuk); <strong>İslami finans prensipleri çerçevesinde faizsiz</strong> yapılandırılmış bir kamu borçlanma aracıdır. Bir varlığın kiralanmasından elde edilen gelir, yatırımcıya aktarılır. Faiz yerine kira geliri ödenir."
+  },
+  {
+    id: 40, section: 's5', sectionName: 'Kamu DİBS',
+    text: "DİBS ihalelerinde 'rekabetçi olmayan teklif' (non-competitive bid) ne anlama gelir?",
+    options: [
+      "Fiyat belirtmeden, ihale ortalama fiyatından alım yapmak",
+      "İhaleye katılmayı reddetmek",
+      "En yüksek fiyattan alım yapmayı taahhüt etmek",
+      "Yalnızca yabancı yatırımcılara açık teklif türü"
+    ],
+    correct: 0,
+    explanation: "Rekabetçi olmayan teklifte; yatırımcı fiyat belirtmeden ihaleye katılır ve <strong>ihale sonucunda oluşan ortalama fiyattan</strong> DİBS alır. Bu yöntem özellikle bireysel yatırımcılar için kolaylık sağlar."
+  }
+];
+
+// State
+let answered = 0, correct = 0;
+let currentFilter = 'all';
+
+function renderQuestions(filter) {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  const visible = filter === 'all' ? questions : questions.filter(q => q.section === filter);
+  document.getElementById('stat-total').textContent = visible.length;
+
+  visible.forEach((q, idx) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    const optHTML = q.options.map((opt, i) =>
+      `<button class="option-btn" id="q${q.id}-opt${i}" onclick="answer(${q.id}, ${i}, ${q.correct})">`+
+      `<span class="option-letter">${letters[i]}</span><span>${opt}</span></button>`
+    ).join('');
+
+    container.insertAdjacentHTML('beforeend', `
+      <div class="question-card" id="qcard-${q.id}">
+        <div class="q-top">
+          <div class="q-meta">
+            <span class="q-num">S-${String(idx+1).padStart(2,'0')}</span>
+            <span class="q-tag ${q.section}">${q.sectionName}</span>
+          </div>
+          <div class="q-text">${q.text}</div>
+        </div>
+        <div class="options">${optHTML}</div>
+        <div class="explanation" id="expl-${q.id}">
+          <div class="result-badge" id="badge-${q.id}"></div>
+          <div class="expl-title">📖 Açıklama</div>
+          <div class="expl-text">${q.explanation}</div>
+        </div>
+      </div>
+    `);
+  });
+}
+
+function answer(qId, chosen, correctIdx) {
+  const card = document.getElementById(`qcard-${qId}`);
+  if (card.classList.contains('answered-correct') || card.classList.contains('answered-wrong')) return;
+
+  const opts = card.querySelectorAll('.option-btn');
+  opts.forEach((btn, i) => {
+    btn.classList.add('locked');
+    if (i === correctIdx) btn.classList.add('show-correct');
+    if (i === chosen && chosen !== correctIdx) btn.classList.add('wrong');
+    if (i === chosen && chosen === correctIdx) btn.classList.remove('show-correct');
+  });
+
+  if (chosen === correctIdx) {
+    opts[chosen].classList.add('correct');
+    card.classList.add('answered-correct');
+  } else {
+    opts[chosen].classList.add('wrong');
+    opts[correctIdx].classList.remove('show-correct');
+    opts[correctIdx].classList.add('correct');
+    card.classList.add('answered-wrong');
+  }
+
+  const expl = document.getElementById(`expl-${qId}`);
+  expl.classList.add('visible');
+
+  const badge = document.getElementById(`badge-${qId}`);
+  if (chosen === correctIdx) {
+    badge.className = 'result-badge correct';
+    badge.innerHTML = '✓ Doğru';
+    correct++;
+  } else {
+    badge.className = 'result-badge wrong';
+    badge.innerHTML = '✗ Yanlış';
+  }
+
+  answered++;
+  updateStats();
+}
+
+function updateStats() {
+  const visible = currentFilter === 'all' ? questions : questions.filter(q => q.section === currentFilter);
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-correct').textContent = correct;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById('stat-pct').textContent = answered > 0 ? pct + '%' : '—';
+  const progPct = (answered / visible.length) * 100;
+  document.getElementById('prog-fill').style.width = Math.min(progPct, 100) + '%';
+}
+
+function filterSection(sec, btn) {
+  currentFilter = sec;
+  answered = 0; correct = 0;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuestions(sec);
+  updateStats();
+}
+
+function resetAll() {
+  answered = 0; correct = 0;
+  renderQuestions(currentFilter);
+  updateStats();
+}
+
+// Init
+renderQuestions('all');
+updateStats();
+</script>
+</body>
+</html>
