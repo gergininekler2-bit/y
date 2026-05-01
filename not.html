@@ -1,908 +1,233 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="night">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Not Evreni</title>
   <style>
     :root {
-      --bg-1: #070816;
-      --bg-2: #101a3f;
-      --bg-3: #221346;
-      --text: #f7fbff;
-      --muted: rgba(247, 251, 255, 0.68);
-      --soft: rgba(255, 255, 255, 0.09);
-      --soft-2: rgba(255, 255, 255, 0.14);
-      --card: rgba(16, 21, 47, 0.68);
-      --card-strong: rgba(17, 24, 56, 0.92);
-      --border: rgba(255, 255, 255, 0.14);
-      --accent: #77e7ff;
-      --accent-2: #b87cff;
-      --danger: #ff5d8f;
-      --success: #72f2b7;
-      --warning: #ffcf6b;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --blur: blur(22px);
-      --grid-line: rgba(255, 255, 255, 0.05);
+      --bg-1:#070816; --bg-2:#101a3f; --bg-3:#221346;
+      --text:#f7fbff; --muted:rgba(247,251,255,.68);
+      --soft:rgba(255,255,255,.09); --soft-2:rgba(255,255,255,.14);
+      --card:rgba(16,21,47,.68); --card-strong:rgba(17,24,56,.94);
+      --border:rgba(255,255,255,.14); --accent:#77e7ff; --accent-2:#b87cff;
+      --danger:#ff5d8f; --success:#72f2b7; --warning:#ffcf6b;
+      --shadow:0 24px 70px rgba(0,0,0,.36); --blur:blur(22px);
+      --radius-xl:30px; --radius-lg:22px; --radius-md:15px;
+      --grid-line:rgba(255,255,255,.055);
+      --land-1:rgba(119,231,255,.14); --land-2:rgba(184,124,255,.14);
     }
+    [data-theme="day"] { --bg-1:#eff7ff; --bg-2:#dfeafe; --bg-3:#fff5fb; --text:#17213b; --muted:rgba(23,33,59,.64); --soft:rgba(255,255,255,.74); --soft-2:rgba(87,111,163,.12); --card:rgba(255,255,255,.73); --card-strong:rgba(255,255,255,.96); --border:rgba(86,103,139,.18); --accent:#177adf; --accent-2:#8c4ef2; --danger:#d92565; --success:#0f9f70; --warning:#b87300; --shadow:0 24px 60px rgba(91,111,150,.22); --grid-line:rgba(20,45,80,.07); }
+    [data-theme="nebula"] { --bg-1:#12051e; --bg-2:#20175a; --bg-3:#5a174b; --accent:#ff7ad9; --accent-2:#77e7ff; --land-1:rgba(255,122,217,.16); --land-2:rgba(119,231,255,.12); }
+    [data-theme="minimal"] { --bg-1:#0d1117; --bg-2:#111827; --bg-3:#1f2937; --accent:#e5e7eb; --accent-2:#94a3b8; --soft:rgba(255,255,255,.06); --card:rgba(17,24,39,.76); --land-1:rgba(229,231,235,.09); --land-2:rgba(148,163,184,.09); }
+    [data-theme="solar"] { --bg-1:#160d05; --bg-2:#4a240c; --bg-3:#7b2f16; --accent:#ffcf6b; --accent-2:#ff6b8f; --land-1:rgba(255,207,107,.16); --land-2:rgba(255,107,143,.12); }
 
-    [data-theme="day"] {
-      --bg-1: #eff7ff;
-      --bg-2: #dfeafe;
-      --bg-3: #fff5fb;
-      --text: #17213b;
-      --muted: rgba(23, 33, 59, 0.64);
-      --soft: rgba(255, 255, 255, 0.74);
-      --soft-2: rgba(87, 111, 163, 0.12);
-      --card: rgba(255, 255, 255, 0.72);
-      --card-strong: rgba(255, 255, 255, 0.95);
-      --border: rgba(86, 103, 139, 0.18);
-      --accent: #177adf;
-      --accent-2: #8c4ef2;
-      --danger: #d92565;
-      --success: #0f9f70;
-      --warning: #c77f05;
-      --shadow: 0 24px 60px rgba(91, 111, 150, 0.22);
-      --grid-line: rgba(23, 33, 59, 0.055);
-    }
-
-    [data-theme="nebula"] {
-      --bg-1: #07030f;
-      --bg-2: #25104b;
-      --bg-3: #450e4d;
-      --text: #fff6ff;
-      --muted: rgba(255, 246, 255, 0.68);
-      --card: rgba(34, 13, 64, 0.68);
-      --card-strong: rgba(34, 13, 64, 0.94);
-      --accent: #ff72d2;
-      --accent-2: #77e7ff;
-      --success: #9effd2;
-    }
-
-    [data-theme="minimal"] {
-      --bg-1: #f7f8fb;
-      --bg-2: #eef2f7;
-      --bg-3: #ffffff;
-      --text: #182033;
-      --muted: rgba(24, 32, 51, 0.62);
-      --soft: rgba(255, 255, 255, 0.82);
-      --soft-2: rgba(24, 32, 51, 0.08);
-      --card: rgba(255, 255, 255, 0.82);
-      --card-strong: rgba(255, 255, 255, 0.98);
-      --border: rgba(24, 32, 51, 0.14);
-      --accent: #2f6ff6;
-      --accent-2: #111827;
-      --danger: #d92d5c;
-      --success: #138b68;
-      --warning: #ad6b00;
-      --shadow: 0 18px 45px rgba(24, 32, 51, 0.12);
-      --grid-line: rgba(24, 32, 51, 0.045);
-    }
-
-    [data-theme="solar"] {
-      --bg-1: #170b05;
-      --bg-2: #452007;
-      --bg-3: #1d1437;
-      --text: #fff8ed;
-      --muted: rgba(255, 248, 237, 0.68);
-      --card: rgba(51, 27, 16, 0.72);
-      --card-strong: rgba(51, 27, 16, 0.95);
-      --accent: #ffd166;
-      --accent-2: #ff6b8f;
-      --success: #83f6ba;
-      --warning: #ffd166;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
     body {
-      min-height: 100vh;
-      margin: 0;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height:100vh; margin:0; color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at 15% 12%, color-mix(in srgb, var(--accent), transparent 78%), transparent 34%),
-        radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--accent-2), transparent 75%), transparent 36%),
-        radial-gradient(circle at 55% 95%, rgba(255, 93, 143, 0.14), transparent 34%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2) 52%, var(--bg-3));
-      transition: background 0.45s ease, color 0.35s ease;
-      overflow-x: hidden;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -2;
-    }
-
-    body::before {
-      opacity: 0.7;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.78) 1px, transparent 1.6px),
-        radial-gradient(circle, color-mix(in srgb, var(--accent), transparent 40%) 1px, transparent 1.5px);
-      background-size: 86px 86px, 132px 132px;
-      background-position: 0 0, 24px 44px;
-      animation: starDrift 38s linear infinite;
-    }
-
-    [data-theme="day"] body::before,
-    [data-theme="minimal"] body::before {
-      opacity: 0.24;
-    }
-
-    body::after {
-      z-index: -1;
-      background:
-        linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.045), transparent),
-        radial-gradient(circle at 50% 48%, transparent 0 34%, rgba(255, 255, 255, 0.04) 35%, transparent 37%);
-      mix-blend-mode: screen;
-    }
-
-    @keyframes starDrift {
-      from { transform: translate3d(0, 0, 0); }
-      to { transform: translate3d(-86px, 86px, 0); }
-    }
-
-    button, input, textarea, select { font: inherit; }
-    button { cursor: pointer; }
-    mark { color: inherit; background: color-mix(in srgb, var(--accent), transparent 62%); border-radius: 7px; padding: 1px 4px; }
-
-    .app {
-      width: min(1260px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 94px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      background: linear-gradient(135deg, var(--card), rgba(255, 255, 255, 0.05));
-      box-shadow: var(--shadow);
-      backdrop-filter: var(--blur);
-      position: sticky;
-      top: 14px;
-      z-index: 20;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 230px;
-    }
-
-    .brand-orb {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 34% 25%, rgba(255, 255, 255, 0.95), transparent 12%),
-        radial-gradient(circle at 32% 33%, var(--accent), var(--accent-2) 52%, #251048 78%);
-      box-shadow: 0 0 28px color-mix(in srgb, var(--accent), transparent 42%), inset -14px -18px 22px rgba(0, 0, 0, 0.25);
-      position: relative;
-      flex: 0 0 auto;
-    }
-
-    .brand-orb::after {
-      content: "";
-      position: absolute;
-      width: 76px;
-      height: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.34);
-      border-radius: 50%;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(-18deg);
-    }
-
-    h1 { margin: 0; line-height: 1; font-size: clamp(1.55rem, 2.4vw, 2.2rem); letter-spacing: -0.055em; }
-    .subtitle { margin: 7px 0 0; color: var(--muted); font-size: 0.94rem; }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn, .file-btn {
-      border: 1px solid var(--border);
-      color: var(--text);
-      background: var(--soft);
-      min-height: 44px;
-      padding: 0 16px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      user-select: none;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .btn:hover, .file-btn:hover {
-      transform: translateY(-2px);
-      border-color: color-mix(in srgb, var(--accent), transparent 46%);
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-    }
-
-    .btn:active, .file-btn:active { transform: translateY(0) scale(0.98); }
-
-    .btn-primary {
-      border: 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      font-weight: 850;
-      box-shadow: 0 18px 38px color-mix(in srgb, var(--accent), transparent 80%);
-    }
-
-    .btn-danger { border-color: color-mix(in srgb, var(--danger), transparent 67%); background: color-mix(in srgb, var(--danger), transparent 87%); }
-    .btn-ghost { background: transparent; }
-    .btn-small { min-height: 36px; padding: 0 12px; font-size: 0.9rem; }
-
-    .select-pill {
-      border: 1px solid var(--border);
-      color: var(--text);
-      background: var(--soft);
-      min-height: 44px;
-      padding: 0 12px;
-      border-radius: 999px;
-      outline: none;
-    }
-
-    select option { background: #121834; color: white; }
-    [data-theme="day"] select option, [data-theme="minimal"] select option { background: white; color: #17213b; }
-
-    .toolbar {
-      margin: 24px 0;
-      display: grid;
-      grid-template-columns: minmax(220px, 1fr) 230px;
-      gap: 14px;
-    }
-
-    .search-wrap, .select-wrap {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--card);
-      backdrop-filter: var(--blur);
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.13);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-    }
-
-    .search-wrap span, .select-wrap span { opacity: 0.72; }
-    .search-wrap input, .select-wrap select { width: 100%; border: 0; outline: 0; color: var(--text); background: transparent; min-height: 34px; }
-    .search-wrap input::placeholder { color: var(--muted); }
-
-    .quick-filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin: -8px 0 22px;
-    }
-
-    .chip {
-      border: 1px solid var(--border);
-      background: var(--soft);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 14px;
-      min-height: 38px;
-      transition: 0.2s ease;
-    }
-
-    .chip:hover, .chip.active {
-      border-color: color-mix(in srgb, var(--accent), transparent 42%);
-      background: linear-gradient(135deg, color-mix(in srgb, var(--accent), transparent 82%), color-mix(in srgb, var(--accent-2), transparent 82%));
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent), transparent 94%);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin: 0 0 22px;
-    }
-
-    .stat-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      background: var(--card);
-      backdrop-filter: var(--blur);
-      padding: 17px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .stat-card::after {
-      content: "";
-      position: absolute;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      right: -32px;
-      bottom: -40px;
-      background: radial-gradient(circle, color-mix(in srgb, var(--accent), transparent 78%), transparent 68%);
-    }
-
-    .stat-number { display: block; font-size: 1.55rem; font-weight: 900; letter-spacing: -0.04em; }
-    .stat-label { display: block; color: var(--muted); margin-top: 4px; font-size: 0.9rem; }
-
-    .productivity-panel, .search-results-panel {
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      background: var(--card);
-      backdrop-filter: var(--blur);
-      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
-      padding: 18px;
-      margin-bottom: 22px;
-    }
-
-    .panel-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .panel-title-row h2 { margin: 0; font-size: 1.05rem; letter-spacing: -0.03em; }
-    .panel-subtitle { color: var(--muted); font-size: 0.9rem; }
-
-    .recent-grid, .search-match-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 12px;
-    }
-
-    .mini-card, .match-card {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.052);
-      color: var(--text);
-      padding: 13px;
-      text-align: left;
-      transition: 0.2s ease;
-      min-height: 92px;
-    }
-
-    .mini-card:hover, .match-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent), transparent 50%); }
-    .mini-title { font-weight: 850; margin-bottom: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .mini-meta { color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
-    .match-snippet { color: var(--muted); line-height: 1.45; font-size: 0.9rem; margin-top: 7px; }
-
-    .universe {
-      min-height: 500px;
-      border: 1px solid var(--border);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--accent), transparent 88%), transparent 28%),
-        radial-gradient(circle at 88% 26%, color-mix(in srgb, var(--accent-2), transparent 86%), transparent 30%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
-      backdrop-filter: var(--blur);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-      padding: 22px;
-    }
-
-    .universe::before {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      border-radius: 28px;
-      background-image:
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-        radial-gradient(circle at center, transparent 0 24%, rgba(255,255,255,0.08) 24.3%, transparent 24.8%, transparent 46%, rgba(255,255,255,0.055) 46.2%, transparent 46.7%);
-      background-size: 42px 42px, 42px 42px, 100% 100%;
-      mask-image: radial-gradient(circle at center, black, transparent 82%);
-      pointer-events: none;
-    }
-
-    .universe-header {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .universe-title { margin: 0; font-size: 1.02rem; letter-spacing: -0.02em; color: var(--muted); font-weight: 750; }
-    .result-count { color: var(--muted); font-size: 0.92rem; }
-
-    .planet-grid {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
-      gap: 18px;
-    }
-
-    .planet-card {
-      min-height: 220px;
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      text-align: center;
-      position: relative;
-      overflow: visible;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      animation: planetAppear 0.42s ease both;
-      transform: translateY(var(--drift-y, 0px));
-      color: var(--text);
-    }
-
-    .planet-card::before {
-      content: "";
-      position: absolute;
-      inset: -50%;
-      border-radius: inherit;
-      background: conic-gradient(from 180deg, transparent, rgba(255, 255, 255, 0.09), transparent 30%);
-      opacity: 0;
-      transition: opacity 0.25s ease, transform 1.2s ease;
-      pointer-events: none;
-    }
-
-    .planet-card:hover {
-      transform: translateY(calc(var(--drift-y, 0px) - 8px)) rotate(var(--tilt, 0deg));
-      border-color: color-mix(in srgb, var(--accent), transparent 46%);
-      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.22);
-      z-index: 5;
-    }
-
-    .planet-card:hover::before { opacity: 1; transform: rotate(60deg); }
-
-    @keyframes planetAppear { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(var(--drift-y, 0px)) scale(1); } }
-
-    .planet-actions {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      z-index: 4;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-
-    .tiny-icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.09);
-      color: var(--text);
-      display: inline-grid;
-      place-items: center;
-      transition: 0.2s ease;
-      pointer-events: auto;
-    }
-
-    .tiny-icon-btn:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent), transparent 45%); }
-    .tiny-icon-btn.favorite.active { color: #ffd166; background: rgba(255, 209, 102, 0.16); border-color: rgba(255, 209, 102, 0.42); }
-
-    .planet-orbit {
-      width: calc(var(--planet-size) + 38px);
-      height: calc(var(--planet-size) + 38px);
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      display: grid;
-      place-items: center;
-      position: relative;
-      margin-top: 12px;
-    }
-
-    .planet-orbit::before {
-      content: "";
-      position: absolute;
-      inset: 13%;
-      border-radius: 50%;
-      border: 1px dashed rgba(255, 255, 255, 0.12);
-      animation: orbitSpin 9s linear infinite;
-    }
-
-    .planet-orbit::after {
-      content: "";
-      position: absolute;
-      width: calc(var(--planet-size) + 64px);
-      height: 32px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.17);
-      transform: rotate(-19deg);
-    }
-
-    @keyframes orbitSpin { to { transform: rotate(360deg); } }
-
-    .planet {
-      width: var(--planet-size);
-      height: var(--planet-size);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 32% 25%, rgba(255, 255, 255, 0.92), transparent 10%),
-        radial-gradient(circle at 32% 31%, var(--planet-a), var(--planet-b) 52%, var(--planet-c) 82%);
-      box-shadow: 0 0 34px color-mix(in srgb, var(--planet-a), transparent 58%), inset -17px -22px 24px rgba(0, 0, 0, 0.28);
-      position: relative;
-      z-index: 2;
-      animation: floatPlanet 4.8s ease-in-out infinite;
-    }
-
-    .planet::before {
-      content: "";
-      position: absolute;
-      inset: 18% 10% auto;
-      height: 15%;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      transform: rotate(-18deg);
-    }
-
-    .planet::after {
-      content: "";
-      position: absolute;
-      inset: auto 15% 24%;
-      height: 10%;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.12);
-      transform: rotate(-16deg);
-    }
-
-    @keyframes floatPlanet { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-
-    .planet-name { width: 100%; margin: 10px 0 0; font-weight: 900; letter-spacing: -0.03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .planet-meta { display: flex; align-items: center; justify-content: center; gap: 7px; flex-wrap: wrap; margin-top: 9px; color: var(--muted); font-size: 0.83rem; }
-    .category-badge { max-width: 150px; border: 1px solid rgba(255, 255, 255, 0.16); color: var(--text); border-radius: 999px; padding: 5px 9px; background: rgba(255, 255, 255, 0.08); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .note-count { color: var(--muted); }
-
-    .hover-card {
-      position: absolute;
-      left: 50%;
-      bottom: calc(100% + 12px);
-      width: min(260px, calc(100vw - 44px));
-      transform: translateX(-50%) translateY(8px);
-      opacity: 0;
-      pointer-events: none;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--card-strong);
-      backdrop-filter: var(--blur);
-      padding: 12px;
-      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.26);
-      text-align: left;
-      transition: 0.2s ease;
-      z-index: 20;
-    }
-
-    .planet-card:hover .hover-card { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .hover-card strong { display: block; margin-bottom: 7px; }
-    .hover-card span { display: block; color: var(--muted); font-size: 0.84rem; line-height: 1.48; }
-
-    .empty-state {
-      min-height: 390px;
-      display: grid;
-      place-items: center;
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 32px 12px;
-    }
-
-    .empty-card {
-      max-width: 610px;
-      border: 1px solid var(--border);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 18% 10%, color-mix(in srgb, var(--accent), transparent 84%), transparent 34%),
-        var(--card);
-      backdrop-filter: var(--blur);
-      padding: 38px 28px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .empty-card::before, .empty-card::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .empty-card::before { width: 190px; height: 190px; left: -70px; bottom: -70px; background: radial-gradient(circle, color-mix(in srgb, var(--accent), transparent 76%), transparent 70%); }
-    .empty-card::after { width: 260px; height: 52px; right: -60px; top: 42px; border: 1px solid rgba(255,255,255,0.16); transform: rotate(-16deg); }
-
-    .empty-icon {
-      width: 104px;
-      height: 104px;
-      border-radius: 50%;
-      margin: 0 auto 18px;
-      background: radial-gradient(circle at 35% 25%, white, transparent 12%), radial-gradient(circle at 42% 35%, var(--accent), var(--accent-2) 62%, transparent 64%);
-      box-shadow: 0 0 44px color-mix(in srgb, var(--accent), transparent 76%);
-      position: relative;
-    }
-
-    .empty-icon::after {
-      content: "";
-      position: absolute;
-      width: 136px;
-      height: 30px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(-18deg);
-    }
-
-    .empty-card h2 { margin: 0 0 10px; letter-spacing: -0.04em; }
-    .empty-card p { margin: 0 auto 22px; color: var(--muted); line-height: 1.55; }
-
-    .detail { display: none; }
-    .detail.active, .home.active { display: block; }
-    .home { display: none; }
-
-    .detail-hero {
-      border: 1px solid var(--border);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--accent), transparent 83%), transparent 30%),
-        linear-gradient(135deg, var(--card), rgba(255, 255, 255, 0.035));
-      backdrop-filter: var(--blur);
-      box-shadow: var(--shadow);
-      padding: 24px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .detail-hero::after {
-      content: "";
-      position: absolute;
-      width: 420px;
-      height: 420px;
-      border-radius: 50%;
-      right: -150px;
-      top: -150px;
-      background: radial-gradient(circle at 35% 25%, rgba(255,255,255,0.7), transparent 9%), radial-gradient(circle, var(--active-a), var(--active-b) 56%, var(--active-c) 82%);
-      opacity: 0.26;
-      filter: blur(1px);
-      animation: megaPulse 6s ease-in-out infinite;
-    }
-
-    @keyframes megaPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
-
-    .detail-top { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
-    .detail-title-row { display: flex; align-items: center; gap: 18px; min-width: 0; }
-
-    .detail-planet-wrap {
-      width: 138px;
-      height: 138px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.15);
-      display: grid;
-      place-items: center;
-      position: relative;
-      flex: 0 0 auto;
-    }
-
-    .detail-planet-wrap::after {
-      content: "";
-      position: absolute;
-      width: 178px;
-      height: 38px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.24);
-      transform: rotate(-19deg);
-    }
-
-    .detail-planet {
-      width: 104px;
-      height: 104px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 33% 24%, white, transparent 11%), radial-gradient(circle at 34% 32%, var(--active-a), var(--active-b) 52%, var(--active-c) 82%);
-      box-shadow: 0 0 44px color-mix(in srgb, var(--active-a), transparent 52%), inset -22px -27px 27px rgba(0, 0, 0, 0.28);
-      z-index: 1;
-      animation: floatPlanet 4.8s ease-in-out infinite;
-    }
-
-    .detail-title { margin: 0; font-size: clamp(1.7rem, 4vw, 3.1rem); line-height: 1; letter-spacing: -0.07em; overflow-wrap: anywhere; }
-    .detail-category { margin-top: 10px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
-    .notes-shell { margin-top: 22px; display: grid; gap: 16px; }
-    .notes-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .notes-title { margin: 0; letter-spacing: -0.035em; font-size: 1.18rem; }
-    .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(292px, 1fr)); gap: 16px; }
-
-    .note-block {
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--note-a), transparent 82%), transparent 34%),
-        var(--card);
-      backdrop-filter: var(--blur);
-      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
-      padding: 16px;
-      display: grid;
-      gap: 12px;
-      animation: noteIn 0.28s ease both;
-      position: relative;
-    }
-
-    .note-block.dragging { opacity: 0.45; transform: scale(0.98); }
-    .note-block.drag-over { border-color: color-mix(in srgb, var(--accent), transparent 35%); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent), transparent 90%); }
-
-    @keyframes noteIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    .note-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .note-head-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-    .drag-handle { cursor: grab; opacity: 0.76; }
-    .drag-handle:active { cursor: grabbing; }
-
-    .note-title-input, .note-content, .todo-input, .todo-text-input {
-      width: 100%;
-      border: 1px solid var(--border);
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.055);
-      outline: 0;
-      border-radius: 16px;
-      transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .note-title-input { min-height: 44px; padding: 0 13px; font-weight: 850; }
-    .note-content { min-height: 150px; resize: vertical; padding: 13px; line-height: 1.55; }
-    .note-title-input:focus, .note-content:focus, .form-field input:focus, .todo-input:focus, .todo-text-input:focus { border-color: color-mix(in srgb, var(--accent), transparent 38%); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent), transparent 92%); background: rgba(255, 255, 255, 0.08); }
-
-    .note-date { color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
-    .icon-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--soft); color: var(--text); display: inline-grid; place-items: center; transition: 0.2s ease; flex: 0 0 auto; }
-    .icon-btn:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--danger), transparent 55%); background: color-mix(in srgb, var(--danger), transparent 87%); }
-
-    .todo-box {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.045);
-      padding: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .todo-box-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 0.84rem; font-weight: 800; }
-    .todo-add-row { display: flex; gap: 8px; }
-    .todo-input { min-height: 40px; padding: 0 12px; }
-    .todo-list { display: grid; gap: 8px; }
-    .todo-item { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; }
-    .todo-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--success); }
-    .todo-text-input { min-height: 36px; padding: 0 10px; }
-    .todo-item.done .todo-text-input { text-decoration: line-through; opacity: 0.62; }
-
-    .note-empty { border: 1px dashed var(--border); border-radius: 26px; padding: 34px 22px; text-align: center; color: var(--muted); background: rgba(255, 255, 255, 0.045); }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      place-items: center;
-      padding: 18px;
-      background: rgba(4, 8, 22, 0.62);
-      backdrop-filter: blur(12px);
-    }
-
-    .modal-backdrop.active { display: grid; animation: fadeIn 0.18s ease both; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .modal {
-      width: min(540px, 100%);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      background: radial-gradient(circle at 22% 10%, color-mix(in srgb, var(--accent), transparent 84%), transparent 32%), var(--card-strong);
-      box-shadow: 0 34px 88px rgba(0, 0, 0, 0.42);
-      padding: 22px;
-      transform-origin: center;
-      animation: modalIn 0.22s ease both;
-    }
-
-    @keyframes modalIn { from { transform: translateY(12px) scale(0.96); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
-    .modal h2 { margin: 0; font-size: 1.55rem; letter-spacing: -0.045em; }
-    .modal p { margin: 8px 0 0; color: var(--muted); line-height: 1.5; }
-    .form { display: grid; gap: 14px; }
-    .form-field { display: grid; gap: 8px; }
-    .form-field label { color: var(--muted); font-size: 0.9rem; font-weight: 750; }
-    .form-field input { width: 100%; min-height: 52px; border: 1px solid var(--border); border-radius: 18px; color: var(--text); background: rgba(255, 255, 255, 0.065); outline: 0; padding: 0 15px; }
-    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%) translateY(16px);
-      z-index: 150;
-      border: 1px solid var(--border);
-      background: var(--card-strong);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 12px 16px;
-      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.22s ease, transform 0.22s ease;
-      backdrop-filter: var(--blur);
-      font-weight: 750;
-      text-align: center;
-      max-width: calc(100% - 32px);
-    }
-
-    .toast.active { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .hidden { display: none !important; }
-
-    .mobile-bottom-bar {
-      display: none;
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      z-index: 60;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background: var(--card-strong);
-      backdrop-filter: var(--blur);
-      box-shadow: 0 22px 60px rgba(0,0,0,0.28);
-      padding: 8px;
-      gap: 8px;
-    }
-
-    .mobile-bottom-bar .btn { flex: 1; min-height: 48px; padding: 0 10px; font-size: 0.9rem; }
-
-    @media (max-width: 860px) {
-      .app { width: min(100% - 22px, 1260px); padding-top: 12px; }
-      .topbar { position: relative; top: 0; flex-direction: column; align-items: stretch; }
-      .top-actions { justify-content: stretch; }
-      .top-actions .btn, .top-actions .select-pill, .top-actions .file-btn { flex: 1 1 auto; }
-      .toolbar { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .planet-grid, .notes-grid, .recent-grid, .search-match-grid { grid-template-columns: 1fr; }
-      .universe, .detail-hero { border-radius: 26px; padding: 16px; }
-      .detail-title-row { align-items: flex-start; flex-direction: column; }
-      .detail-planet-wrap { width: 118px; height: 118px; }
-      .detail-planet { width: 88px; height: 88px; }
-      .mobile-bottom-bar { display: flex; }
-      .desktop-create { display: none; }
-      .hover-card { display: none; }
-    }
-
-    @media (max-width: 520px) {
-      .stats { grid-template-columns: 1fr; }
-      .todo-add-row { flex-direction: column; }
-      .modal-actions .btn { width: 100%; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.001ms !important; }
-    }
+        radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--accent-2), transparent 76%), transparent 36%),
+        radial-gradient(circle at 55% 95%, color-mix(in srgb, var(--danger), transparent 86%), transparent 34%),
+        linear-gradient(135deg,var(--bg-1),var(--bg-2) 52%,var(--bg-3));
+      transition:background .45s ease,color .35s ease; overflow-x:hidden;
+    }
+    body::before, body::after { content:""; position:fixed; inset:0; pointer-events:none; z-index:-2; }
+    body::before { opacity:.62; background-image:radial-gradient(circle,rgba(255,255,255,.75) 1px,transparent 1.7px),radial-gradient(circle,color-mix(in srgb,var(--accent),transparent 42%) 1px,transparent 1.5px); background-size:86px 86px,132px 132px; background-position:0 0,24px 44px; animation:starDrift 38s linear infinite; }
+    [data-theme="day"] body::before { opacity:.2; }
+    body::after { z-index:-1; background:linear-gradient(120deg,transparent,rgba(255,255,255,.045),transparent),radial-gradient(circle at 50% 48%,transparent 0 34%,rgba(255,255,255,.04) 35%,transparent 37%); mix-blend-mode:screen; }
+    @keyframes starDrift { from{transform:translate3d(0,0,0)} to{transform:translate3d(-86px,86px,0)} }
+
+    button,input,textarea,select { font:inherit; }
+    button { cursor:pointer; }
+    .hidden { display:none !important; }
+    .app { width:min(1240px,calc(100% - 32px)); margin:0 auto; padding:28px 0 84px; }
+
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px; border:1px solid var(--border); border-radius:var(--radius-xl); background:linear-gradient(135deg,var(--card),rgba(255,255,255,.05)); box-shadow:var(--shadow); backdrop-filter:var(--blur); position:sticky; top:14px; z-index:30; }
+    .brand { display:flex; align-items:center; gap:14px; min-width:220px; }
+    .brand-orb { width:56px; height:56px; border-radius:50%; background:radial-gradient(circle at 34% 25%,rgba(255,255,255,.95),transparent 12%),radial-gradient(circle at 32% 33%,var(--accent),var(--accent-2) 52%,#251048 78%); box-shadow:0 0 30px color-mix(in srgb,var(--accent),transparent 48%), inset -14px -18px 22px rgba(0,0,0,.25); position:relative; flex:0 0 auto; }
+    .brand-orb::after { content:""; position:absolute; width:78px; height:18px; border:1px solid rgba(255,255,255,.34); border-radius:50%; left:50%; top:50%; transform:translate(-50%,-50%) rotate(-18deg); }
+    h1 { margin:0; line-height:1; font-size:clamp(1.55rem,2.4vw,2.2rem); letter-spacing:-.055em; }
+    .subtitle { margin:7px 0 0; color:var(--muted); font-size:.94rem; }
+    .top-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+
+    .btn { border:1px solid var(--border); color:var(--text); background:var(--soft); min-height:42px; padding:0 15px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:transform .2s ease, background .2s ease, box-shadow .2s ease, border-color .2s ease; user-select:none; text-decoration:none; }
+    .btn:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent),transparent 48%); box-shadow:0 14px 34px rgba(0,0,0,.18); }
+    .btn:active { transform:translateY(0) scale(.98); }
+    .btn-primary { border:0; background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#fff; font-weight:850; box-shadow:0 18px 38px color-mix(in srgb,var(--accent),transparent 80%); }
+    .btn-danger { border-color:color-mix(in srgb,var(--danger),transparent 66%); background:color-mix(in srgb,var(--danger),transparent 87%); }
+    .btn-ghost { background:transparent; }
+    .btn-small { min-height:34px; padding:0 11px; font-size:.86rem; }
+    .icon-btn { width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--soft); color:var(--text); display:inline-grid; place-items:center; transition:.2s ease; flex:0 0 auto; }
+    .icon-btn:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent),transparent 44%); }
+
+    .home,.detail { display:none; }
+    .home.active,.detail.active { display:block; }
+
+    .toolbar { margin:24px 0 12px; display:grid; grid-template-columns:minmax(220px,1fr) 220px 190px; gap:14px; }
+    .search-wrap,.select-wrap,.theme-wrap { border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--card); backdrop-filter:var(--blur); box-shadow:0 14px 36px rgba(0,0,0,.13); display:flex; align-items:center; gap:10px; padding:12px 14px; }
+    .search-wrap span,.select-wrap span,.theme-wrap span { opacity:.72; }
+    .search-wrap input,.select-wrap select,.theme-wrap select { width:100%; border:0; outline:0; color:var(--text); background:transparent; min-height:34px; }
+    .search-wrap input::placeholder { color:var(--muted); }
+    select option { background:#121834; color:white; }
+    [data-theme="day"] select option { background:white; color:#17213b; }
+
+    .quick-filters { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 18px; }
+    .chip { border:1px solid var(--border); background:var(--soft); color:var(--text); border-radius:999px; padding:9px 13px; min-height:36px; transition:.2s ease; }
+    .chip:hover,.chip.active { border-color:color-mix(in srgb,var(--accent),transparent 42%); background:linear-gradient(135deg,color-mix(in srgb,var(--accent),transparent 83%),color-mix(in srgb,var(--accent-2),transparent 84%)); box-shadow:0 0 0 4px color-mix(in srgb,var(--accent),transparent 94%); }
+    .tag-chip { border:1px solid var(--border); background:rgba(255,255,255,.055); color:var(--text); border-radius:999px; padding:5px 9px; font-size:.82rem; display:inline-flex; align-items:center; gap:6px; }
+    .tag-chip button { border:0; background:transparent; color:inherit; padding:0; cursor:pointer; opacity:.75; }
+
+    .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin:0 0 18px; }
+    .stat-card { border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--card); backdrop-filter:var(--blur); padding:15px 17px; overflow:hidden; position:relative; }
+    .stat-card::after { content:""; position:absolute; width:90px; height:90px; border-radius:50%; right:-32px; bottom:-40px; background:radial-gradient(circle,color-mix(in srgb,var(--accent),transparent 78%),transparent 68%); }
+    .stat-number { display:block; font-size:1.48rem; font-weight:900; letter-spacing:-.04em; }
+    .stat-label { display:block; color:var(--muted); margin-top:4px; font-size:.88rem; }
+
+    .dashboard-grid { display:grid; grid-template-columns:1.2fr .9fr .9fr; gap:14px; margin-bottom:18px; }
+    .mini-panel,.search-results-panel { border:1px solid var(--border); border-radius:24px; background:var(--card); backdrop-filter:var(--blur); box-shadow:0 18px 42px rgba(0,0,0,.12); padding:14px; min-height:0; }
+    .mini-panel.compact { padding:12px 13px; }
+    .panel-title-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:9px; }
+    .panel-title-row h2 { margin:0; font-size:1rem; letter-spacing:-.03em; }
+    .panel-subtitle { color:var(--muted); font-size:.82rem; white-space:nowrap; }
+    .compact-list { display:grid; gap:7px; }
+    .compact-item { border:1px solid transparent; border-radius:14px; background:rgba(255,255,255,.045); color:var(--text); padding:8px 9px; display:grid; gap:3px; text-align:left; transition:.2s ease; width:100%; }
+    .compact-item:hover { border-color:color-mix(in srgb,var(--accent),transparent 58%); transform:translateY(-1px); }
+    .compact-title { font-weight:850; font-size:.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .compact-meta { color:var(--muted); font-size:.76rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .task-row { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:8px; border-radius:14px; padding:8px; background:rgba(255,255,255,.045); }
+    .task-row input[type="checkbox"] { width:18px; height:18px; accent-color:var(--success); }
+    .task-main { min-width:0; }
+    .task-title { font-weight:800; font-size:.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .task-meta { color:var(--muted); font-size:.76rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .empty-mini { color:var(--muted); font-size:.9rem; line-height:1.45; padding:8px 2px; }
+    .today-card { display:grid; gap:9px; }
+    .today-number { font-size:2rem; font-weight:950; letter-spacing:-.06em; line-height:1; }
+    .today-note { color:var(--muted); font-size:.88rem; line-height:1.45; }
+    .tag-cloud { display:flex; flex-wrap:wrap; gap:7px; }
+
+    .search-results-panel { margin:0 0 18px; }
+    .search-match-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px; }
+    .match-card { border:1px solid var(--border); border-radius:16px; background:rgba(255,255,255,.052); color:var(--text); padding:12px; text-align:left; transition:.2s ease; min-height:86px; }
+    .match-card:hover { transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent),transparent 50%); }
+    .match-title { font-weight:900; margin-bottom:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .match-meta,.match-snippet { color:var(--muted); font-size:.84rem; line-height:1.45; }
+    mark { background:color-mix(in srgb,var(--warning),transparent 36%); color:var(--text); border-radius:5px; padding:0 2px; }
+
+    .universe { min-height:500px; border:1px solid var(--border); border-radius:34px; background:radial-gradient(circle at 18% 18%,color-mix(in srgb,var(--accent),transparent 88%),transparent 28%),radial-gradient(circle at 88% 26%,color-mix(in srgb,var(--accent-2),transparent 86%),transparent 30%),linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.02)); backdrop-filter:var(--blur); box-shadow:var(--shadow); position:relative; overflow:hidden; padding:22px; }
+    .universe::before { content:""; position:absolute; inset:18px; border-radius:28px; background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px),radial-gradient(circle at center,transparent 0 24%,rgba(255,255,255,.08) 24.3%,transparent 24.8%,transparent 46%,rgba(255,255,255,.055) 46.2%,transparent 46.7%); background-size:42px 42px,42px 42px,100% 100%; mask-image:radial-gradient(circle at center,black,transparent 82%); pointer-events:none; }
+    .universe-header { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    .universe-title { margin:0; font-size:1.02rem; letter-spacing:-.02em; color:var(--muted); font-weight:750; }
+    .result-count { color:var(--muted); font-size:.92rem; }
+    .planet-grid { position:relative; z-index:2; display:grid; grid-template-columns:repeat(auto-fill,minmax(188px,1fr)); gap:18px; }
+    .planet-card { min-height:218px; border:1px solid var(--border); border-radius:28px; background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.035)); padding:15px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; text-align:center; position:relative; overflow:visible; transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease; animation:planetAppear .42s ease both; transform:translateY(var(--drift-y,0px)); color:var(--text); }
+    .planet-card:hover { transform:translateY(calc(var(--drift-y,0px) - 8px)); border-color:color-mix(in srgb,var(--accent),transparent 46%); box-shadow:0 24px 54px rgba(0,0,0,.22); z-index:4; }
+    .planet-card.favorite { border-color:color-mix(in srgb,var(--warning),transparent 40%); }
+    @keyframes planetAppear { from{opacity:0;transform:translateY(12px) scale(.96)} to{opacity:1;transform:translateY(var(--drift-y,0px)) scale(1)} }
+    .planet-orbit { width:116px; height:116px; border-radius:50%; border:1px solid rgba(255,255,255,.13); display:grid; place-items:center; position:relative; margin-top:4px; }
+    .planet-orbit::after { content:""; position:absolute; width:142px; height:32px; border-radius:50%; border:1px solid rgba(255,255,255,.17); transform:rotate(-19deg); }
+    .planet { width:var(--planet-size,78px); height:var(--planet-size,78px); border-radius:50%; background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.92),transparent 10%),radial-gradient(circle at 32% 31%,var(--planet-a),var(--planet-b) 52%,var(--planet-c) 82%); box-shadow:0 0 34px color-mix(in srgb,var(--planet-a),transparent 58%), inset -17px -22px 24px rgba(0,0,0,.28); position:relative; z-index:2; animation:floatPlanet 4.8s ease-in-out infinite; }
+    .planet::before { content:""; position:absolute; inset:14px 7px auto; height:12px; border-radius:999px; background:rgba(255,255,255,.12); transform:rotate(-18deg); }
+    @keyframes floatPlanet { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+    .planet-name { width:100%; margin:12px 0 0; font-weight:900; letter-spacing:-.03em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .planet-meta { display:flex; align-items:center; justify-content:center; gap:7px; flex-wrap:wrap; margin-top:9px; color:var(--muted); font-size:.83rem; }
+    .category-badge { max-width:150px; border:1px solid rgba(255,255,255,.16); color:var(--text); border-radius:999px; padding:5px 9px; background:rgba(255,255,255,.08); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .planet-tooltip { position:absolute; left:50%; bottom:calc(100% + 10px); transform:translateX(-50%) translateY(8px); width:230px; opacity:0; pointer-events:none; border:1px solid var(--border); border-radius:18px; background:var(--card-strong); backdrop-filter:var(--blur); padding:12px; text-align:left; box-shadow:0 20px 54px rgba(0,0,0,.28); transition:.2s ease; z-index:10; }
+    .planet-card:hover .planet-tooltip { opacity:1; transform:translateX(-50%) translateY(0); }
+    .tooltip-title { font-weight:900; margin-bottom:5px; }
+    .tooltip-meta { color:var(--muted); font-size:.82rem; line-height:1.45; }
+
+    .empty-state { min-height:360px; display:grid; place-items:center; position:relative; z-index:2; text-align:center; padding:32px 12px; }
+    .empty-card { max-width:560px; border:1px solid var(--border); border-radius:32px; background:var(--card); backdrop-filter:var(--blur); padding:32px 24px; box-shadow:0 24px 60px rgba(0,0,0,.18); }
+    .empty-icon { width:92px; height:92px; border-radius:50%; margin:0 auto 18px; background:radial-gradient(circle at 35% 25%,white,transparent 12%),radial-gradient(circle at 42% 35%,var(--accent),var(--accent-2) 62%,transparent 64%); box-shadow:0 0 44px color-mix(in srgb,var(--accent),transparent 76%); position:relative; }
+    .empty-icon::after { content:""; position:absolute; width:128px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,.24); left:50%; top:50%; transform:translate(-50%,-50%) rotate(-18deg); }
+    .empty-card h2 { margin:0 0 10px; letter-spacing:-.04em; }
+    .empty-card p { margin:0 auto 22px; color:var(--muted); line-height:1.55; }
+
+    .detail-hero { border:1px solid var(--border); border-radius:34px; background:radial-gradient(circle at 18% 20%,color-mix(in srgb,var(--active-a),transparent 84%),transparent 30%),linear-gradient(135deg,var(--card),rgba(255,255,255,.035)); backdrop-filter:var(--blur); box-shadow:var(--shadow); padding:22px; overflow:hidden; position:relative; }
+    .detail-hero::after { content:""; position:absolute; width:360px; height:360px; border-radius:50%; right:-160px; top:-130px; background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.7),transparent 9%),radial-gradient(circle,var(--active-a),var(--active-b) 56%,var(--active-c) 82%); opacity:.28; filter:blur(1px); }
+    .detail-top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .detail-title-row { display:flex; align-items:center; gap:16px; min-width:0; }
+    .detail-planet { width:78px; height:78px; border-radius:50%; background:radial-gradient(circle at 33% 24%,white,transparent 11%),radial-gradient(circle at 34% 32%,var(--active-a),var(--active-b) 52%,var(--active-c) 82%); box-shadow:0 0 38px color-mix(in srgb,var(--active-a),transparent 52%), inset -16px -20px 23px rgba(0,0,0,.26); flex:0 0 auto; }
+    .detail-title { margin:0; font-size:clamp(1.7rem,4vw,3.1rem); line-height:1; letter-spacing:-.07em; overflow-wrap:anywhere; }
+    .detail-category { margin-top:10px; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+    .planet-surface { margin-top:18px; border:1px solid var(--border); border-radius:30px; background:radial-gradient(circle at 28% 28%,var(--land-1),transparent 32%),radial-gradient(circle at 72% 36%,var(--land-2),transparent 34%),linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.02)); backdrop-filter:var(--blur); box-shadow:0 18px 42px rgba(0,0,0,.12); padding:18px; position:relative; overflow:hidden; }
+    .planet-surface::before { content:""; position:absolute; inset:-80px; background:radial-gradient(circle at 50% 50%,transparent 0 38%,rgba(255,255,255,.06) 38.3%,transparent 39%,transparent 55%,rgba(255,255,255,.04) 55.3%,transparent 56%); animation:slowRotate 38s linear infinite; opacity:.8; }
+    @keyframes slowRotate { to{transform:rotate(360deg)} }
+    .surface-head { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; }
+    .surface-head h2 { margin:0; font-size:1.1rem; letter-spacing:-.035em; }
+    .surface-map { position:relative; z-index:1; min-height:210px; display:grid; grid-template-columns:repeat(auto-fill,minmax(138px,1fr)); gap:14px; }
+    .land-tile { border:1px solid color-mix(in srgb,var(--tile-a),transparent 58%); color:var(--text); min-height:112px; padding:13px 12px; text-align:left; border-radius:34% 66% 42% 58% / 56% 35% 65% 44%; background:radial-gradient(circle at 22% 24%,rgba(255,255,255,.16),transparent 18%),linear-gradient(145deg,color-mix(in srgb,var(--tile-a),transparent 78%),color-mix(in srgb,var(--tile-b),transparent 83%)); box-shadow:0 16px 32px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.13); transition:.2s ease; position:relative; overflow:hidden; }
+    .land-tile:nth-child(2n) { border-radius:58% 42% 63% 37% / 39% 61% 40% 60%; transform:translateY(8px) rotate(-1deg); }
+    .land-tile:nth-child(3n) { border-radius:44% 56% 34% 66% / 62% 39% 61% 38%; transform:translateY(-4px) rotate(1deg); }
+    .land-tile:hover { transform:translateY(-4px) scale(1.02); border-color:color-mix(in srgb,var(--tile-a),transparent 24%); }
+    .land-title { font-weight:950; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; position:relative; z-index:1; }
+    .land-meta { color:var(--muted); font-size:.76rem; margin-top:4px; line-height:1.35; position:relative; z-index:1; }
+    .land-tags { margin-top:8px; display:flex; gap:4px; flex-wrap:wrap; position:relative; z-index:1; }
+    .land-tags span { max-width:70px; font-size:.69rem; border:1px solid rgba(255,255,255,.15); border-radius:999px; padding:2px 5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    .notes-shell { margin-top:18px; display:grid; gap:14px; }
+    .notes-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .notes-title { margin:0; letter-spacing:-.035em; font-size:1.18rem; }
+    .terrain-list { display:grid; gap:14px; }
+    .terrain-card { border:1px solid color-mix(in srgb,var(--note-a),transparent 72%); border-radius:28px 20px 30px 22px; background:linear-gradient(145deg,color-mix(in srgb,var(--note-a),transparent 90%),rgba(255,255,255,.04)),var(--card); backdrop-filter:var(--blur); box-shadow:0 18px 42px rgba(0,0,0,.12); overflow:hidden; animation:noteIn .28s ease both; }
+    .terrain-card.dragging { opacity:.45; }
+    .terrain-card.drag-over { outline:2px dashed var(--accent); outline-offset:4px; }
+    @keyframes noteIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .terrain-header { width:100%; border:0; color:var(--text); background:linear-gradient(135deg,rgba(255,255,255,.065),rgba(255,255,255,.025)); padding:13px 14px; display:grid; grid-template-columns:auto 1fr auto auto; gap:10px; align-items:center; text-align:left; }
+    .drag-handle { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; color:var(--muted); background:rgba(255,255,255,.055); cursor:grab; }
+    .terrain-main { min-width:0; }
+    .terrain-title { font-weight:950; letter-spacing:-.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .terrain-meta { color:var(--muted); font-size:.78rem; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .terrain-actions { display:flex; gap:7px; align-items:center; }
+    .terrain-body { padding:15px; display:grid; gap:13px; border-top:1px solid var(--border); }
+    .terrain-card.collapsed .terrain-body { display:none; }
+    .form-grid { display:grid; grid-template-columns:1.2fr 160px 140px; gap:10px; }
+    .field { display:grid; gap:7px; }
+    .field label { color:var(--muted); font-size:.82rem; font-weight:800; }
+    .text-input,.date-input,.mood-select,.note-content,.tag-input,.todo-input,.todo-text-input,.form-field input { width:100%; border:1px solid var(--border); color:var(--text); background:rgba(255,255,255,.055); outline:0; border-radius:16px; transition:border-color .2s ease,background .2s ease,box-shadow .2s ease; }
+    .text-input,.date-input,.mood-select,.tag-input,.todo-input,.todo-text-input,.form-field input { min-height:42px; padding:0 12px; }
+    .note-content { min-height:190px; resize:vertical; padding:13px; line-height:1.55; }
+    .text-input:focus,.date-input:focus,.mood-select:focus,.note-content:focus,.tag-input:focus,.todo-input:focus,.todo-text-input:focus,.form-field input:focus { border-color:color-mix(in srgb,var(--accent),transparent 38%); box-shadow:0 0 0 4px color-mix(in srgb,var(--accent),transparent 92%); background:rgba(255,255,255,.08); }
+    .tag-editor { border:1px solid var(--border); border-radius:18px; background:rgba(255,255,255,.04); padding:11px; display:grid; gap:9px; }
+    .tag-row,.todo-add-row { display:flex; gap:8px; }
+    .tag-list,.tag-suggestions { display:flex; flex-wrap:wrap; gap:7px; }
+    .todo-box { border:1px solid var(--border); border-radius:18px; background:rgba(255,255,255,.04); padding:11px; display:grid; gap:10px; }
+    .todo-box-title { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:.84rem; font-weight:850; }
+    .todo-list { display:grid; gap:8px; }
+    .todo-item { display:grid; grid-template-columns:auto 1fr auto; gap:8px; align-items:center; }
+    .todo-item input[type="checkbox"] { width:18px; height:18px; accent-color:var(--success); }
+    .todo-item.done .todo-text-input { text-decoration:line-through; opacity:.62; }
+    .related-box { border:1px solid var(--border); border-radius:18px; background:rgba(255,255,255,.035); padding:11px; }
+    .related-title { color:var(--muted); font-size:.84rem; font-weight:850; margin-bottom:8px; }
+    .related-list { display:flex; flex-wrap:wrap; gap:7px; }
+    .note-empty { border:1px dashed var(--border); border-radius:26px; padding:30px 22px; text-align:center; color:var(--muted); background:rgba(255,255,255,.045); }
+
+    .modal-backdrop { position:fixed; inset:0; z-index:100; display:none; place-items:center; padding:18px; background:rgba(4,8,22,.62); backdrop-filter:blur(12px); }
+    .modal-backdrop.active { display:grid; animation:fadeIn .18s ease both; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .modal { width:min(560px,100%); border:1px solid var(--border); border-radius:30px; background:radial-gradient(circle at 22% 10%,color-mix(in srgb,var(--accent),transparent 84%),transparent 32%),var(--card-strong); box-shadow:0 34px 88px rgba(0,0,0,.42); padding:22px; transform-origin:center; animation:modalIn .22s ease both; }
+    @keyframes modalIn { from{transform:translateY(12px) scale(.96);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+    .modal-header { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:16px; }
+    .modal h2 { margin:0; font-size:1.55rem; letter-spacing:-.045em; }
+    .modal p { margin:8px 0 0; color:var(--muted); line-height:1.5; }
+    .form { display:grid; gap:14px; }
+    .form-field { display:grid; gap:8px; position:relative; }
+    .form-field label { color:var(--muted); font-size:.9rem; font-weight:750; }
+    .category-picker { display:grid; gap:8px; }
+    .category-suggestions { display:flex; flex-wrap:wrap; gap:7px; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:8px; flex-wrap:wrap; }
+    .toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(16px); z-index:150; border:1px solid var(--border); background:var(--card-strong); color:var(--text); border-radius:999px; padding:12px 16px; box-shadow:0 18px 46px rgba(0,0,0,.22); opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease; backdrop-filter:var(--blur); font-weight:750; text-align:center; max-width:calc(100% - 32px); }
+    .toast.active { opacity:1; transform:translateX(-50%) translateY(0); }
+    .mobile-bar { display:none; position:fixed; left:12px; right:12px; bottom:12px; z-index:70; border:1px solid var(--border); border-radius:24px; background:var(--card-strong); backdrop-filter:var(--blur); box-shadow:0 18px 50px rgba(0,0,0,.28); padding:9px; gap:8px; }
+    .mobile-bar .btn { flex:1; min-height:44px; padding:0 10px; }
+
+    @media (max-width:960px) { .dashboard-grid { grid-template-columns:1fr; } .toolbar { grid-template-columns:1fr; } .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .form-grid { grid-template-columns:1fr; } }
+    @media (max-width:720px) { .app { width:min(100% - 22px,1240px); padding-top:12px; } .topbar { position:relative; top:0; flex-direction:column; align-items:stretch; } .top-actions { justify-content:stretch; } .top-actions .btn { flex:1 1 auto; } .planet-grid,.search-match-grid { grid-template-columns:1fr; } .universe,.detail-hero,.planet-surface { border-radius:26px; padding:16px; } .detail-title-row { align-items:flex-start; } .terrain-header { grid-template-columns:auto 1fr auto; } .terrain-actions { grid-column:2 / -1; justify-content:flex-start; } .surface-map { grid-template-columns:repeat(2,minmax(0,1fr)); } .tag-row,.todo-add-row { flex-direction:column; } .mobile-bar { display:flex; } .planet-tooltip { display:none; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.001ms !important; } }
   </style>
 </head>
 <body>
@@ -911,115 +236,73 @@
       <header class="topbar">
         <div class="brand">
           <div class="brand-orb" aria-hidden="true"></div>
-          <div>
-            <h1>Not Evreni</h1>
-            <p class="subtitle">Her fikir yeni bir gezegen.</p>
-          </div>
+          <div><h1>Not Evreni</h1><p class="subtitle">Her fikir yeni bir gezegen.</p></div>
         </div>
-
         <div class="top-actions">
-          <select id="themeSelect" class="select-pill" aria-label="Tema seç">
-            <option value="night">🌙 Gece</option>
-            <option value="day">☀️ Gündüz</option>
-            <option value="nebula">🌌 Nebula</option>
-            <option value="minimal">◻ Minimal</option>
-            <option value="solar">☄ Solar</option>
-          </select>
           <button id="exportAllJson" class="btn btn-ghost" type="button">⤓ JSON</button>
-          <button id="exportAllTxt" class="btn btn-ghost" type="button">⤓ TXT</button>
-          <label class="file-btn" for="importFile">⤒ Yedek Yükle</label>
+          <button id="exportAllTxt" class="btn btn-ghost" type="button">TXT</button>
+          <button id="importButton" class="btn btn-ghost" type="button">⤒ Yedek Yükle</button>
           <input id="importFile" class="hidden" type="file" accept="application/json,.json" />
-          <button id="openCreateModal" class="btn btn-primary desktop-create" type="button">✦ Yeni Gezegen Oluştur</button>
+          <button id="openCreateModal" class="btn btn-primary" type="button">✦ Yeni Gezegen</button>
         </div>
       </header>
 
       <section class="toolbar" aria-label="Arama ve filtreler">
-        <label class="search-wrap">
-          <span aria-hidden="true">⌕</span>
-          <input id="searchInput" type="search" placeholder="Gezegen adı, kategori, not veya yapılacak içinde ara..." autocomplete="off" />
-        </label>
-
-        <label class="select-wrap">
-          <span aria-hidden="true">◌</span>
-          <select id="categoryFilter" aria-label="Kategori filtresi">
-            <option value="all">Tüm Kategoriler</option>
-          </select>
-        </label>
+        <label class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Gezegen, kategori, etiket, görev veya günlük içinde ara..." autocomplete="off" /></label>
+        <label class="select-wrap"><span>◌</span><select id="categoryFilter"><option value="all">Tüm Kategoriler</option></select></label>
+        <label class="theme-wrap"><span>☼</span><select id="themeSelect"><option value="night">Gece</option><option value="day">Gündüz</option><option value="nebula">Nebula</option><option value="minimal">Minimal</option><option value="solar">Solar</option></select></label>
       </section>
 
       <section class="quick-filters" aria-label="Hızlı filtreler">
         <button class="chip active" type="button" data-filter="all">Tüm Gezegenler</button>
         <button class="chip" type="button" data-filter="recent">Son Eklenenler</button>
         <button class="chip" type="button" data-filter="favorites">Favoriler</button>
+        <button class="chip" type="button" data-filter="openTasks">Açık Görevli</button>
         <button class="chip" type="button" data-filter="category">Kategoriye Göre</button>
       </section>
 
-      <section class="stats" aria-label="Evren istatistikleri">
+      <section class="stats">
         <div class="stat-card"><span id="planetStat" class="stat-number">0</span><span class="stat-label">Gezegen</span></div>
-        <div class="stat-card"><span id="noteStat" class="stat-number">0</span><span class="stat-label">Not Bloğu</span></div>
-        <div class="stat-card"><span id="todoStat" class="stat-number">0</span><span class="stat-label">Yapılacak</span></div>
-        <div class="stat-card"><span id="categoryStat" class="stat-number">0</span><span class="stat-label">Kategori</span></div>
+        <div class="stat-card"><span id="noteStat" class="stat-number">0</span><span class="stat-label">Günlük Kaydı</span></div>
+        <div class="stat-card"><span id="todoStat" class="stat-number">0</span><span class="stat-label">Açık Görev</span></div>
+        <div class="stat-card"><span id="tagStat" class="stat-number">0</span><span class="stat-label">Etiket</span></div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="mini-panel compact">
+          <div class="panel-title-row"><h2>Açık Görevler</h2><span id="taskSummary" class="panel-subtitle"></span></div>
+          <div id="openTasksList" class="compact-list"></div>
+        </div>
+        <div class="mini-panel compact">
+          <div class="panel-title-row"><h2>Son Dokunulan Notlar</h2><span class="panel-subtitle">minimal akış</span></div>
+          <div id="recentNotesList" class="compact-list"></div>
+        </div>
+        <div class="mini-panel compact today-card">
+          <div class="panel-title-row"><h2>Bugünün Günlüğü</h2><span id="todaySummary" class="panel-subtitle"></span></div>
+          <div class="today-number" id="todayCount">0</div>
+          <div class="today-note">Bugüne ait kayıtlarını hızlıca takip et veya yeni bir günlük girişi başlat.</div>
+          <button id="createTodayEntry" class="btn btn-primary btn-small" type="button">Bugüne Kayıt Ekle</button>
+          <div id="tagCloud" class="tag-cloud"></div>
+        </div>
       </section>
 
       <section id="searchResultsPanel" class="search-results-panel hidden">
-        <div class="panel-title-row">
-          <h2>Gelişmiş Arama Sonuçları</h2>
-          <span id="searchResultSummary" class="panel-subtitle"></span>
-        </div>
+        <div class="panel-title-row"><h2>Gelişmiş Arama Sonuçları</h2><span id="searchResultSummary" class="panel-subtitle"></span></div>
         <div id="searchMatchGrid" class="search-match-grid"></div>
       </section>
 
-      <section id="productivityPanel" class="productivity-panel hidden">
-        <div class="panel-title-row">
-          <h2>Son Düzenlenenler</h2>
-          <span class="panel-subtitle">Hızlı devam et</span>
-        </div>
-        <div id="recentGrid" class="recent-grid"></div>
-      </section>
-
       <section class="universe">
-        <div class="universe-header">
-          <h2 class="universe-title">Galaksi Haritası</h2>
-          <span id="resultCount" class="result-count">0 gezegen gösteriliyor</span>
-        </div>
-
+        <div class="universe-header"><h2 class="universe-title">Galaksi Haritası</h2><span id="resultCount" class="result-count">0 gezegen gösteriliyor</span></div>
         <div id="planetGrid" class="planet-grid"></div>
-
-        <div id="emptyState" class="empty-state hidden">
-          <div class="empty-card">
-            <div class="empty-icon" aria-hidden="true"></div>
-            <h2>Henüz bir gezegen oluşturmadın.</h2>
-            <p>Not evrenini başlatmak için ilk gezegenini yarat.</p>
-            <button class="btn btn-primary" type="button" data-open-create>✦ İlk Gezegenini Yarat</button>
-          </div>
-        </div>
-
-        <div id="noResultState" class="empty-state hidden">
-          <div class="empty-card">
-            <div class="empty-icon" aria-hidden="true"></div>
-            <h2>Eşleşen gezegen bulunamadı.</h2>
-            <p>Arama metnini, kategori filtreni veya hızlı filtreleri değiştirerek tekrar dene.</p>
-          </div>
-        </div>
+        <div id="emptyState" class="empty-state hidden"><div class="empty-card"><div class="empty-icon"></div><h2>Henüz bir gezegen oluşturmadın.</h2><p>Not evrenini başlatmak için ilk gezegenini yarat.</p><button class="btn btn-primary" type="button" data-open-create>✦ İlk Gezegenini Yarat</button></div></div>
+        <div id="noResultState" class="empty-state hidden"><div class="empty-card"><div class="empty-icon"></div><h2>Eşleşen gezegen bulunamadı.</h2><p>Arama metnini, kategori filtreni veya hızlı filtreleri değiştirerek tekrar dene.</p></div></div>
       </section>
     </section>
 
     <section id="detailView" class="detail">
       <header id="detailHero" class="detail-hero">
         <div class="detail-top">
-          <div class="detail-title-row">
-            <div class="detail-planet-wrap" aria-hidden="true"><div id="detailPlanetOrb" class="detail-planet"></div></div>
-            <div>
-              <h1 id="detailTitle" class="detail-title"></h1>
-              <div class="detail-category">
-                <span id="detailFavoriteLabel"></span>
-                <span>Kategori:</span>
-                <span id="detailCategory" class="category-badge"></span>
-                <span id="detailDates"></span>
-              </div>
-            </div>
-          </div>
-
+          <div class="detail-title-row"><div id="detailPlanetOrb" class="detail-planet" aria-hidden="true"></div><div><h1 id="detailTitle" class="detail-title"></h1><div class="detail-category"><span id="detailFavoriteLabel"></span><span>Kategori:</span><span id="detailCategory" class="category-badge"></span><span id="detailDates"></span></div></div></div>
           <div class="top-actions">
             <button id="backToUniverse" class="btn" type="button">← Evrene Dön</button>
             <button id="toggleDetailFavorite" class="btn" type="button">☆ Favori</button>
@@ -1031,917 +314,340 @@
         </div>
       </header>
 
+      <section class="planet-surface">
+        <div class="surface-head"><h2>Gezegen Yüzeyi</h2><span id="surfaceSummary" class="panel-subtitle">Not blokları arazi parçaları olarak gösterilir</span></div>
+        <div id="surfaceMap" class="surface-map"></div>
+      </section>
+
       <section class="notes-shell">
-        <div class="notes-toolbar">
-          <h2 class="notes-title">Not Blokları</h2>
-          <button id="addNoteBlock" class="btn btn-primary" type="button">＋ Not Bloğu Ekle</button>
-        </div>
-
-        <div id="notesGrid" class="notes-grid"></div>
-
-        <div id="notesEmpty" class="note-empty hidden">
-          Bu gezegende henüz not bloğu yok. İlk bloğu ekleyerek fikirlerini yörüngeye al.
-        </div>
+        <div class="notes-toolbar"><h2 class="notes-title">Günlük Kayıtları</h2><button id="addNoteBlock" class="btn btn-primary" type="button">＋ Günlük Kaydı Ekle</button></div>
+        <div id="notesList" class="terrain-list"></div>
+        <div id="notesEmpty" class="note-empty hidden">Bu gezegende henüz günlük kaydı yok. İlk arazi parçasını ekleyerek gezegen yüzeyini başlat.</div>
       </section>
     </section>
   </main>
 
   <div id="planetModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
-      <div class="modal-header">
-        <div>
-          <h2 id="modalTitle">Yeni Gezegen Oluştur</h2>
-          <p id="modalDescription">Yeni konu, proje veya fikir alanın için bir gezegen yarat.</p>
-        </div>
-        <button id="closePlanetModal" class="icon-btn" type="button" aria-label="Modalı kapat">×</button>
-      </div>
-
+      <div class="modal-header"><div><h2 id="modalTitle">Yeni Gezegen Oluştur</h2><p id="modalDescription">Yeni yaşam alanı, konu veya günlük bölgesi için bir gezegen yarat.</p></div><button id="closePlanetModal" class="icon-btn" type="button">×</button></div>
       <form id="planetForm" class="form">
-        <div class="form-field">
-          <label for="planetNameInput">Gezegen Adı</label>
-          <input id="planetNameInput" type="text" placeholder="Örn. Ürün Fikirleri" maxlength="64" autocomplete="off" required />
-        </div>
-
-        <div class="form-field">
-          <label for="planetCategoryInput">Kategori</label>
-          <input id="planetCategoryInput" type="text" list="categoryOptions" placeholder="Örn. İş, Kişisel, Proje..." maxlength="42" autocomplete="off" />
-          <datalist id="categoryOptions"></datalist>
-        </div>
-
-        <div class="modal-actions">
-          <button class="btn" id="cancelPlanetModal" type="button">Vazgeç</button>
-          <button id="planetSubmitButton" class="btn btn-primary" type="submit">Oluştur</button>
-        </div>
+        <div class="form-field"><label for="planetNameInput">Gezegen Adı</label><input id="planetNameInput" type="text" placeholder="Örn. Kişisel Günlük" maxlength="64" autocomplete="off" required /></div>
+        <div class="form-field category-picker"><label for="planetCategoryInput">Kategori</label><input id="planetCategoryInput" type="text" placeholder="Mevcut kategorilerden seç veya yeni yaz" maxlength="42" autocomplete="off" /><div id="categorySuggestions" class="category-suggestions"></div></div>
+        <div class="modal-actions"><button class="btn" id="cancelPlanetModal" type="button">Vazgeç</button><button class="btn btn-primary" id="planetSubmitButton" type="submit">Oluştur</button></div>
       </form>
     </div>
   </div>
 
-  <nav class="mobile-bottom-bar" aria-label="Mobil hızlı işlemler">
-    <button class="btn" id="mobileHome" type="button">⌂ Evren</button>
-    <button class="btn btn-primary" id="mobilePrimary" type="button">✦ Gezegen</button>
-  </nav>
-
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <nav class="mobile-bar"><button id="mobileHome" class="btn" type="button">Evren</button><button id="mobileAdd" class="btn btn-primary" type="button">Ekle</button><button id="mobileSearchFocus" class="btn" type="button">Ara</button></nav>
 
   <script>
     (() => {
       "use strict";
-
-      const STORAGE_KEY = "not-evreni-state-v2";
-      const LEGACY_STORAGE_KEY = "not-evreni-state-v1";
-      const THEMES = ["night", "day", "nebula", "minimal", "solar"];
-
-      const planetPalettes = [
-        ["#77e7ff", "#836cff", "#241048"],
-        ["#72f2b7", "#2fb7ff", "#09384d"],
-        ["#ffca6b", "#ff6b8f", "#4a1934"],
-        ["#d088ff", "#6f7bff", "#20105b"],
-        ["#80ffea", "#4d8cff", "#0b2e5d"],
-        ["#ffd1ef", "#ff7ad9", "#4d1542"],
-        ["#d6ff7a", "#53d982", "#153a2a"],
-        ["#ffad7a", "#ff5d8f", "#491830"],
-        ["#9fc9ff", "#b87cff", "#28165a"],
-        ["#fff27a", "#77e7ff", "#154257"]
-      ];
-
-      const categoryIcons = {
-        "iş": "💼", "is": "💼", "work": "💼",
-        "kişisel": "🧭", "kisisel": "🧭", "personal": "🧭",
-        "proje": "🚀", "project": "🚀",
-        "fikir": "💡", "idea": "💡",
-        "okul": "🎓", "school": "🎓",
-        "araştırma": "🔬", "arastirma": "🔬", "research": "🔬",
-        "tasarım": "🎨", "tasarim": "🎨", "design": "🎨",
-        "kod": "⌘", "code": "⌘", "yazılım": "⌘", "yazilim": "⌘",
-        "sağlık": "✚", "saglik": "✚", "health": "✚",
-        "finans": "◈", "finance": "◈",
-        "genel": "☉"
-      };
-
-      const defaultState = { theme: "night", categories: [], planets: [] };
+      const STORAGE_KEY = "not-evreni-state-v3";
+      const V2_STORAGE_KEY = "not-evreni-state-v2";
+      const V1_STORAGE_KEY = "not-evreni-state-v1";
+      const palettes = [["#77e7ff","#836cff","#241048"],["#72f2b7","#2fb7ff","#09384d"],["#ffca6b","#ff6b8f","#4a1934"],["#d088ff","#6f7bff","#20105b"],["#80ffea","#4d8cff","#0b2e5d"],["#ffd1ef","#ff7ad9","#4d1542"],["#d6ff7a","#53d982","#153a2a"],["#ffad7a","#ff5d8f","#491830"],["#9fc9ff","#b87cff","#28165a"],["#fff27a","#77e7ff","#154257"]];
+      const categoryIcons = {"genel":"✦","günlük":"📓","gunluk":"📓","kişisel":"🧭","kisisel":"🧭","iş":"💼","is":"💼","proje":"🚀","fikir":"💡","sağlık":"🌿","saglik":"🌿","öğrenme":"📚","ogrenme":"📚","ilişki":"🤍","iliski":"🤍","finans":"◎"};
+      const moods = [{v:"neutral",t:"😐 Normal"},{v:"happy",t:"🙂 İyi"},{v:"excited",t:"⚡ Üretken"},{v:"tired",t:"😴 Yorgun"},{v:"sad",t:"🌧 Zor"},{v:"angry",t:"🔥 Gergin"},{v:"grateful",t:"✨ Şükür"}];
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => Array.from(document.querySelectorAll(s));
 
       let state = loadState();
       let activeFilter = "all";
       let activePlanetId = null;
-      let saveTimer = null;
-      let modalMode = "create";
       let draggedNoteId = null;
+      let modalMode = "create";
+      let editingPlanetId = null;
+      let saveTimer = null;
+      let tagFilter = "all";
 
-      const $ = (selector) => document.querySelector(selector);
-      const $$ = (selector) => Array.from(document.querySelectorAll(selector));
-
-      const homeView = $("#homeView");
-      const detailView = $("#detailView");
-      const themeSelect = $("#themeSelect");
-      const planetGrid = $("#planetGrid");
-      const emptyState = $("#emptyState");
-      const noResultState = $("#noResultState");
-      const searchInput = $("#searchInput");
-      const categoryFilter = $("#categoryFilter");
-      const categoryOptions = $("#categoryOptions");
-      const resultCount = $("#resultCount");
-      const planetStat = $("#planetStat");
-      const noteStat = $("#noteStat");
-      const todoStat = $("#todoStat");
-      const categoryStat = $("#categoryStat");
-      const planetModalBackdrop = $("#planetModalBackdrop");
-      const planetForm = $("#planetForm");
-      const modalTitle = $("#modalTitle");
-      const modalDescription = $("#modalDescription");
-      const planetSubmitButton = $("#planetSubmitButton");
-      const planetNameInput = $("#planetNameInput");
-      const planetCategoryInput = $("#planetCategoryInput");
-      const toast = $("#toast");
-      const productivityPanel = $("#productivityPanel");
-      const recentGrid = $("#recentGrid");
-      const searchResultsPanel = $("#searchResultsPanel");
-      const searchMatchGrid = $("#searchMatchGrid");
-      const searchResultSummary = $("#searchResultSummary");
-
-      const detailHero = $("#detailHero");
-      const detailTitle = $("#detailTitle");
-      const detailCategory = $("#detailCategory");
-      const detailDates = $("#detailDates");
-      const detailFavoriteLabel = $("#detailFavoriteLabel");
-      const toggleDetailFavorite = $("#toggleDetailFavorite");
-      const notesGrid = $("#notesGrid");
-      const notesEmpty = $("#notesEmpty");
-      const mobilePrimary = $("#mobilePrimary");
-      const mobileHome = $("#mobileHome");
-      const importFile = $("#importFile");
+      const el = {
+        home:$("#homeView"), detail:$("#detailView"), themeSelect:$("#themeSelect"), search:$("#searchInput"), categoryFilter:$("#categoryFilter"),
+        planetGrid:$("#planetGrid"), emptyState:$("#emptyState"), noResultState:$("#noResultState"), resultCount:$("#resultCount"),
+        planetStat:$("#planetStat"), noteStat:$("#noteStat"), todoStat:$("#todoStat"), tagStat:$("#tagStat"),
+        tasksList:$("#openTasksList"), taskSummary:$("#taskSummary"), recentNotes:$("#recentNotesList"), todayCount:$("#todayCount"), todaySummary:$("#todaySummary"), tagCloud:$("#tagCloud"),
+        searchPanel:$("#searchResultsPanel"), searchSummary:$("#searchResultSummary"), searchGrid:$("#searchMatchGrid"),
+        detailHero:$("#detailHero"), detailTitle:$("#detailTitle"), detailCategory:$("#detailCategory"), detailDates:$("#detailDates"), detailFavoriteLabel:$("#detailFavoriteLabel"), toggleDetailFavorite:$("#toggleDetailFavorite"),
+        surfaceMap:$("#surfaceMap"), surfaceSummary:$("#surfaceSummary"), notesList:$("#notesList"), notesEmpty:$("#notesEmpty"),
+        modal:$("#planetModalBackdrop"), modalTitle:$("#modalTitle"), modalDescription:$("#modalDescription"), planetName:$("#planetNameInput"), planetCategory:$("#planetCategoryInput"), categorySuggestions:$("#categorySuggestions"), planetSubmit:$("#planetSubmitButton"),
+        importFile:$("#importFile"), toast:$("#toast")
+      };
 
       init();
 
-      function init() {
-        normalizeState();
-        applyTheme(state.theme);
-        renderHome();
-
+      function init(){
+        normalizeState(); applyTheme(state.theme); renderHome();
         $("#openCreateModal").addEventListener("click", openCreateModal);
-        $$("[data-open-create]").forEach((button) => button.addEventListener("click", openCreateModal));
+        $$('[data-open-create]').forEach(b=>b.addEventListener("click", openCreateModal));
         $("#closePlanetModal").addEventListener("click", closePlanetModal);
         $("#cancelPlanetModal").addEventListener("click", closePlanetModal);
+        $("#planetForm").addEventListener("submit", submitPlanetForm);
+        el.modal.addEventListener("click", e=>{ if(e.target===el.modal) closePlanetModal(); });
+        document.addEventListener("keydown", e=>{ if(e.key==="Escape" && el.modal.classList.contains("active")) closePlanetModal(); });
+        el.search.addEventListener("input", renderHome);
+        el.categoryFilter.addEventListener("change", renderHome);
+        el.themeSelect.addEventListener("change", ()=>{ state.theme=el.themeSelect.value; applyTheme(state.theme); saveNow(); });
+        $$(".chip[data-filter]").forEach(chip=>chip.addEventListener("click",()=>{ activeFilter=chip.dataset.filter; if(activeFilter==="all") tagFilter="all"; 3864(".chip[data-filter]").forEach(c=>c.classList.remove("active")); chip.classList.add("active"); renderHome(); }));
+        $("#createTodayEntry").addEventListener("click", createTodayEntry);
         $("#backToUniverse").addEventListener("click", showHome);
-        $("#addNoteBlock").addEventListener("click", addNoteBlock);
-        $("#deletePlanet").addEventListener("click", deleteActivePlanet);
+        $("#addNoteBlock").addEventListener("click", ()=>addNoteBlock({open:true}));
         $("#openEditModal").addEventListener("click", openEditModal);
-        $("#exportAllJson").addEventListener("click", () => exportUniverse("json"));
-        $("#exportAllTxt").addEventListener("click", () => exportUniverse("txt"));
-        $("#exportPlanetJson").addEventListener("click", () => exportActivePlanet("json"));
-        $("#exportPlanetTxt").addEventListener("click", () => exportActivePlanet("txt"));
-        toggleDetailFavorite.addEventListener("click", () => toggleFavorite(activePlanetId));
-
-        mobileHome.addEventListener("click", showHome);
-        mobilePrimary.addEventListener("click", () => {
-          if (activePlanetId) addNoteBlock();
-          else openCreateModal();
-        });
-
-        themeSelect.addEventListener("change", () => {
-          state.theme = themeSelect.value;
-          applyTheme(state.theme);
-          saveNow();
-        });
-
-        searchInput.addEventListener("input", renderHome);
-        categoryFilter.addEventListener("change", renderHome);
-        planetForm.addEventListener("submit", submitPlanetForm);
-        importFile.addEventListener("change", importBackup);
-
-        planetModalBackdrop.addEventListener("click", (event) => {
-          if (event.target === planetModalBackdrop) closePlanetModal();
-        });
-
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && planetModalBackdrop.classList.contains("active")) closePlanetModal();
-        });
-
-        $$(".chip").forEach((chip) => {
-          chip.addEventListener("click", () => {
-            activeFilter = chip.dataset.filter;
-            $$(".chip").forEach((item) => item.classList.remove("active"));
-            chip.classList.add("active");
-            renderHome();
-          });
-        });
+        $("#toggleDetailFavorite").addEventListener("click", toggleFavorite);
+        $("#deletePlanet").addEventListener("click", deleteActivePlanet);
+        $("#exportAllJson").addEventListener("click", ()=>exportUniverse("json"));
+        $("#exportAllTxt").addEventListener("click", ()=>exportUniverse("txt"));
+        $("#exportPlanetJson").addEventListener("click", ()=>exportPlanet("json"));
+        $("#exportPlanetTxt").addEventListener("click", ()=>exportPlanet("txt"));
+        $("#importButton").addEventListener("click", ()=>el.importFile.click());
+        el.importFile.addEventListener("change", importBackup);
+        $("#mobileHome").addEventListener("click", showHome);
+        $("#mobileAdd").addEventListener("click", ()=> activePlanetId ? addNoteBlock({open:true}) : openCreateModal());
+        $("#mobileSearchFocus").addEventListener("click", ()=>{ showHome(); setTimeout(()=>el.search.focus(),100); });
+        el.planetCategory.addEventListener("input", renderCategorySuggestions);
+        el.planetCategory.addEventListener("focus", renderCategorySuggestions);
       }
 
-      function loadState() {
-        try {
-          const savedV2 = JSON.parse(localStorage.getItem(STORAGE_KEY));
-          if (savedV2 && typeof savedV2 === "object") return { ...defaultState, ...savedV2 };
-        } catch {}
-
-        try {
-          const savedLegacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY));
-          if (savedLegacy && typeof savedLegacy === "object") return { ...defaultState, ...savedLegacy };
-        } catch {}
-
-        return structuredClone(defaultState);
+      function loadState(){
+        for (const key of [STORAGE_KEY,V2_STORAGE_KEY,V1_STORAGE_KEY]) {
+          try { const raw=localStorage.getItem(key); if(raw) return JSON.parse(raw); } catch {}
+        }
+        return {theme:"night",categories:[],tags:[],planets:[]};
       }
-
-      function normalizeState() {
+      function normalizeState(){
+        state.theme = ["night","day","nebula","minimal","solar"].includes(state.theme) ? state.theme : "night";
         state.planets = Array.isArray(state.planets) ? state.planets : [];
         state.categories = Array.isArray(state.categories) ? state.categories : [];
-        state.theme = THEMES.includes(state.theme) ? state.theme : "night";
-
-        state.planets.forEach((planet, index) => {
-          planet.id ||= makeId();
-          planet.name ||= "İsimsiz Gezegen";
-          planet.category ||= "Genel";
-          planet.palette ||= planetPalettes[index % planetPalettes.length];
-          planet.notes = Array.isArray(planet.notes) ? planet.notes : [];
-          planet.favorite = Boolean(planet.favorite);
-          planet.createdAt ||= new Date().toISOString();
-          planet.updatedAt ||= planet.createdAt;
-
-          planet.notes.forEach((note) => {
-            note.id ||= makeId();
-            note.title ||= "";
-            note.content ||= "";
-            note.todos = Array.isArray(note.todos) ? note.todos : [];
-            note.createdAt ||= new Date().toISOString();
-            note.updatedAt ||= note.createdAt;
-            note.todos.forEach((todo) => {
-              todo.id ||= makeId();
-              todo.text ||= "";
-              todo.done = Boolean(todo.done);
-            });
+        state.tags = Array.isArray(state.tags) ? state.tags : [];
+        state.planets.forEach((p,pi)=>{
+          p.id ||= makeId(); p.name ||= "İsimsiz Gezegen"; p.category ||= "Genel"; p.palette ||= palettes[pi % palettes.length]; p.favorite=Boolean(p.favorite); p.notes=Array.isArray(p.notes)?p.notes:[]; p.createdAt ||= new Date().toISOString(); p.updatedAt ||= p.createdAt;
+          p.notes.forEach((n,ni)=>{
+            n.id ||= makeId(); n.title ||= ""; n.content ||= ""; n.date ||= (n.createdAt ? dateInputValue(n.createdAt) : dateInputValue(new Date().toISOString())); n.mood ||= "neutral"; n.tags=Array.isArray(n.tags)?n.tags:[]; n.todos=Array.isArray(n.todos)?n.todos:[]; n.collapsed = typeof n.collapsed === "boolean" ? n.collapsed : ni !== 0; n.order = Number.isFinite(n.order) ? n.order : ni; n.createdAt ||= new Date().toISOString(); n.updatedAt ||= n.createdAt;
+            n.todos.forEach(t=>{ t.id ||= makeId(); t.text ||= ""; t.done=Boolean(t.done); t.createdAt ||= new Date().toISOString(); });
           });
+          p.notes.sort((a,b)=>(a.order??0)-(b.order??0));
         });
-
-        state.categories = unique([...state.categories, ...state.planets.map((planet) => planet.category).filter(Boolean)]);
+        state.categories = unique([...state.categories, ...state.planets.map(p=>p.category)]);
+        state.tags = unique([...state.tags, ...state.planets.flatMap(p=>p.notes.flatMap(n=>n.tags||[]))]);
         saveNow();
       }
+      function saveNow(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      function saveDebounced(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveNow,220); }
+      function makeId(){ return "id-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9); }
+      function unique(items){ return [...new Set(items.map(x=>String(x||"").trim()).filter(Boolean))]; }
+      function normalizeText(s){ return String(s||"").toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+      function escapeHTML(s){ return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+      function formatDate(v){ return new Intl.DateTimeFormat("tr-TR",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(new Date(v)); }
+      function formatDay(v){ return new Intl.DateTimeFormat("tr-TR",{day:"2-digit",month:"long",year:"numeric"}).format(new Date(v+"T12:00:00")); }
+      function dateInputValue(iso){ return new Date(iso).toISOString().slice(0,10); }
+      function today(){ return new Date().toISOString().slice(0,10); }
+      function categoryIcon(c){ return categoryIcons[normalizeText(c)] || "✦"; }
+      function moodText(v){ return (moods.find(m=>m.v===v)||moods[0]).t; }
+      function touch(p,n){ const now=new Date().toISOString(); if(n) n.updatedAt=now; p.updatedAt=now; }
+      function findPlanet(id){ return state.planets.find(p=>p.id===id); }
+      function findNote(planet,id){ return planet?.notes.find(n=>n.id===id); }
 
-      function saveNow() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-      function saveDebounced() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 220); }
-      function makeId() { return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9); }
-      function unique(items) { return [...new Set(items.map((item) => String(item).trim()).filter(Boolean))]; }
-      function normalizeText(value) { return String(value || "").toLocaleLowerCase("tr-TR"); }
-      function categoryIcon(category) { return categoryIcons[normalizeText(category)] || "✦"; }
-
-      function escapeHTML(value) {
-        return String(value ?? "")
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
+      function applyTheme(theme){ document.documentElement.dataset.theme=theme; el.themeSelect.value=theme; }
+      function renderHome(){ updateCategoryFilter(); renderStats(); renderDashboard(); renderSearchResults(); renderPlanets(); }
+      function updateCategoryFilter(){
+        const cats=unique(state.categories); const cur=el.categoryFilter.value||"all";
+        el.categoryFilter.innerHTML='<option value="all">Tüm Kategoriler</option>'+cats.map(c=>`<option value="${escapeHTML(c)}">${categoryIcon(c)} ${escapeHTML(c)}</option>`).join("");
+        if([...el.categoryFilter.options].some(o=>o.value===cur)) el.categoryFilter.value=cur;
       }
-
-      function escapeRegExp(value) { return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
-
-      function highlight(value, query) {
-        const safe = escapeHTML(value);
-        if (!query) return safe;
-        const pattern = new RegExp(`(${escapeRegExp(query)})`, "gi");
-        return safe.replace(pattern, "<mark>$1</mark>");
+      function renderStats(){
+        const notes=state.planets.reduce((s,p)=>s+p.notes.length,0); const open=getOpenTasks().length; const tags=unique(state.planets.flatMap(p=>p.notes.flatMap(n=>n.tags||[])));
+        el.planetStat.textContent=state.planets.length; el.noteStat.textContent=notes; el.todoStat.textContent=open; el.tagStat.textContent=tags.length;
       }
-
-      function formatDate(value) {
-        return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
-      }
-
-      function renderHome() {
-        updateMobileBar();
-        updateCategoryControls();
-        renderStats();
-        renderProductivityPanel();
-        renderAdvancedSearchPanel();
-
-        const planets = getFilteredPlanets();
-        planetGrid.innerHTML = "";
-        resultCount.textContent = `${planets.length} gezegen gösteriliyor`;
-
-        const hasPlanets = state.planets.length > 0;
-        const hasResults = planets.length > 0;
-        emptyState.classList.toggle("hidden", hasPlanets);
-        noResultState.classList.toggle("hidden", !hasPlanets || hasResults);
-        planetGrid.classList.toggle("hidden", !hasResults);
-
-        planets.forEach((planet, index) => planetGrid.appendChild(createPlanetCard(planet, index)));
-      }
-
-      function getFilteredPlanets() {
-        const query = searchInput.value.trim();
-        const q = normalizeText(query);
-        const selectedCategory = categoryFilter.value;
-
-        let planets = state.planets.filter((planet) => {
-          const noteText = planet.notes.map((note) => `${note.title} ${note.content} ${note.todos.map((todo) => todo.text).join(" ")}`).join(" ");
-          const haystack = normalizeText(`${planet.name} ${planet.category} ${noteText}`);
-          const matchesSearch = !q || haystack.includes(q);
-          const matchesCategory = selectedCategory === "all" || planet.category === selectedCategory;
-          const matchesFavorite = activeFilter !== "favorites" || planet.favorite;
-          return matchesSearch && matchesCategory && matchesFavorite;
+      function renderDashboard(){ renderOpenTasks(); renderRecentNotes(); renderToday(); renderTagCloud(); }
+      function renderOpenTasks(){
+        const tasks=getOpenTasks().slice(0,8); el.taskSummary.textContent = tasks.length ? `${getOpenTasks().length} açık görev` : "temiz";
+        el.tasksList.innerHTML = tasks.length ? tasks.map(t=>`<label class="task-row" data-planet-id="${t.planet.id}" data-note-id="${t.note.id}" data-todo-id="${t.todo.id}"><input type="checkbox"><span class="task-main"><span class="task-title">${escapeHTML(t.todo.text)}</span><span class="task-meta">${escapeHTML(t.note.title||"Başlıksız kayıt")} · ${escapeHTML(t.planet.name)}</span></span><button class="icon-btn" type="button">↗</button></label>`).join("") : `<div class="empty-mini">Tamamlanmamış görev yok. Günlük kayıtlarından yeni görev ekleyebilirsin.</div>`;
+        el.tasksList.querySelectorAll(".task-row").forEach(row=>{
+          const p=findPlanet(row.dataset.planetId), n=findNote(p,row.dataset.noteId), todo=n?.todos.find(x=>x.id===row.dataset.todoId);
+          row.querySelector('input[type="checkbox"]').addEventListener("change",()=>{ todo.done=true; touch(p,n); saveNow(); renderHome(); });
+          row.querySelector("button").addEventListener("click",(e)=>{ e.preventDefault(); openPlanet(p.id,row.dataset.noteId); });
         });
-
-        if (activeFilter === "recent") {
-          planets = planets.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 12);
-        } else if (activeFilter === "category") {
-          planets = planets.slice().sort((a, b) => a.category.localeCompare(b.category, "tr") || a.name.localeCompare(b.name, "tr"));
-        } else {
-          planets = planets.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        }
-
-        return planets;
+      }
+      function getOpenTasks(){ return state.planets.flatMap(p=>p.notes.flatMap(n=>(n.todos||[]).filter(t=>!t.done && t.text.trim()).map(todo=>({planet:p,note:n,todo})))).sort((a,b)=>new Date(b.note.updatedAt)-new Date(a.note.updatedAt)); }
+      function renderRecentNotes(){
+        const recent=state.planets.flatMap(p=>p.notes.map(n=>({planet:p,note:n}))).sort((a,b)=>new Date(b.note.updatedAt)-new Date(a.note.updatedAt)).slice(0,7);
+        el.recentNotes.innerHTML = recent.length ? recent.map(({planet,note})=>`<button class="compact-item" type="button" data-planet-id="${planet.id}" data-note-id="${note.id}"><span class="compact-title">${escapeHTML(note.title||"Başlıksız günlük kaydı")}</span><span class="compact-meta">${escapeHTML(planet.name)} · ${formatDay(note.date)} · ${moodText(note.mood)}</span></button>`).join("") : `<div class="empty-mini">Henüz günlük kaydı yok.</div>`;
+        el.recentNotes.querySelectorAll("button[data-planet-id]").forEach(b=>b.addEventListener("click",()=>openPlanet(b.dataset.planetId,b.dataset.noteId)));
+      }
+      function renderToday(){
+        const count=state.planets.reduce((s,p)=>s+p.notes.filter(n=>n.date===today()).length,0);
+        el.todayCount.textContent=count; el.todaySummary.textContent = count ? `${count} kayıt` : "henüz yok";
+      }
+      function renderTagCloud(){
+        const counts={}; state.planets.forEach(p=>p.notes.forEach(n=>(n.tags||[]).forEach(t=>counts[t]=(counts[t]||0)+1)));
+        const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+        el.tagCloud.innerHTML = top.length ? top.map(([tag,count])=>`<button class="tag-chip" type="button" data-tag="${escapeHTML(tag)}">#${escapeHTML(tag)} <span>${count}</span></button>`).join("") : `<span class="empty-mini">Etiket ekledikçe burada kısa yollar oluşacak.</span>`;
+        el.tagCloud.querySelectorAll("[data-tag]").forEach(b=>b.addEventListener("click",()=>{ tagFilter=b.dataset.tag; renderHome(); showToast(`#${tagFilter} filtresi uygulandı.`); }));
       }
 
-      function createPlanetCard(planet, index) {
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "planet-card";
-        card.title = `${planet.name} gezegenine gir`;
-        const size = Math.min(112, 70 + planet.notes.length * 7 + totalTodos(planet) * 2);
-        const drift = [-8, 10, -4, 12, 0, -12][index % 6];
-        const tilt = [-1.4, 1.1, -0.6, 0.8, 0, 1.5][index % 6];
-        card.style.setProperty("--planet-a", planet.palette[0]);
-        card.style.setProperty("--planet-b", planet.palette[1]);
-        card.style.setProperty("--planet-c", planet.palette[2]);
-        card.style.setProperty("--planet-size", `${size}px`);
-        card.style.setProperty("--drift-y", `${drift}px`);
-        card.style.setProperty("--tilt", `${tilt}deg`);
-        card.style.animationDelay = `${Math.min(index * 35, 260)}ms`;
-
-        card.innerHTML = `
-          <div class="planet-actions">
-            <span class="category-badge">${categoryIcon(planet.category)}</span>
-            <span class="tiny-icon-btn favorite ${planet.favorite ? "active" : ""}" data-favorite-title="Favori">${planet.favorite ? "★" : "☆"}</span>
-          </div>
-          <div class="hover-card">
-            <strong>${escapeHTML(planet.name)}</strong>
-            <span>${categoryIcon(planet.category)} ${escapeHTML(planet.category)}</span>
-            <span>${planet.notes.length} not bloğu · ${totalTodos(planet)} yapılacak</span>
-            <span>Son güncelleme: ${formatDate(planet.updatedAt)}</span>
-          </div>
-          <div class="planet-orbit"><div class="planet" aria-hidden="true"></div></div>
-          <div>
-            <div class="planet-name">${escapeHTML(planet.name)}</div>
-            <div class="planet-meta">
-              <span class="category-badge">${categoryIcon(planet.category)} ${escapeHTML(planet.category)}</span>
-              <span class="note-count">${planet.notes.length} not</span>
-            </div>
-          </div>
-        `;
-
-        card.addEventListener("click", () => openPlanet(planet.id));
-        card.querySelector(".favorite").addEventListener("click", (event) => {
-          event.stopPropagation();
-          toggleFavorite(planet.id);
+      function getFilteredPlanets(){
+        const q=normalizeText(el.search.value.trim()); const cat=el.categoryFilter.value;
+        let list=state.planets.filter(p=>{
+          const noteText=p.notes.map(n=>`${n.title} ${n.content} ${(n.tags||[]).join(" ")} ${(n.todos||[]).map(t=>t.text).join(" ")}`).join(" ");
+          const hay=normalizeText(`${p.name} ${p.category} ${noteText}`);
+          const matchesQ=!q || hay.includes(q); const matchesC=cat==="all" || p.category===cat; const matchesT=tagFilter==="all" || p.notes.some(n=>(n.tags||[]).includes(tagFilter)); const matchesFav=activeFilter!=="favorites" || p.favorite; const matchesTasks=activeFilter!=="openTasks" || p.notes.some(n=>(n.todos||[]).some(t=>!t.done));
+          return matchesQ && matchesC && matchesT && matchesFav && matchesTasks;
         });
-        return card;
+        if(activeFilter==="recent") list=list.slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,12);
+        else if(activeFilter==="category") list=list.slice().sort((a,b)=>a.category.localeCompare(b.category,"tr") || a.name.localeCompare(b.name,"tr"));
+        else list=list.slice().sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+        return list;
+      }
+      function renderPlanets(){
+        const planets=getFilteredPlanets(); el.planetGrid.innerHTML=""; el.resultCount.textContent=`${planets.length} gezegen gösteriliyor${tagFilter!=="all" ? " · #"+tagFilter : ""}`;
+        el.emptyState.classList.toggle("hidden", state.planets.length>0); el.noResultState.classList.toggle("hidden", !state.planets.length || planets.length>0); el.planetGrid.classList.toggle("hidden", !planets.length);
+        planets.forEach((p,i)=>el.planetGrid.appendChild(createPlanetCard(p,i)));
+      }
+      function createPlanetCard(p,i){
+        const open=totalTodos(p)-completedTodos(p); const size=Math.min(116,70+p.notes.length*7+open*2); const card=document.createElement("button"); card.type="button"; card.className=`planet-card ${p.favorite?"favorite":""}`; card.style.setProperty("--planet-a",p.palette[0]); card.style.setProperty("--planet-b",p.palette[1]); card.style.setProperty("--planet-c",p.palette[2]); card.style.setProperty("--planet-size",size+"px"); card.style.setProperty("--drift-y", ((i%5)-2)*5+"px"); card.style.animationDelay=`${Math.min(i*35,260)}ms`;
+        card.innerHTML=`<div class="planet-tooltip"><div class="tooltip-title">${p.favorite?"★ ":""}${escapeHTML(p.name)}</div><div class="tooltip-meta">${categoryIcon(p.category)} ${escapeHTML(p.category)}<br>${p.notes.length} günlük kaydı · ${open} açık görev<br>Son güncelleme: ${formatDate(p.updatedAt)}</div></div><div class="planet-orbit"><div class="planet"></div></div><div><div class="planet-name">${p.favorite?"★ ":""}${escapeHTML(p.name)}</div><div class="planet-meta"><span class="category-badge">${categoryIcon(p.category)} ${escapeHTML(p.category)}</span><span>${p.notes.length} kayıt</span></div></div>`;
+        card.addEventListener("click",()=>openPlanet(p.id)); return card;
+      }
+      function totalTodos(p){ return p.notes.reduce((s,n)=>s+(n.todos?.length||0),0); }
+      function completedTodos(p){ return p.notes.reduce((s,n)=>s+(n.todos||[]).filter(t=>t.done).length,0); }
+
+      function renderSearchResults(){
+        const q=el.search.value.trim(); if(!q){ el.searchPanel.classList.add("hidden"); return; }
+        const matches=findMatches(q).slice(0,12); el.searchPanel.classList.remove("hidden"); el.searchSummary.textContent=`${matches.length} sonuç`;
+        el.searchGrid.innerHTML=matches.length?matches.map(m=>`<button class="match-card" type="button" data-planet-id="${m.planet.id}" data-note-id="${m.note?.id||""}"><div class="match-title">${highlight(m.title,q)}</div><div class="match-meta">${m.type} · ${escapeHTML(m.planet.name)} · ${escapeHTML(m.planet.category)}</div><div class="match-snippet">${highlight(m.snippet,q)}</div></button>`).join(""):`<div class="empty-mini">Aramada eşleşen kayıt bulunamadı.</div>`;
+        el.searchGrid.querySelectorAll("button[data-planet-id]").forEach(b=>b.addEventListener("click",()=>openPlanet(b.dataset.planetId,b.dataset.noteId||null)));
+      }
+      function findMatches(q){
+        const nq=normalizeText(q), out=[]; state.planets.forEach(p=>{
+          if(normalizeText(p.name).includes(nq)) out.push({planet:p,type:"Gezegen",title:p.name,snippet:p.category});
+          if(normalizeText(p.category).includes(nq)) out.push({planet:p,type:"Kategori",title:p.name,snippet:p.category});
+          p.notes.forEach(n=>{
+            if(normalizeText(n.title).includes(nq)) out.push({planet:p,note:n,type:"Başlık",title:n.title||"Başlıksız",snippet:n.content.slice(0,120)});
+            if(normalizeText(n.content).includes(nq)) out.push({planet:p,note:n,type:"Günlük metni",title:n.title||"Başlıksız",snippet:snippetAround(n.content,q)});
+            (n.tags||[]).forEach(t=>{ if(normalizeText(t).includes(nq)) out.push({planet:p,note:n,type:"Etiket",title:n.title||"Başlıksız",snippet:"#"+t}); });
+            (n.todos||[]).forEach(t=>{ if(normalizeText(t.text).includes(nq)) out.push({planet:p,note:n,type:"Görev",title:n.title||"Başlıksız",snippet:t.text}); });
+          });
+        }); return out;
+      }
+      function snippetAround(text,q){ const nt=normalizeText(text), nq=normalizeText(q); const idx=nt.indexOf(nq); if(idx<0) return text.slice(0,130); return text.slice(Math.max(0,idx-45), Math.min(text.length, idx+90)); }
+      function highlight(text,q){ const safe=escapeHTML(text||""); const needle=escapeHTML(q.trim()); if(!needle) return safe; return safe.replace(new RegExp(needle.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"), m=>`<mark>${m}</mark>`); }
+
+      function openCreateModal(){ modalMode="create"; editingPlanetId=null; el.modalTitle.textContent="Yeni Gezegen Oluştur"; el.modalDescription.textContent="Yeni yaşam alanı, konu veya günlük bölgesi için bir gezegen yarat."; el.planetSubmit.textContent="Oluştur"; el.planetName.value=""; el.planetCategory.value=""; renderCategorySuggestions(); openPlanetModal(); }
+      function openEditModal(){ const p=findPlanet(activePlanetId); if(!p) return; modalMode="edit"; editingPlanetId=p.id; el.modalTitle.textContent="Gezegeni Düzenle"; el.modalDescription.textContent="Gezegen adını ve kategorisini güncelle."; el.planetSubmit.textContent="Güncelle"; el.planetName.value=p.name; el.planetCategory.value=p.category; renderCategorySuggestions(); openPlanetModal(); }
+      function openPlanetModal(){ el.modal.classList.add("active"); setTimeout(()=>el.planetName.focus(),60); }
+      function closePlanetModal(){ el.modal.classList.remove("active"); }
+      function renderCategorySuggestions(){
+        const cats=unique(state.categories); const typed=normalizeText(el.planetCategory.value); const sorted=cats.filter(c=>!typed || normalizeText(c).includes(typed)).slice(0,8);
+        el.categorySuggestions.innerHTML = sorted.length ? sorted.map(c=>`<button class="tag-chip" type="button" data-cat="${escapeHTML(c)}">${categoryIcon(c)} ${escapeHTML(c)}</button>`).join("") : `<span class="empty-mini">Yeni kategori olarak kaydedilecek.</span>`;
+        el.categorySuggestions.querySelectorAll("[data-cat]").forEach(b=>b.addEventListener("click",()=>{ el.planetCategory.value=b.dataset.cat; renderCategorySuggestions(); }));
+      }
+      function submitPlanetForm(e){
+        e.preventDefault(); const name=el.planetName.value.trim(); const category=el.planetCategory.value.trim() || "Günlük"; if(!name){ showToast("Gezegen adı boş olamaz."); return; }
+        if(modalMode==="edit") { const p=findPlanet(editingPlanetId); if(!p) return; p.name=name; p.category=category; touch(p); state.categories=unique([...state.categories,category]); saveNow(); closePlanetModal(); renderDetail(); showToast("Gezegen güncellendi."); return; }
+        const now=new Date().toISOString(); state.planets.unshift({id:makeId(),name,category,palette:palettes[Math.floor(Math.random()*palettes.length)],favorite:false,notes:[],createdAt:now,updatedAt:now}); state.categories=unique([...state.categories,category]); saveNow(); closePlanetModal(); renderHome(); showToast("Yeni gezegen evrende belirdi.");
       }
 
-      function totalTodos(planet) { return planet.notes.reduce((sum, note) => sum + (note.todos?.length || 0), 0); }
-      function completedTodos(planet) { return planet.notes.reduce((sum, note) => sum + (note.todos || []).filter((todo) => todo.done).length, 0); }
-
-      function renderStats() {
-        const totalNotes = state.planets.reduce((sum, planet) => sum + planet.notes.length, 0);
-        const todos = state.planets.reduce((sum, planet) => sum + totalTodos(planet), 0);
-        planetStat.textContent = state.planets.length;
-        noteStat.textContent = totalNotes;
-        todoStat.textContent = todos;
-        categoryStat.textContent = unique(state.planets.map((planet) => planet.category)).length;
+      function openPlanet(id,noteId=null){ activePlanetId=id; el.home.classList.remove("active"); el.detail.classList.add("active"); renderDetail(noteId); window.scrollTo({top:0,behavior:"smooth"}); }
+      function showHome(){ activePlanetId=null; el.detail.classList.remove("active"); el.home.classList.add("active"); renderHome(); window.scrollTo({top:0,behavior:"smooth"}); }
+      function renderDetail(openNoteId=null){
+        const p=findPlanet(activePlanetId); if(!p){ showHome(); return; }
+        if(openNoteId){ p.notes.forEach(n=>n.collapsed=n.id!==openNoteId); }
+        el.detailHero.style.setProperty("--active-a",p.palette[0]); el.detailHero.style.setProperty("--active-b",p.palette[1]); el.detailHero.style.setProperty("--active-c",p.palette[2]);
+        el.detailTitle.textContent=p.name; el.detailCategory.textContent=`${categoryIcon(p.category)} ${p.category}`; el.detailFavoriteLabel.textContent=p.favorite?"★ Favori":"☆ Normal"; el.toggleDetailFavorite.textContent=p.favorite?"★ Favoriden Çıkar":"☆ Favori";
+        el.detailDates.textContent=`${p.notes.length} kayıt · ${completedTodos(p)}/${totalTodos(p)} görev · Son: ${formatDate(p.updatedAt)}`;
+        renderSurface(p); renderNotes(p); setTimeout(()=>{ if(openNoteId){ const card=document.querySelector(`[data-note-id="${openNoteId}"]`); card?.scrollIntoView({behavior:"smooth",block:"center"}); } },50);
       }
-
-      function renderProductivityPanel() {
-        if (!state.planets.length) {
-          productivityPanel.classList.add("hidden");
-          return;
-        }
-
-        const recentPlanets = state.planets.slice().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 3);
-        const recentNotes = state.planets.flatMap((planet) => planet.notes.map((note) => ({ planet, note })))
-          .sort((a, b) => new Date(b.note.updatedAt) - new Date(a.note.updatedAt)).slice(0, 3);
-
-        recentGrid.innerHTML = [
-          ...recentPlanets.map((planet) => `
-            <button class="mini-card" type="button" data-planet-id="${planet.id}">
-              <div class="mini-title">${planet.favorite ? "★ " : ""}${categoryIcon(planet.category)} ${escapeHTML(planet.name)}</div>
-              <div class="mini-meta">Gezegen · ${escapeHTML(planet.category)}<br>Son güncelleme: ${formatDate(planet.updatedAt)}</div>
-            </button>
-          `),
-          ...recentNotes.map(({ planet, note }) => `
-            <button class="mini-card" type="button" data-planet-id="${planet.id}">
-              <div class="mini-title">✎ ${escapeHTML(note.title || "Başlıksız not")}</div>
-              <div class="mini-meta">${escapeHTML(planet.name)} içinde<br>${formatDate(note.updatedAt)}</div>
-            </button>
-          `)
-        ].join("");
-
-        recentGrid.querySelectorAll("[data-planet-id]").forEach((item) => {
-          item.addEventListener("click", () => openPlanet(item.dataset.planetId));
-        });
-
-        productivityPanel.classList.remove("hidden");
+      function renderSurface(p){
+        el.surfaceSummary.textContent=`${p.notes.length} arazi parçası · tıklayınca kayıt açılır`;
+        el.surfaceMap.innerHTML = p.notes.length ? p.notes.map((n,i)=>`<button class="land-tile" type="button" data-note-id="${n.id}" style="--tile-a:${palettes[i%palettes.length][0]};--tile-b:${palettes[i%palettes.length][1]}"><div class="land-title">${moodText(n.mood).split(" ")[0]} ${escapeHTML(n.title||"Başlıksız")}</div><div class="land-meta">${formatDay(n.date)} · ${(n.todos||[]).filter(t=>!t.done).length} açık görev</div><div class="land-tags">${(n.tags||[]).slice(0,3).map(t=>`<span>#${escapeHTML(t)}</span>`).join("")}</div></button>`).join("") : `<div class="note-empty">Gezegen yüzeyi boş. İlk günlük kaydı burada bir arazi parçası oluşturacak.</div>`;
+        el.surfaceMap.querySelectorAll("[data-note-id]").forEach(b=>b.addEventListener("click",()=>{ p.notes.forEach(n=>n.collapsed=n.id!==b.dataset.noteId); saveDebounced(); renderDetail(b.dataset.noteId); }));
       }
-
-      function renderAdvancedSearchPanel() {
-        const query = searchInput.value.trim();
-        if (!query) {
-          searchResultsPanel.classList.add("hidden");
-          searchMatchGrid.innerHTML = "";
-          return;
-        }
-
-        const matches = collectSearchMatches(query).slice(0, 8);
-        searchResultSummary.textContent = `${matches.length} eşleşme`;
-        searchMatchGrid.innerHTML = matches.map((match) => `
-          <button class="match-card" type="button" data-planet-id="${match.planet.id}">
-            <div class="mini-title">${categoryIcon(match.planet.category)} ${highlight(match.planet.name, query)}</div>
-            <div class="mini-meta">${escapeHTML(match.type)} · ${escapeHTML(match.planet.category)}</div>
-            <div class="match-snippet">${highlight(match.snippet, query)}</div>
+      function renderNotes(p){
+        el.notesList.innerHTML=""; el.notesEmpty.classList.toggle("hidden",p.notes.length>0);
+        p.notes.forEach((n,i)=>el.notesList.appendChild(createTerrainCard(p,n,i)));
+      }
+      function createTerrainCard(p,n,i){
+        const card=document.createElement("article"); card.className=`terrain-card ${n.collapsed?"collapsed":""}`; card.dataset.noteId=n.id; card.draggable=true; card.style.setProperty("--note-a",palettes[i%palettes.length][0]); card.style.setProperty("--note-b",palettes[i%palettes.length][1]);
+        const openTodos=(n.todos||[]).filter(t=>!t.done).length;
+        card.innerHTML=`
+          <button class="terrain-header" type="button" data-toggle>
+            <span class="drag-handle" title="Sürükle-bırak ile sırala">☷</span>
+            <span class="terrain-main"><span class="terrain-title">${moodText(n.mood).split(" ")[0]} ${escapeHTML(n.title||"Başlıksız günlük kaydı")}</span><span class="terrain-meta">${formatDay(n.date)} · ${openTodos} açık görev · ${(n.tags||[]).map(t=>"#"+escapeHTML(t)).join(" ")}</span></span>
+            <span class="category-badge">${n.collapsed?"Aç":"Kapat"}</span>
+            <span class="terrain-actions"><span class="icon-btn" data-delete title="Sil">🗑</span></span>
           </button>
-        `).join("");
-
-        searchMatchGrid.querySelectorAll("[data-planet-id]").forEach((item) => {
-          item.addEventListener("click", () => openPlanet(item.dataset.planetId));
-        });
-
-        searchResultsPanel.classList.remove("hidden");
-      }
-
-      function collectSearchMatches(query) {
-        const q = normalizeText(query);
-        const matches = [];
-
-        state.planets.forEach((planet) => {
-          if (normalizeText(planet.name).includes(q)) matches.push({ planet, type: "Gezegen adı", snippet: planet.name });
-          if (normalizeText(planet.category).includes(q)) matches.push({ planet, type: "Kategori", snippet: planet.category });
-
-          planet.notes.forEach((note) => {
-            if (normalizeText(note.title).includes(q)) matches.push({ planet, type: "Not başlığı", snippet: note.title || "Başlıksız not" });
-            if (normalizeText(note.content).includes(q)) matches.push({ planet, type: "Not içeriği", snippet: makeSnippet(note.content, query) });
-            (note.todos || []).forEach((todo) => {
-              if (normalizeText(todo.text).includes(q)) matches.push({ planet, type: "Yapılacak", snippet: todo.text });
-            });
-          });
-        });
-
-        return matches;
-      }
-
-      function makeSnippet(text, query) {
-        const source = String(text || "").replace(/\s+/g, " ").trim();
-        const index = normalizeText(source).indexOf(normalizeText(query));
-        if (index === -1) return source.slice(0, 120) || "Eşleşme";
-        return `${index > 30 ? "..." : ""}${source.slice(Math.max(0, index - 30), index + query.length + 75)}${index + query.length + 75 < source.length ? "..." : ""}`;
-      }
-
-      function updateCategoryControls() {
-        const categories = unique(state.categories);
-        const currentValue = categoryFilter.value || "all";
-        categoryFilter.innerHTML = `<option value="all">Tüm Kategoriler</option>` + categories.map((category) => `<option value="${escapeHTML(category)}">${categoryIcon(category)} ${escapeHTML(category)}</option>`).join("");
-        if ([...categoryFilter.options].some((option) => option.value === currentValue)) categoryFilter.value = currentValue;
-        categoryOptions.innerHTML = categories.map((category) => `<option value="${escapeHTML(category)}"></option>`).join("");
-      }
-
-      function openCreateModal() {
-        modalMode = "create";
-        modalTitle.textContent = "Yeni Gezegen Oluştur";
-        modalDescription.textContent = "Yeni konu, proje veya fikir alanın için bir gezegen yarat.";
-        planetSubmitButton.textContent = "Oluştur";
-        planetNameInput.value = "";
-        planetCategoryInput.value = "";
-        updateCategoryControls();
-        openPlanetModal();
-      }
-
-      function openEditModal() {
-        const planet = findPlanet(activePlanetId);
-        if (!planet) return;
-        modalMode = "edit";
-        modalTitle.textContent = "Gezegeni Düzenle";
-        modalDescription.textContent = "Gezegen adını ve kategorisini güncelle.";
-        planetSubmitButton.textContent = "Güncelle";
-        planetNameInput.value = planet.name;
-        planetCategoryInput.value = planet.category;
-        updateCategoryControls();
-        openPlanetModal();
-      }
-
-      function openPlanetModal() {
-        planetModalBackdrop.classList.add("active");
-        setTimeout(() => planetNameInput.focus(), 60);
-      }
-
-      function closePlanetModal() { planetModalBackdrop.classList.remove("active"); }
-
-      function submitPlanetForm(event) {
-        event.preventDefault();
-        const name = planetNameInput.value.trim();
-        const category = planetCategoryInput.value.trim() || "Genel";
-
-        if (!name) {
-          showToast("Gezegen adı boş olamaz.");
-          planetNameInput.focus();
-          return;
-        }
-
-        if (modalMode === "edit") {
-          const planet = findPlanet(activePlanetId);
-          if (!planet) return;
-          planet.name = name;
-          planet.category = category;
-          planet.updatedAt = new Date().toISOString();
-          state.categories = unique([...state.categories, category]);
-          saveNow();
-          closePlanetModal();
-          renderDetail();
-          showToast("Gezegen güncellendi.");
-          return;
-        }
-
-        const palette = planetPalettes[Math.floor(Math.random() * planetPalettes.length)];
-        const now = new Date().toISOString();
-        state.planets.unshift({ id: makeId(), name, category, palette, notes: [], favorite: false, createdAt: now, updatedAt: now });
-        state.categories = unique([...state.categories, category]);
-        saveNow();
-        closePlanetModal();
-        renderHome();
-        showToast("Yeni gezegen evrende belirdi.");
-      }
-
-      function openPlanet(id) {
-        const planet = findPlanet(id);
-        if (!planet) return;
-        activePlanetId = id;
-        homeView.classList.remove("active");
-        detailView.classList.add("active");
-        renderDetail();
-        updateMobileBar();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function showHome() {
-        activePlanetId = null;
-        detailView.classList.remove("active");
-        homeView.classList.add("active");
-        renderHome();
-        updateMobileBar();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function findPlanet(id) { return state.planets.find((planet) => planet.id === id); }
-
-      function renderDetail() {
-        const planet = findPlanet(activePlanetId);
-        if (!planet) { showHome(); return; }
-
-        detailHero.style.setProperty("--active-a", planet.palette[0]);
-        detailHero.style.setProperty("--active-b", planet.palette[1]);
-        detailHero.style.setProperty("--active-c", planet.palette[2]);
-        detailTitle.textContent = planet.name;
-        detailCategory.textContent = `${categoryIcon(planet.category)} ${planet.category}`;
-        detailFavoriteLabel.textContent = planet.favorite ? "★ Favori" : "☆ Normal";
-        detailDates.textContent = `Son güncelleme: ${formatDate(planet.updatedAt)} · ${planet.notes.length} not · ${completedTodos(planet)}/${totalTodos(planet)} görev`;
-        toggleDetailFavorite.textContent = planet.favorite ? "★ Favoriden Çıkar" : "☆ Favori";
-
-        notesGrid.innerHTML = "";
-        notesEmpty.classList.toggle("hidden", planet.notes.length > 0);
-        planet.notes.forEach((note, index) => notesGrid.appendChild(createNoteBlock(planet, note, index)));
-      }
-
-      function createNoteBlock(planet, note, index) {
-        const block = document.createElement("article");
-        block.className = "note-block";
-        block.dataset.noteId = note.id;
-        block.draggable = true;
-        block.style.setProperty("--note-a", planetPalettes[index % planetPalettes.length][0]);
-        block.style.setProperty("--note-b", planetPalettes[index % planetPalettes.length][1]);
-
-        block.innerHTML = `
-          <div class="note-head">
-            <div class="note-head-left">
-              <span class="drag-handle" title="Sürükle-bırak ile sırala">☷</span>
-              <div class="note-date">Oluşturuldu: ${formatDate(note.createdAt)}<br>Güncellendi: ${formatDate(note.updatedAt)}</div>
+          <div class="terrain-body">
+            <div class="form-grid">
+              <div class="field"><label>Başlık</label><input class="text-input note-title" type="text" maxlength="90" value="${escapeHTML(n.title)}" placeholder="Günlük başlığı" /></div>
+              <div class="field"><label>Tarih</label><input class="date-input note-date-input" type="date" value="${escapeHTML(n.date)}" /></div>
+              <div class="field"><label>Ruh hali</label><select class="mood-select">${moods.map(m=>`<option value="${m.v}" ${m.v===n.mood?"selected":""}>${m.t}</option>`).join("")}</select></div>
             </div>
-            <button class="icon-btn" type="button" aria-label="Not bloğunu sil">🗑</button>
-          </div>
-          <input class="note-title-input" type="text" placeholder="Not başlığı" maxlength="90" value="${escapeHTML(note.title)}" />
-          <textarea class="note-content" placeholder="Fikrini buraya yaz...">${escapeHTML(note.content)}</textarea>
-          <div class="todo-box">
-            <div class="todo-box-title"><span>☑ Yapılacak Listesi</span><span>${(note.todos || []).filter((todo) => todo.done).length}/${(note.todos || []).length}</span></div>
-            <div class="todo-add-row">
-              <input class="todo-input" type="text" placeholder="Yeni görev ekle..." maxlength="110" />
-              <button class="btn btn-small" type="button" data-add-todo>＋ Ekle</button>
-            </div>
-            <div class="todo-list"></div>
-          </div>
-        `;
-
-        const titleInput = block.querySelector(".note-title-input");
-        const contentInput = block.querySelector(".note-content");
-        const deleteButton = block.querySelector(".icon-btn");
-        const todoInput = block.querySelector(".todo-input");
-        const addTodoButton = block.querySelector("[data-add-todo]");
-        const todoList = block.querySelector(".todo-list");
-
-        const updateNote = () => {
-          note.title = titleInput.value;
-          note.content = contentInput.value;
-          touchPlanet(planet, note);
-          saveDebounced();
-        };
-
-        titleInput.addEventListener("input", updateNote);
-        contentInput.addEventListener("input", updateNote);
-
-        deleteButton.addEventListener("click", () => {
-          const confirmed = confirm("Bu not bloğunu silmek istediğine emin misin?");
-          if (!confirmed) return;
-          planet.notes = planet.notes.filter((item) => item.id !== note.id);
-          planet.updatedAt = new Date().toISOString();
-          saveNow();
-          renderDetail();
-          showToast("Not bloğu silindi.");
-        });
-
-        addTodoButton.addEventListener("click", () => addTodo(planet, note, todoInput.value));
-        todoInput.addEventListener("keydown", (event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            addTodo(planet, note, todoInput.value);
-          }
-        });
-
-        block.addEventListener("dragstart", () => {
-          draggedNoteId = note.id;
-          block.classList.add("dragging");
-        });
-        block.addEventListener("dragend", () => {
-          draggedNoteId = null;
-          block.classList.remove("dragging");
-          notesGrid.querySelectorAll(".drag-over").forEach((item) => item.classList.remove("drag-over"));
-        });
-        block.addEventListener("dragover", (event) => {
-          event.preventDefault();
-          if (draggedNoteId && draggedNoteId !== note.id) block.classList.add("drag-over");
-        });
-        block.addEventListener("dragleave", () => block.classList.remove("drag-over"));
-        block.addEventListener("drop", (event) => {
-          event.preventDefault();
-          block.classList.remove("drag-over");
-          reorderNote(planet, draggedNoteId, note.id);
-        });
-
-        renderTodos(planet, note, todoList);
-        return block;
+            <div class="field"><label>Günlük metni</label><textarea class="note-content" placeholder="Bugün ne oldu, ne düşündün, ne hissettin?">${escapeHTML(n.content)}</textarea></div>
+            <div class="tag-editor"><div class="todo-box-title"><span>Etiketler ve bağlantılar</span><span>${(n.tags||[]).length} etiket</span></div><div class="tag-list"></div><div class="tag-row"><input class="tag-input" type="text" placeholder="Etiket ekle: fikir, sağlık, karar..." maxlength="32" /><button class="btn btn-small" type="button" data-add-tag>＋ Ekle</button></div><div class="tag-suggestions"></div></div>
+            <div class="todo-box"><div class="todo-box-title"><span>☑ Yapılacak Listesi</span><span>${(n.todos||[]).filter(t=>t.done).length}/${(n.todos||[]).length}</span></div><div class="todo-add-row"><input class="todo-input" type="text" placeholder="Yeni görev ekle..." maxlength="120" /><button class="btn btn-small" type="button" data-add-todo>＋ Ekle</button></div><div class="todo-list"></div></div>
+            <div class="related-box"><div class="related-title">Etiketlerle bağlı notlar</div><div class="related-list"></div></div>
+          </div>`;
+        bindTerrainCard(card,p,n); return card;
       }
-
-      function renderTodos(planet, note, container) {
-        container.innerHTML = (note.todos || []).map((todo) => `
-          <label class="todo-item ${todo.done ? "done" : ""}" data-todo-id="${todo.id}">
-            <input type="checkbox" ${todo.done ? "checked" : ""} />
-            <input class="todo-text-input" type="text" maxlength="110" value="${escapeHTML(todo.text)}" />
-            <button class="icon-btn" type="button" aria-label="Görevi sil">×</button>
-          </label>
-        `).join("");
-
-        container.querySelectorAll(".todo-item").forEach((item) => {
-          const todo = note.todos.find((entry) => entry.id === item.dataset.todoId);
-          const checkbox = item.querySelector('input[type="checkbox"]');
-          const textInput = item.querySelector(".todo-text-input");
-          const deleteButton = item.querySelector("button");
-
-          checkbox.addEventListener("change", () => {
-            todo.done = checkbox.checked;
-            touchPlanet(planet, note);
-            saveNow();
-            renderDetail();
-          });
-
-          textInput.addEventListener("input", () => {
-            todo.text = textInput.value;
-            touchPlanet(planet, note);
-            saveDebounced();
-          });
-
-          deleteButton.addEventListener("click", (event) => {
-            event.preventDefault();
-            note.todos = note.todos.filter((entry) => entry.id !== todo.id);
-            touchPlanet(planet, note);
-            saveNow();
-            renderDetail();
-          });
-        });
-      }
-
-      function addTodo(planet, note, value) {
-        const text = String(value || "").trim();
-        if (!text) return;
-        note.todos ||= [];
-        note.todos.push({ id: makeId(), text, done: false });
-        touchPlanet(planet, note);
-        saveNow();
-        renderDetail();
-      }
-
-      function reorderNote(planet, sourceId, targetId) {
-        if (!sourceId || !targetId || sourceId === targetId) return;
-        const sourceIndex = planet.notes.findIndex((note) => note.id === sourceId);
-        const targetIndex = planet.notes.findIndex((note) => note.id === targetId);
-        if (sourceIndex === -1 || targetIndex === -1) return;
-        const [moved] = planet.notes.splice(sourceIndex, 1);
-        planet.notes.splice(targetIndex, 0, moved);
-        planet.updatedAt = new Date().toISOString();
-        saveNow();
-        renderDetail();
-        showToast("Not sırası güncellendi.");
-      }
-
-      function touchPlanet(planet, note) {
-        const now = new Date().toISOString();
-        if (note) note.updatedAt = now;
-        planet.updatedAt = now;
-        detailDates.textContent = `Son güncelleme: ${formatDate(planet.updatedAt)} · ${planet.notes.length} not · ${completedTodos(planet)}/${totalTodos(planet)} görev`;
-      }
-
-      function addNoteBlock() {
-        const planet = findPlanet(activePlanetId);
-        if (!planet) return;
-        const now = new Date().toISOString();
-        planet.notes.unshift({ id: makeId(), title: "", content: "", todos: [], createdAt: now, updatedAt: now });
-        planet.updatedAt = now;
-        saveNow();
-        renderDetail();
-        const firstTitle = notesGrid.querySelector(".note-title-input");
-        if (firstTitle) firstTitle.focus();
-        showToast("Yeni not bloğu eklendi.");
-      }
-
-      function deleteActivePlanet() {
-        const planet = findPlanet(activePlanetId);
-        if (!planet) return;
-        const confirmed = confirm(`"${planet.name}" gezegenini ve içindeki tüm not bloklarını silmek istediğine emin misin?`);
-        if (!confirmed) return;
-        state.planets = state.planets.filter((item) => item.id !== planet.id);
-        saveNow();
-        showHome();
-        showToast("Gezegen silindi.");
-      }
-
-      function toggleFavorite(planetId) {
-        const planet = findPlanet(planetId);
-        if (!planet) return;
-        planet.favorite = !planet.favorite;
-        planet.updatedAt = new Date().toISOString();
-        saveNow();
-        if (activePlanetId) renderDetail();
-        else renderHome();
-        showToast(planet.favorite ? "Gezegen favorilere eklendi." : "Gezegen favorilerden çıkarıldı.");
-      }
-
-      function applyTheme(theme) {
-        state.theme = THEMES.includes(theme) ? theme : "night";
-        document.documentElement.dataset.theme = state.theme;
-        themeSelect.value = state.theme;
-      }
-
-      function updateMobileBar() {
-        if (activePlanetId) {
-          mobileHome.textContent = "← Evren";
-          mobilePrimary.textContent = "＋ Not";
-        } else {
-          mobileHome.textContent = "⌂ Evren";
-          mobilePrimary.textContent = "✦ Gezegen";
+      function bindTerrainCard(card,p,n){
+        const title=card.querySelector(".note-title"), date=card.querySelector(".note-date-input"), mood=card.querySelector(".mood-select"), content=card.querySelector(".note-content");
+        card.querySelector("[data-toggle]").addEventListener("click",e=>{ if(e.target.closest("[data-delete]") || e.target.closest(".drag-handle")) return; n.collapsed=!n.collapsed; saveDebounced(); renderDetail(); });
+        card.querySelector("[data-delete]").addEventListener("click",e=>{ e.stopPropagation(); if(!confirm("Bu günlük kaydını silmek istediğine emin misin?")) return; p.notes=p.notes.filter(x=>x.id!==n.id); touch(p); reorderOrders(p); saveNow(); renderDetail(); showToast("Günlük kaydı silindi."); });
+        [title,date,mood,content].forEach(input=>input.addEventListener("input",()=>{ n.title=title.value; n.date=date.value || today(); n.mood=mood.value; n.content=content.value; touch(p,n); saveDebounced(); renderSurface(p); }));
+        const tagList=card.querySelector(".tag-list"), tagInput=card.querySelector(".tag-input"), tagSuggest=card.querySelector(".tag-suggestions");
+        function drawTags(){
+          tagList.innerHTML=(n.tags||[]).map(t=>`<span class="tag-chip">#${escapeHTML(t)} <button type="button" data-remove-tag="${escapeHTML(t)}">×</button></span>`).join("") || `<span class="empty-mini">Bu kayda etiket ekle.</span>`;
+          tagList.querySelectorAll("[data-remove-tag]").forEach(b=>b.addEventListener("click",()=>{ n.tags=n.tags.filter(t=>t!==b.dataset.removeTag); touch(p,n); refreshGlobalTags(); saveNow(); renderDetail(n.id); }));
+          const suggestions=state.tags.filter(t=>!(n.tags||[]).includes(t)).slice(0,8);
+          tagSuggest.innerHTML=suggestions.map(t=>`<button class="tag-chip" type="button" data-suggest-tag="${escapeHTML(t)}">#${escapeHTML(t)}</button>`).join("");
+          tagSuggest.querySelectorAll("[data-suggest-tag]").forEach(b=>b.addEventListener("click",()=>addTag(b.dataset.suggestTag)));
+          drawRelated(card,p,n);
         }
+        function addTag(raw){ const tag=String(raw||tagInput.value).trim().replace(/^#/g,""); if(!tag) return; n.tags=unique([...(n.tags||[]),tag]); state.tags=unique([...state.tags,tag]); tagInput.value=""; touch(p,n); saveNow(); drawTags(); renderSurface(p); }
+        card.querySelector("[data-add-tag]").addEventListener("click",()=>addTag());
+        tagInput.addEventListener("keydown",e=>{ if(e.key==="Enter" || e.key===","){ e.preventDefault(); addTag(); } });
+        drawTags();
+        const todoInput=card.querySelector(".todo-input"), todoList=card.querySelector(".todo-list");
+        card.querySelector("[data-add-todo]").addEventListener("click",()=>addTodo(p,n,todoInput.value,todoInput));
+        todoInput.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); addTodo(p,n,todoInput.value,todoInput); } });
+        renderTodos(p,n,todoList);
+        card.addEventListener("dragstart",()=>{ draggedNoteId=n.id; card.classList.add("dragging"); });
+        card.addEventListener("dragend",()=>{ draggedNoteId=null; card.classList.remove("dragging"); document.querySelectorAll(".drag-over").forEach(x=>x.classList.remove("drag-over")); });
+        card.addEventListener("dragover",e=>{ e.preventDefault(); if(draggedNoteId && draggedNoteId!==n.id) card.classList.add("drag-over"); });
+        card.addEventListener("dragleave",()=>card.classList.remove("drag-over"));
+        card.addEventListener("drop",e=>{ e.preventDefault(); reorderNote(p,draggedNoteId,n.id); });
       }
-
-      function exportUniverse(format) {
-        if (format === "json") {
-          downloadBlob(JSON.stringify(state, null, 2), `not-evreni-yedek-${dateStamp()}.json`, "application/json");
-          return;
-        }
-        downloadBlob(universeToText(), `not-evreni-${dateStamp()}.txt`, "text/plain;charset=utf-8");
+      function drawRelated(card,p,n){
+        const box=card.querySelector(".related-list"); const tags=n.tags||[]; if(!tags.length){ box.innerHTML=`<span class="empty-mini">Etiket ekledikçe bağlantılı notlar burada görünür.</span>`; return; }
+        const related=[]; state.planets.forEach(op=>op.notes.forEach(on=>{ if(on.id!==n.id && (on.tags||[]).some(t=>tags.includes(t))) related.push({planet:op,note:on,shared:(on.tags||[]).filter(t=>tags.includes(t))}); }));
+        box.innerHTML=related.slice(0,8).map(r=>`<button class="tag-chip" type="button" data-planet-id="${r.planet.id}" data-note-id="${r.note.id}">${escapeHTML(r.note.title||"Başlıksız")} · ${r.shared.map(t=>"#"+escapeHTML(t)).join(" ")}</button>`).join("") || `<span class="empty-mini">Bu etiketlerde başka kayıt yok.</span>`;
+        box.querySelectorAll("[data-planet-id]").forEach(b=>b.addEventListener("click",()=>openPlanet(b.dataset.planetId,b.dataset.noteId)));
       }
-
-      function exportActivePlanet(format) {
-        const planet = findPlanet(activePlanetId);
-        if (!planet) return;
-        if (format === "json") {
-          downloadBlob(JSON.stringify({ type: "not-evreni-planet", planet }, null, 2), `${safeFileName(planet.name)}-${dateStamp()}.json`, "application/json");
-          return;
-        }
-        downloadBlob(planetToText(planet), `${safeFileName(planet.name)}-${dateStamp()}.txt`, "text/plain;charset=utf-8");
-      }
-
-      function universeToText() {
-        return [
-          "NOT EVRENİ",
-          `Dışa aktarma: ${formatDate(new Date().toISOString())}`,
-          "",
-          ...state.planets.map(planetToText)
-        ].join("\n");
-      }
-
-      function planetToText(planet) {
-        const lines = [
-          `GEZEGEN: ${planet.name}`,
-          `Kategori: ${planet.category}`,
-          `Favori: ${planet.favorite ? "Evet" : "Hayır"}`,
-          `Oluşturuldu: ${formatDate(planet.createdAt)}`,
-          `Güncellendi: ${formatDate(planet.updatedAt)}`,
-          ""
-        ];
-
-        if (!planet.notes.length) lines.push("Not yok.", "");
-        planet.notes.forEach((note, index) => {
-          lines.push(`  ${index + 1}. ${note.title || "Başlıksız Not"}`);
-          lines.push(`     Güncellendi: ${formatDate(note.updatedAt)}`);
-          if (note.content) lines.push(`     ${note.content.replace(/\n/g, "\n     ")}`);
-          if ((note.todos || []).length) {
-            lines.push("     Yapılacaklar:");
-            note.todos.forEach((todo) => lines.push(`     ${todo.done ? "[x]" : "[ ]"} ${todo.text}`));
-          }
-          lines.push("");
+      function renderTodos(p,n,container){
+        container.innerHTML=(n.todos||[]).map(t=>`<label class="todo-item ${t.done?"done":""}" data-todo-id="${t.id}"><input type="checkbox" ${t.done?"checked":""}><input class="todo-text-input" type="text" maxlength="120" value="${escapeHTML(t.text)}"><button class="icon-btn" type="button">×</button></label>`).join("") || `<div class="empty-mini">Bu kayda bağlı görev yok.</div>`;
+        container.querySelectorAll(".todo-item").forEach(item=>{ const todo=n.todos.find(t=>t.id===item.dataset.todoId); const cb=item.querySelector('input[type="checkbox"]'), text=item.querySelector(".todo-text-input"), del=item.querySelector("button");
+          cb.addEventListener("change",()=>{ todo.done=cb.checked; touch(p,n); saveNow(); renderDetail(n.id); });
+          text.addEventListener("input",()=>{ todo.text=text.value; touch(p,n); saveDebounced(); });
+          del.addEventListener("click",e=>{ e.preventDefault(); n.todos=n.todos.filter(t=>t.id!==todo.id); touch(p,n); saveNow(); renderDetail(n.id); });
         });
-        lines.push("---", "");
-        return lines.join("\n");
       }
+      function addTodo(p,n,text,input){ const value=String(text||"").trim(); if(!value) return; n.todos.push({id:makeId(),text:value,done:false,createdAt:new Date().toISOString()}); touch(p,n); if(input) input.value=""; saveNow(); renderDetail(n.id); }
+      function reorderNote(p,dragId,targetId){ if(!dragId || dragId===targetId) return; const from=p.notes.findIndex(n=>n.id===dragId), to=p.notes.findIndex(n=>n.id===targetId); if(from<0||to<0) return; const [moved]=p.notes.splice(from,1); p.notes.splice(to,0,moved); reorderOrders(p); touch(p); saveNow(); renderDetail(dragId); }
+      function reorderOrders(p){ p.notes.forEach((n,i)=>n.order=i); }
+      function refreshGlobalTags(){ state.tags=unique(state.planets.flatMap(p=>p.notes.flatMap(n=>n.tags||[]))); }
+      function addNoteBlock(opts={}){ const p=findPlanet(activePlanetId); if(!p) return; const now=new Date().toISOString(); p.notes.forEach(n=>n.collapsed=true); const n={id:makeId(),title:"",content:"",date:today(),mood:"neutral",tags:[],todos:[],collapsed:opts.open?false:true,order:0,createdAt:now,updatedAt:now}; p.notes.unshift(n); reorderOrders(p); touch(p,n); saveNow(); renderDetail(n.id); showToast("Yeni günlük kaydı eklendi."); }
+      function createTodayEntry(){ if(!state.planets.length){ openCreateModal(); showToast("Önce bir gezegen oluştur."); return; } const p=state.planets.find(x=>x.favorite) || state.planets[0]; openPlanet(p.id); setTimeout(()=>addNoteBlock({open:true}),100); }
+      function toggleFavorite(){ const p=findPlanet(activePlanetId); if(!p) return; p.favorite=!p.favorite; touch(p); saveNow(); renderDetail(); }
+      function deleteActivePlanet(){ const p=findPlanet(activePlanetId); if(!p) return; if(!confirm(`"${p.name}" gezegenini ve tüm günlük kayıtlarını silmek istediğine emin misin?`)) return; state.planets=state.planets.filter(x=>x.id!==p.id); refreshGlobalTags(); saveNow(); showHome(); showToast("Gezegen silindi."); }
 
-      function downloadBlob(content, fileName, mimeType) {
-        const blob = new Blob([content], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-        showToast("Dışa aktarma hazırlandı.");
-      }
-
-      async function importBackup(event) {
-        const file = event.target.files?.[0];
-        if (!file) return;
-        try {
-          const text = await file.text();
-          const data = JSON.parse(text);
-
-          if (data && Array.isArray(data.planets)) {
-            const confirmed = confirm("Bu yedek mevcut evrenin üzerine yazılacak. Devam edilsin mi?");
-            if (!confirmed) return;
-            state = { ...defaultState, ...data };
-            normalizeState();
-            activePlanetId = null;
-            showHome();
-            showToast("Evren yedeği geri yüklendi.");
-          } else if (data?.planet) {
-            const importedPlanet = cloneImportedPlanet(data.planet);
-            state.planets.unshift(importedPlanet);
-            state.categories = unique([...state.categories, importedPlanet.category]);
-            saveNow();
-            renderHome();
-            showToast("Gezegen içe aktarıldı.");
-          } else {
-            showToast("Bu dosya geçerli bir Not Evreni yedeği değil.");
-          }
-        } catch {
-          showToast("Yedek dosyası okunamadı.");
-        } finally {
-          importFile.value = "";
-        }
-      }
-
-      function cloneImportedPlanet(planet) {
-        const now = new Date().toISOString();
-        return {
-          id: makeId(),
-          name: `${planet.name || "İçe Aktarılan Gezegen"}`,
-          category: planet.category || "Genel",
-          palette: Array.isArray(planet.palette) ? planet.palette : planetPalettes[Math.floor(Math.random() * planetPalettes.length)],
-          favorite: Boolean(planet.favorite),
-          createdAt: planet.createdAt || now,
-          updatedAt: now,
-          notes: Array.isArray(planet.notes) ? planet.notes.map((note) => ({
-            id: makeId(),
-            title: note.title || "",
-            content: note.content || "",
-            todos: Array.isArray(note.todos) ? note.todos.map((todo) => ({ id: makeId(), text: todo.text || "", done: Boolean(todo.done) })) : [],
-            createdAt: note.createdAt || now,
-            updatedAt: note.updatedAt || now
-          })) : []
-        };
-      }
-
-      function safeFileName(value) {
-        return String(value || "not-evreni").toLocaleLowerCase("tr-TR").replace(/[^a-z0-9ğüşöçıİĞÜŞÖÇ]+/gi, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "not-evreni";
-      }
-
-      function dateStamp() {
-        const date = new Date();
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-      }
-
-      function showToast(message) {
-        toast.textContent = message;
-        toast.classList.add("active");
-        clearTimeout(showToast.timer);
-        showToast.timer = setTimeout(() => toast.classList.remove("active"), 2200);
-      }
+      function exportUniverse(type){ if(type==="json") return download("not-evreni-yedek.json","application/json",JSON.stringify({...state,exportedAt:new Date().toISOString()},null,2)); download("not-evreni-ozet.txt","text/plain",universeToText()); }
+      function exportPlanet(type){ const p=findPlanet(activePlanetId); if(!p) return; if(type==="json") return download(slug(p.name)+".json","application/json",JSON.stringify({planet:p,exportedAt:new Date().toISOString()},null,2)); download(slug(p.name)+".txt","text/plain",planetToText(p)); }
+      function universeToText(){ return [`Not Evreni`, `Dışa aktarma: ${formatDate(new Date().toISOString())}`, "", ...state.planets.map(planetToText)].join("\n"); }
+      function planetToText(p){ return [`# ${p.name}`, `Kategori: ${p.category}`, `Favori: ${p.favorite?"Evet":"Hayır"}`, `Kayıt sayısı: ${p.notes.length}`, "", ...p.notes.map(n=>[`## ${n.title||"Başlıksız"}`, `Tarih: ${n.date} · Ruh hali: ${moodText(n.mood)}`, `Etiketler: ${(n.tags||[]).map(t=>"#"+t).join(", ") || "-"}`, `Görevler:`, ...(n.todos||[]).map(t=>`- [${t.done?"x":" "}] ${t.text}`), "", n.content, ""].join("\n")), ""].join("\n"); }
+      function download(filename,mime,text){ const blob=new Blob([text],{type:mime}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
+      function slug(s){ return normalizeText(s).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "not-evreni"; }
+      function importBackup(){ const file=el.importFile.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const data=JSON.parse(reader.result); if(data.planet){ state.planets.unshift(data.planet); normalizeState(); renderHome(); showToast("Gezegen yedeği içe aktarıldı."); } else if(Array.isArray(data.planets)){ if(confirm("Bu yedek mevcut evrenin üzerine yazılacak. Devam edilsin mi?")){ state={theme:data.theme||state.theme,categories:data.categories||[],tags:data.tags||[],planets:data.planets}; normalizeState(); showHome(); showToast("Evren yedeği yüklendi."); } } else { showToast("Geçerli bir Not Evreni yedeği değil."); } } catch { showToast("Yedek dosyası okunamadı."); } el.importFile.value=""; }; reader.readAsText(file); }
+      function showToast(msg){ el.toast.textContent=msg; el.toast.classList.add("active"); clearTimeout(showToast.t); showToast.t=setTimeout(()=>el.toast.classList.remove("active"),2200); }
     })();
   </script>
 </body>
